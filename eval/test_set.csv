@@ -1,0 +1,228 @@
+﻿id;categorie;piege_temporel;question;reponse_attendue;source;url;note
+G01;gameplay;non;What is Reinhardt's role and sub-role?;Tank, Stalwart sub-role.;fandom:Reinhardt;https://overwatch.fandom.com/wiki/Reinhardt;
+G02;gameplay;non;When was Ana released, and which hero number was she?;"19 July 2016; she was the 22nd hero added to the game.";fandom:Ana;https://overwatch.fandom.com/wiki/Ana;
+G03;gameplay;non;What is the name of Ashe's ultimate ability?;B.O.B.;fandom:Ashe;https://overwatch.fandom.com/wiki/Ashe;
+G04;gameplay;non;What is Baptiste's role and sub-role?;Support, Tactician sub-role.;fandom:Baptiste;https://overwatch.fandom.com/wiki/Baptiste;
+G05;gameplay;non;Which three configurations can Bastion transform between?;Assault, Recon and Artillery.;fandom:Bastion;https://overwatch.fandom.com/wiki/Bastion;
+G06;gameplay;non;How much base health and armor does Brigitte have?;175 health and 75 armor.;fandom:Brigitte;https://overwatch.fandom.com/wiki/Brigitte;Valeur au moment du scraping (oct. 2026).
+G07;gameplay;non;What was Cassidy's in-game name before it was changed in 2021?;McCree.;fandom:Cassidy;https://overwatch.fandom.com/wiki/Cassidy;
+G08;gameplay;non;What is D.Va's sub-role?;Initiator (Tank).;fandom:D.Va;https://overwatch.fandom.com/wiki/D.Va;
+G09;gameplay;non;When was Doomfist released, and which hero number was he?;"27 July 2017; the 25th hero.";fandom:Doomfist;https://overwatch.fandom.com/wiki/Doomfist;
+G10;gameplay;non;How much health and how many shields does Echo have?;150 health and 75 shields.;fandom:Echo;https://overwatch.fandom.com/wiki/Echo;Valeur au moment du scraping.
+G11;gameplay;non;What is Freja's role and sub-role?;Damage, Recon sub-role.;fandom:Freja;https://overwatch.fandom.com/wiki/Freja;
+G12;gameplay;non;What is Genji's ultimate ability?;Dragonblade.;fandom:Genji;https://overwatch.fandom.com/wiki/Genji;
+G13;gameplay;non;What is Hanzo's ultimate ability?;Dragonstrike.;fandom:Hanzo;https://overwatch.fandom.com/wiki/Hanzo;
+G14;gameplay;non;When was Hazard released, in which season, and what is his sub-role?;"10 December 2024, Season 14; Initiator Tank (42nd hero).";fandom:Hazard;https://overwatch.fandom.com/wiki/Hazard;
+G15;gameplay;non;Which Illari ability deploys a structure that automatically heals nearby allies?;Healing Pylon.;fandom:Illari;https://overwatch.fandom.com/wiki/Illari;
+G16;gameplay;non;What is Junker Queen's ultimate ability?;Rampage.;fandom:Junker Queen;https://overwatch.fandom.com/wiki/Junker_Queen;
+G17;gameplay;non;Which Junkrat ability stops enemies dead in their tracks?;Steel Trap.;fandom:Junkrat;https://overwatch.fandom.com/wiki/Junkrat;
+G18;gameplay;non;How much health and how many shields does Juno have?;75 health and 150 shields.;fandom:Juno;https://overwatch.fandom.com/wiki/Juno;Valeur au moment du scraping.
+G19;gameplay;non;Which Kiriko ability lets her teleport to an ally?;Swift Step.;fandom:Kiriko;https://overwatch.fandom.com/wiki/Kiriko;
+G20;gameplay;non;Which Lifeweaver ability pulls an ally to safety?;Life Grip.;fandom:Lifeweaver;https://overwatch.fandom.com/wiki/Lifeweaver;
+G21;gameplay;non;What is Lúcio's ultimate ability?;Sound Barrier.;fandom:Lúcio;https://overwatch.fandom.com/wiki/Lúcio;
+G22;gameplay;non;When was Mauga released and what is his sub-role?;"5 December 2023 (Season 8), 39th hero; Bruiser Tank.";fandom:Mauga;https://overwatch.fandom.com/wiki/Mauga;
+G23;gameplay;non;What is Mei's base health?;300.;fandom:Mei;https://overwatch.fandom.com/wiki/Mei;Valeur au moment du scraping.
+G24;gameplay;non;What are the names of Mercy's two weapons?;Caduceus Staff and Caduceus Blaster.;fandom:Mercy;https://overwatch.fandom.com/wiki/Mercy;
+G25;gameplay;non;What is Moira's ultimate ability?;Coalescence.;fandom:Moira;https://overwatch.fandom.com/wiki/Moira;
+G26;gameplay;non;When was Orisa released, and which hero number was she?;"21 March 2017; the 24th hero.";fandom:Orisa;https://overwatch.fandom.com/wiki/Orisa;
+G27;gameplay;non;What is Pharah's sub-role?;Recon (Damage).;fandom:Pharah;https://overwatch.fandom.com/wiki/Pharah;
+G28;gameplay;non;What is the name of Ramattra's close-range transformation, and when was he released?;"Nemesis Form; released 6 December 2022 (Season 2), 36th hero.";fandom:Ramattra;https://overwatch.fandom.com/wiki/Ramattra;
+G29;gameplay;non;Which Reaper ability lets him teleport to a target location?;Shadow Step.;fandom:Reaper;https://overwatch.fandom.com/wiki/Reaper;
+G30;gameplay;non;What is Roadhog's base health in Role Queue?;750 (600 in Open Queue).;fandom:Roadhog;https://overwatch.fandom.com/wiki/Roadhog;Valeur au moment du scraping.
+G31;gameplay;non;What is Sigma's ultimate ability?;Gravitic Flux.;fandom:Sigma;https://overwatch.fandom.com/wiki/Sigma;
+G32;gameplay;non;What is Sojourn's main weapon and her ultimate?;"Railgun; ultimate Overclock.";fandom:Sojourn;https://overwatch.fandom.com/wiki/Sojourn;
+G33;gameplay;non;Which Soldier: 76 ability heals him and nearby allies?;Biotic Field.;fandom:Soldier: 76;https://overwatch.fandom.com/wiki/Soldier:_76;
+G34;gameplay;non;What is Sombra's ultimate ability?;EMP.;fandom:Sombra;https://overwatch.fandom.com/wiki/Sombra;
+G35;gameplay;non;How much health and how many shields does Symmetra have?;125 health and 150 shields.;fandom:Symmetra;https://overwatch.fandom.com/wiki/Symmetra;Valeur au moment du scraping.
+G36;gameplay;non;What is Torbjörn's ultimate ability?;Molten Core.;fandom:Torbjörn;https://overwatch.fandom.com/wiki/Torbjörn;
+G37;gameplay;non;What is Tracer's base health, and which ability rewinds her personal timeline?;"175 health; Recall.";fandom:Tracer;https://overwatch.fandom.com/wiki/Tracer;
+G38;gameplay;non;When was Venture released and which hero number were they?;"16 April 2024 (Season 10); the 40th hero.";fandom:Venture;https://overwatch.fandom.com/wiki/Venture;
+G39;gameplay;non;What is Widowmaker's ultimate ability?;Infra-Sight.;fandom:Widowmaker;https://overwatch.fandom.com/wiki/Widowmaker;
+G40;gameplay;non;What is Winston's ultimate ability?;Primal Rage.;fandom:Winston;https://overwatch.fandom.com/wiki/Winston;
+G41;gameplay;non;What is Wrecking Ball's ultimate ability?;Minefield.;fandom:Wrecking Ball;https://overwatch.fandom.com/wiki/Wrecking_Ball;
+G42;gameplay;non;What is Zarya's ultimate ability?;Graviton Surge.;fandom:Zarya;https://overwatch.fandom.com/wiki/Zarya;
+G43;gameplay;non;What is Zenyatta's ultimate ability?;Transcendence.;fandom:Zenyatta;https://overwatch.fandom.com/wiki/Zenyatta;
+G44;gameplay;oui;Which hero fights with the Zhuque Fans and controls fire?;Anran.;fandom:Anran;https://overwatch.fandom.com/wiki/Anran;
+G45;gameplay;oui;Which Tank hero has the ultimate ability Panopticon?;Domina.;fandom:Domina;https://overwatch.fandom.com/wiki/Domina;
+G46;gameplay;oui;What is Emre's ultimate ability and his sub-role?;"Override Protocol; Specialist Damage.";fandom:Emre;https://overwatch.fandom.com/wiki/Emre;
+G47;gameplay;oui;What makes Jetpack Cat's passive unique among support heroes?;Her Jetpack passive grants permanent flight, letting her stay airborne.;fandom:Jetpack Cat;https://overwatch.fandom.com/wiki/Jetpack_Cat;
+G48;gameplay;oui;Which Mizuki ability throws his hat at allies to heal them?;Healing Kasa.;fandom:Mizuki;https://overwatch.fandom.com/wiki/Mizuki;
+G49;gameplay;oui;Which Shion ability involves her motorcycle?;Joyride: she revs up and rides her bike, then can dismount and launch it forward.;fandom:Shion;https://overwatch.fandom.com/wiki/Shion;
+G50;gameplay;oui;What is the name of Sierra's main weapon?;Helix Rifle.;fandom:Sierra;https://overwatch.fandom.com/wiki/Sierra;
+T01;patch;oui;Who was the 46th hero added to Overwatch, and when was she released?;Anran, released 10 February 2026 in Season 1: Conquest.;fandom:Anran;https://overwatch.fandom.com/wiki/Anran;
+T02;patch;oui;How many heroes were released at the start of Season 1: Conquest on 10 February 2026, and who were they?;Five: Anran, Domina, Emre, Mizuki and Jetpack Cat.;"fandom:Anran;Domina;Emre;Mizuki;Jetpack Cat";https://overwatch.fandom.com/wiki/Anran;
+T03;patch;oui;Which hero was released in Season 4: Heroes of Busan, and on what date?;D.Mon, on 11 August 2026 (53rd hero).;fandom:D.Mon;https://overwatch.fandom.com/wiki/D.Mon;
+T04;patch;oui;Which hero is set to release in Season 5 on 6 October 2026, and what is his role?;Doctrine, a Survivor Support hero (54th hero).;fandom:Doctrine;https://overwatch.fandom.com/wiki/Doctrine;Date annoncée, héros pas encore sorti au moment du scraping.
+T05;patch;oui;What is D.Mon's real name?;Yuna Lee.;fandom:D.Mon;https://overwatch.fandom.com/wiki/D.Mon;
+T06;patch;oui;When was Sierra released, and in which season?;14 April 2026, Season 2: Summit (51st hero).;fandom:Sierra;https://overwatch.fandom.com/wiki/Sierra;
+T07;patch;oui;When was Shion released, and in which season?;16 June 2026, Season 3: Into the Tiger's Den (52nd hero).;fandom:Shion;https://overwatch.fandom.com/wiki/Shion;
+T08;patch;oui;When was Vendetta released, and which hero number was she?;"9 December 2025 (Season 20); the 45th hero.";fandom:Vendetta;https://overwatch.fandom.com/wiki/Vendetta;
+T09;patch;oui;When was Wuyang released, and which hero number was he?;"26 August 2025 (Season 18); the 44th hero.";fandom:Wuyang;https://overwatch.fandom.com/wiki/Wuyang;
+T10;patch;oui;When was Freja released, and which hero number was she?;"22 April 2025 (Season 16); the 43rd hero.";fandom:Freja;https://overwatch.fandom.com/wiki/Freja;
+T11;patch;oui;How was Reinhardt's Fire Strike changed in the 16 June 2026 patch?;Damage increased from 120 to 125 and projectile speed from 30 to 33.;fandom:Reinhardt;https://overwatch.fandom.com/wiki/Reinhardt;
+T12;patch;oui;How was Ana's Biotic Grenade changed in the 14 July 2026 patch?;Explosion damage and healing increased from 75 to 90.;fandom:Ana;https://overwatch.fandom.com/wiki/Ana;
+T13;patch;oui;What changes did Baptiste's Regenerative Burst receive in the 12 May 2026 patch?;Instant healing 40 to 50, healing over time 40 to 50, cooldown reduced from 14 to 12 seconds.;fandom:Baptiste;https://overwatch.fandom.com/wiki/Baptiste;
+T14;patch;oui;What is Genji's Deflect cooldown after the 16 June 2026 patch?;8 seconds (reduced from 10).;fandom:Genji;https://overwatch.fandom.com/wiki/Genji;
+T15;patch;oui;How was Genji's Shuriken ammo changed on 8 January 2026?;Increased from 24 to 30.;fandom:Genji;https://overwatch.fandom.com/wiki/Genji;
+T16;patch;oui;What happened to Reaper's health in the 16 June 2026 patch, and why?;Reduced from 300 to 275, because Dire Triggers pushed his durability and kill potential past intended levels.;fandom:Reaper;https://overwatch.fandom.com/wiki/Reaper;
+T17;patch;oui;How was Lúcio's Sound Barrier changed on 12 May 2026?;Overhealth reduced from 750 to 625 and duration from 6 to 5 seconds.;fandom:Lúcio;https://overwatch.fandom.com/wiki/Lúcio;
+T18;patch;oui;What is the damage boost of Mercy's Caduceus Staff after the 16 June 2026 patch?;25% (reduced from 30%).;fandom:Mercy;https://overwatch.fandom.com/wiki/Mercy;
+T19;patch;oui;How was Moira's Biotic Orb changed on 16 June 2026?;Damage per second 50 to 60, healing per second 65 to 75, maximum damage per orb 200 to 250.;fandom:Moira;https://overwatch.fandom.com/wiki/Moira;
+T20;patch;oui;How was the projectile speed of Kiriko's Healing Ofuda changed on 8 September 2026?;Reduced from 24 to 18 meters per second (seeking range also reduced from 35 to 30 m).;fandom:Kiriko;https://overwatch.fandom.com/wiki/Kiriko;
+T21;patch;oui;What is Tracer's Recall cooldown after the 11 August 2026 patch?;12 seconds (reduced from 13).;fandom:Tracer;https://overwatch.fandom.com/wiki/Tracer;
+T22;patch;oui;Roadhog's Chain Hook cooldown changed twice in April 2026. What was it after the 23 April 2026 patch?;7 seconds (it went from 6 to 8 on 14 April, then 8 to 7 on 23 April).;fandom:Roadhog;https://overwatch.fandom.com/wiki/Roadhog;
+T23;patch;oui;How was Sigma's shield health changed on 14 July 2026?;Reduced from 275 to 250.;fandom:Sigma;https://overwatch.fandom.com/wiki/Sigma;
+T24;patch;oui;What new capability did Echo's Duplicate gain in the 14 April 2026 patch?;It can now duplicate allied heroes.;fandom:Echo;https://overwatch.fandom.com/wiki/Echo;
+T25;patch;oui;What change to Soldier: 76's Sprint was made on 14 April 2026?;He can now reload while sprinting (with a temporary 50% reduction to Sprint's speed bonus).;fandom:Soldier: 76;https://overwatch.fandom.com/wiki/Soldier:_76;
+T26;patch;oui;What change was made to Pharah's Barrage on 14 April 2026?;"Pharah can now move while using Barrage (explosion damage reduced from 30 to 25; Drift Thrusters perk removed).";fandom:Pharah;https://overwatch.fandom.com/wiki/Pharah;
+T27;patch;oui;What is the range of Mei's Endothermic Blaster after the 16 June 2026 patch?;12 meters (increased from 10).;fandom:Mei;https://overwatch.fandom.com/wiki/Mei;
+T28;patch;oui;How was Zarya's Particle Cannon maximum primary-fire damage changed on 10 February 2026?;Reduced from 190 to 175 damage per second.;fandom:Zarya;https://overwatch.fandom.com/wiki/Zarya;
+T29;patch;oui;How was Wrecking Ball's base armor changed on 11 November 2025?;Reduced from 175 to 125.;fandom:Wrecking Ball;https://overwatch.fandom.com/wiki/Wrecking_Ball;
+T30;patch;oui;How was Venture's Explorer's Resolve changed on 9 December 2025?;Shield health gained per ability reduced from 30 to 25.;fandom:Venture;https://overwatch.fandom.com/wiki/Venture;
+T31;patch;oui;Which role change is planned for Sombra?;She is set to move from Recon Damage to Tactician Support.;fandom:Sombra;https://overwatch.fandom.com/wiki/Sombra;Changement annoncé au moment du scraping.
+T32;patch;oui;In the 12 May 2026 (10th Anniversary) patch, how did the requirement to unlock Competitive Play change?;It increased from 20 wins to 50 wins.;liquipedia:May 12, 2026 Patch;https://liquipedia.net/overwatch/May_12,_2026_Patch;
+T33;patch;oui;What was the name of the season that started on 10 February 2026, right after Season 20?;Season 1: Conquest (the season numbering restarted).;liquipedia:February 10, 2026 Patch;https://liquipedia.net/overwatch/February_10,_2026_Patch;
+T34;patch;oui;What was the name of Season 19, launched on 14 October 2025?;Haunted Masquerade.;liquipedia:October 14, 2025 Patch;https://liquipedia.net/overwatch/October_14,_2025_Patch;
+T35;patch;oui;What was the headline feature of Season 18 (26 August 2025)?;Stadium Quick Play (Season 18: Stadium Quick Play), along with Wuyang's release.;liquipedia:August 26, 2025 Patch;https://liquipedia.net/overwatch/August_26,_2025_Patch;
+T36;patch;oui;Which three maps were reworked in the 11 August 2026 patch?;Paraíso, Eichenwalde and Busan.;liquipedia:August 11, 2026 Patch;https://liquipedia.net/overwatch/August_11,_2026_Patch;
+T37;patch;oui;Which game was the Overwatch x Project YoRHa collaboration based on, and when did it run?;"NieR: Automata; it ran from 10 to 23 March 2026 with 5 Legendary skins.";fandom:Overwatch x Project YoRHa;https://overwatch.fandom.com/wiki/Overwatch_x_Project_YoRHa;
+T38;patch;oui;How was Mauga's Cage Fight changed on 14 October 2025?;Its ultimate cost was reduced by 6%.;fandom:Mauga;https://overwatch.fandom.com/wiki/Mauga;
+T39;patch;oui;What is Jetpack Cat's base movement speed after the 14 August 2026 hotfix?;5.5 meters per second (reduced from 6, which had been raised from 5.5 on 11 August).;fandom:Jetpack Cat;https://overwatch.fandom.com/wiki/Jetpack_Cat;
+T40;patch;oui;How was Junker Queen's Commanding Shout cooldown changed on 14 July 2026 (5v5)?;Reduced from 12 to 10 seconds.;fandom:Junker Queen;https://overwatch.fandom.com/wiki/Junker_Queen;
+T41;patch;oui;How was Lifeweaver's Tree of Life changed on 16 June 2026?;Ultimate cost increased by 9% and overhealth conversion from overhealing reduced from 100% to 50%.;fandom:Lifeweaver;https://overwatch.fandom.com/wiki/Lifeweaver;
+T42;patch;oui;How could players try Doctrine before his official release?;In a playable trial weekend (12 September 2026), disabled in ranked games.;fandom:Doctrine;https://overwatch.fandom.com/wiki/Doctrine;
+L01;lore;non;What is Ana's full name and nationality?;Ana Amari, Egyptian.;fandom:Ana;https://overwatch.fandom.com/wiki/Ana;
+L02;lore;non;Who was Reinhardt's mentor?;Balderich von Adler.;fandom:Reinhardt;https://overwatch.fandom.com/wiki/Reinhardt;
+L03;lore;non;Who are Brigitte's father and godfather?;Her father is Torbjörn Lindholm and her godfather is Reinhardt Wilhelm.;fandom:Brigitte;https://overwatch.fandom.com/wiki/Brigitte;
+L04;lore;non;What is Cassidy's real name?;Cole Cassidy (formerly known as Jesse McCree).;fandom:Cassidy;https://overwatch.fandom.com/wiki/Cassidy;
+L05;lore;non;What is D.Va's real name and what was her job before becoming a mech pilot?;"Hana Song; she was a professional gamer.";fandom:D.Va;https://overwatch.fandom.com/wiki/D.Va;
+L06;lore;non;What is Doomfist's real name and nationality?;Akande Ogundimu, Nigerian.;fandom:Doomfist;https://overwatch.fandom.com/wiki/Doomfist;
+L07;lore;non;Who created Echo?;Dr. Mina Liao.;fandom:Echo;https://overwatch.fandom.com/wiki/Echo;
+L08;lore;non;What is the relationship between Genji and Hanzo, and who was their father?;"They are brothers (Hanzo is the elder); their father was Sojiro Shimada.";fandom:Hanzo;https://overwatch.fandom.com/wiki/Hanzo;
+L09;lore;non;What is Junker Queen's real name?;Odessa Stone.;fandom:Junker Queen;https://overwatch.fandom.com/wiki/Junker_Queen;
+L10;lore;non;What is Junkrat's real name?;Jamison Fawkes.;fandom:Junkrat;https://overwatch.fandom.com/wiki/Junkrat;
+L11;lore;non;What is Roadhog's real name?;Mako Rutledge.;fandom:Roadhog;https://overwatch.fandom.com/wiki/Roadhog;
+L12;lore;non;Where does Juno come from, and who is her mother?;"She is Martian, from the Red Promise Colony on Mars; her mother is Jiayi Teo.";fandom:Juno;https://overwatch.fandom.com/wiki/Juno;
+L13;lore;non;Who is Kiriko's mother?;Asa Yamagami.;fandom:Kiriko;https://overwatch.fandom.com/wiki/Kiriko;
+L14;lore;non;What is Lifeweaver's real name and nationality?;Niran Pruksamanee, Thai.;fandom:Lifeweaver;https://overwatch.fandom.com/wiki/Lifeweaver;
+L15;lore;non;Which city is Lúcio's base?;Rio de Janeiro, Brazil.;fandom:Lúcio;https://overwatch.fandom.com/wiki/Lúcio;
+L16;lore;non;What is Mauga's nationality and which organization is he affiliated with?;"Samoan; Talon (formerly Deepsea Raiders).";fandom:Mauga;https://overwatch.fandom.com/wiki/Mauga;
+L17;lore;non;What is Mercy's real name and nationality?;Angela Ziegler, Swiss.;fandom:Mercy;https://overwatch.fandom.com/wiki/Mercy;
+L18;lore;non;What is Moira's profession and where is she based?;"She is a geneticist (Minister of Genetics) based in Oasis, Iraq; Talon council member.";fandom:Moira;https://overwatch.fandom.com/wiki/Moira;
+L19;lore;non;Who created Orisa?;Efi Oladele.;fandom:Orisa;https://overwatch.fandom.com/wiki/Orisa;
+L20;lore;non;What is Pharah's real name?;Fareeha Amari.;fandom:Pharah;https://overwatch.fandom.com/wiki/Pharah;
+L21;lore;non;Who is Ramattra's brother, and who created him?;"His brother is Zenyatta; he was created by Anubis.";fandom:Ramattra;https://overwatch.fandom.com/wiki/Ramattra;
+L22;lore;non;What is Reaper's real name?;Gabriel Reyes.;fandom:Reaper;https://overwatch.fandom.com/wiki/Reaper;
+L23;lore;non;What is Sigma's real name and nationality?;Siebren de Kuiper, Dutch.;fandom:Sigma;https://overwatch.fandom.com/wiki/Sigma;
+L24;lore;non;What is Sojourn's real name and nationality?;Vivian Chase, Canadian.;fandom:Sojourn;https://overwatch.fandom.com/wiki/Sojourn;
+L25;lore;non;What is Soldier: 76's real name?;"John Francis ""Jack"" Morrison.";fandom:Soldier: 76;https://overwatch.fandom.com/wiki/Soldier:_76;
+L26;lore;non;What is Sombra's real name and where is she based?;"Olivia Colomar; based in Dorado, Mexico.";fandom:Sombra;https://overwatch.fandom.com/wiki/Sombra;
+L27;lore;non;What is Symmetra's real name and which corporation does she work for?;"Satya Vaswani; Vishkar Corporation.";fandom:Symmetra;https://overwatch.fandom.com/wiki/Symmetra;
+L28;lore;non;What is Tracer's real name?;Lena Oxton.;fandom:Tracer;https://overwatch.fandom.com/wiki/Tracer;
+L29;lore;non;What is Widowmaker's real name and who was her husband?;"Amélie Lacroix (née Guillard); her husband was Gérard Lacroix.";fandom:Widowmaker;https://overwatch.fandom.com/wiki/Widowmaker;
+L30;lore;non;Where did Winston grow up?;On the Horizon Lunar Colony (he was a test subject, Specimen 28).;fandom:Winston;https://overwatch.fandom.com/wiki/Winston;
+L31;lore;non;What is the name of the hamster who pilots Wrecking Ball?;Hammond.;fandom:Wrecking Ball;https://overwatch.fandom.com/wiki/Wrecking_Ball;
+L32;lore;non;What is Zarya's real name?;Aleksandra Zaryanova.;fandom:Zarya;https://overwatch.fandom.com/wiki/Zarya;
+L33;lore;oui;What is the relationship between Wuyang and Anran, and which university do they attend?;"They are siblings (Anran is the older sister); Wuxing University (Water College for Wuyang, Fire College for Anran).";"fandom:Wuyang;Anran";https://overwatch.fandom.com/wiki/Wuyang;
+L34;lore;oui;What is Vendetta's real name and who was her father?;"Marzia Bartalotti; her father was Antonio Bartalotti. She is the leader of Talon.";fandom:Vendetta;https://overwatch.fandom.com/wiki/Vendetta;
+L35;lore;oui;What is Domina's real name and which company is she part of?;"Vaira Singhania; Vishkar Corporation (vice president of development and operations).";fandom:Domina;https://overwatch.fandom.com/wiki/Domina;
+L36;lore;non;What is Hazard's real name and which group does he belong to?;"Findlay Docherty; the Phreaks.";fandom:Hazard;https://overwatch.fandom.com/wiki/Hazard;
+L37;lore;oui;Which clan did Mizuki belong to, and who was his guardian?;"The Hashimoto clan; his guardian was Shion.";fandom:Mizuki;https://overwatch.fandom.com/wiki/Mizuki;
+L38;lore;non;What was the first Overwatch short story, who wrote it, and when was it released?;Bastet, written by Michael Chu, released 7 January 2019.;fandom:Bastet;https://overwatch.fandom.com/wiki/Bastet;
+L39;lore;non;"Which hero is the protagonist of the short story ""What You Left Behind""?";Baptiste.;fandom:What You Left Behind;https://overwatch.fandom.com/wiki/What_You_Left_Behind;
+L40;lore;non;Who was Aurora in Overwatch lore?;"The first sentient omnic, created by Omnica Corp researchers led by Dr. Mina Liao; she sacrificed herself to grant sentience to other omnics.";fandom:Aurora;https://overwatch.fandom.com/wiki/Aurora;
+L41;lore;non;Who was Gabrielle Adawe?;The UN under-secretary-general during the Omnic Crisis and a key architect of the Overwatch taskforce.;fandom:Gabrielle Adawe;https://overwatch.fandom.com/wiki/Gabrielle_Adawe;
+L42;lore;non;What happened to the graphic novel Overwatch: First Strike?;It was cancelled (announced 18 November 2016) because the story was taken in a different direction.;fandom:Overwatch: First Strike;https://overwatch.fandom.com/wiki/Overwatch:_First_Strike;
+L43;lore;non;Which three Talon agents appear in the animated short Infiltration, and who is their target?;"Reaper, Widowmaker and Sombra; their target is Katya Volskaya.";fandom:Infiltration;https://overwatch.fandom.com/wiki/Infiltration;
+L44;lore;non;What is Zero Hour, and which enemy attacks in it?;"The cinematic trailer / intro of Overwatch 2; Null Sector attacks (in Paris).";fandom:Zero Hour;https://overwatch.fandom.com/wiki/Zero_Hour;
+L45;lore;non;Which hero's backstory is told in the animated short Honor and Glory, and where does it take place?;"Reinhardt's; at Eichenwalde.";fandom:Honor and Glory;https://overwatch.fandom.com/wiki/Honor_and_Glory;
+L46;lore;non;Which hero is the focus of the animated short Calling, and where is it set?;"Sojourn; in Toronto.";fandom:Calling;https://overwatch.fandom.com/wiki/Calling;
+L47;lore;oui;Which two characters star in the animated short Elemental Kin?;Wuyang and his older sister Anran (released 21 August 2025).;fandom:Elemental Kin;https://overwatch.fandom.com/wiki/Elemental_Kin;
+L48;lore;oui;What is Overwatch: Undivided, and what event starts its story?;"A webcomic series produced with Webtoon; it begins after Talon's strike on Watchpoint: Gibraltar led by Vendetta.";fandom:Undivided-Episode 4;https://overwatch.fandom.com/wiki/Undivided-Episode_4;
+L49;lore;non;Who is Iggy and where does she live?;"An omnic who loves human music; she lives in the Underworld, the omnic city beneath King's Row.";fandom:Iggy;https://overwatch.fandom.com/wiki/Iggy;
+L50;lore;non;Who replaced Antonio Bartalotti on the Talon council after his assassination?;Augusto Vialli.;fandom:Augusto Vialli;https://overwatch.fandom.com/wiki/Augusto_Vialli;
+L51;lore;oui;What is Doctrine's real name, nationality and profession?;Tamuka Yeukai, Zimbabwean, a cyberneticist.;fandom:Doctrine;https://overwatch.fandom.com/wiki/Doctrine;
+M01;maps_modes;non;What type of map is Shambali Monastery and where is it located?;Escort map, located in Nepal (released 6 December 2022, Season 2).;fandom:Shambali Monastery;https://overwatch.fandom.com/wiki/Shambali_Monastery;
+M02;maps_modes;non;Whose family home is Château Guillard, and where is it?;"Widowmaker's; near Annecy, France (Deathmatch map).";fandom:Château Guillard;https://overwatch.fandom.com/wiki/Château_Guillard;
+M03;maps_modes;non;Why is Horizon Lunar Colony only playable in Custom Games and Arcade in Overwatch 2?;Because the Assault mode was removed from standard modes.;fandom:Horizon Lunar Colony;https://overwatch.fandom.com/wiki/Horizon_Lunar_Colony;
+M04;maps_modes;non;Which seasonal brawl uses a Winter Wonderland variant of Ecopoint: Antarctica?;Mei's Snowball Offensive.;fandom:Ecopoint: Antarctica;https://overwatch.fandom.com/wiki/Ecopoint:_Antarctica;
+M05;maps_modes;non;What type of map is Samoa, and when was it released?;"Control map; 10 October 2023 (Season 7).";fandom:Samoa;https://overwatch.fandom.com/wiki/Samoa;
+M06;maps_modes;non;Where is Dorado located and which festival is celebrated there?;"Veracruz, Mexico; the Festival de la Luz.";fandom:Dorado;https://overwatch.fandom.com/wiki/Dorado;
+M07;maps_modes;non;Which squad uses Busan as its base of operations?;The MEKA Squad.;fandom:Busan;https://overwatch.fandom.com/wiki/Busan;
+M08;maps_modes;non;In which city is the Push map New Queen Street set?;Toronto, Canada.;fandom:New Queen Street;https://overwatch.fandom.com/wiki/New_Queen_Street;
+M09;maps_modes;non;"What does ""Estádio das Rãs"" translate to, and which mode is played there?";"""Stadium of the frogs""; Lúcioball.";fandom:Estádio das Rãs;https://overwatch.fandom.com/wiki/Estádio_das_Rãs;
+M10;maps_modes;non;For which game mode was the Ayutthaya map made, and during which event was it released?;"Capture the Flag; released during the Year of the Dog event (8 February 2018).";fandom:Ayutthaya;https://overwatch.fandom.com/wiki/Ayutthaya;
+M11;maps_modes;non;In which city is the Volskaya Industries map located?;St. Petersburg, Russia.;fandom:Volskaya Industries;https://overwatch.fandom.com/wiki/Volskaya_Industries;
+M12;maps_modes;non;In which country is the Petra Deathmatch map set?;Jordan (Ma'an).;fandom:Petra;https://overwatch.fandom.com/wiki/Petra;
+M13;maps_modes;non;What type of map is Colosseo and in which city is it?;Push map, in Rome, Italy.;fandom:Colosseo;https://overwatch.fandom.com/wiki/Colosseo;
+M14;maps_modes;non;When was the Kanezaka map released and for which mode?;"12 January 2021; Deathmatch.";fandom:Kanezaka;https://overwatch.fandom.com/wiki/Kanezaka;
+M15;maps_modes;non;How many maps were included in Overwatch at release on 24 May 2016?;12.;fandom:King's Row;https://overwatch.fandom.com/wiki/King's_Row;
+M16;maps_modes;non;What type of map is Havana and when was it released?;"Escort map; released 7 May 2019.";fandom:Havana;https://overwatch.fandom.com/wiki/Havana;
+M17;maps_modes;non;How many objectives does a Clash map have, and which one is activated first?;"Five (A to E); the central objective C is activated first.";fandom:Clash;https://overwatch.fandom.com/wiki/Clash;
+M18;maps_modes;non;Which four maps were specifically designed for Deathmatch?;Château Guillard, Kanezaka, Malevento and Petra.;fandom:Deathmatch;https://overwatch.fandom.com/wiki/Deathmatch;
+M19;maps_modes;non;In Mystery Heroes, what happens when a player respawns, and how many heroes of one role can a team have?;"The hero is randomly changed on respawn; a team can have at most three heroes from a given role.";fandom:Mystery Heroes;https://overwatch.fandom.com/wiki/Mystery_Heroes;
+M20;maps_modes;non;In the Mischief and Magic mode, which heroes play the knights and the rogues?;Knights are Genji, rogues are Kiriko (a Prop Hunt-style mode).;fandom:Mischief and Magic (game mode);https://overwatch.fandom.com/wiki/Mischief_and_Magic_(game_mode);
+M21;maps_modes;non;What was Cosmic Crisis?;A 4-player co-op PvE limited-time mode (Season 9) on a modified Ecopoint: Antarctica, led by Sojourn against Null Sector.;fandom:Cosmic Crisis;https://overwatch.fandom.com/wiki/Cosmic_Crisis;
+M22;maps_modes;non;In the Love of Geometry brawl, which hero does everyone play and which old ability returns?;"Cupid Hanzo; Scatter Arrow returns.";fandom:Love of Geometry;https://overwatch.fandom.com/wiki/Love_of_Geometry;
+M23;maps_modes;non;What is the special rule of the Low Gravity Arcade mode?;Gravity is greatly reduced: heroes jump higher and fall slower.;fandom:Low Gravity;https://overwatch.fandom.com/wiki/Low_Gravity;
+M24;maps_modes;non;Where is the Junkertown map located?;Central Australia.;fandom:Junkertown;https://overwatch.fandom.com/wiki/Junkertown;
+M25;maps_modes;non;When did the Overwatch 2 x My Hero Academia collaboration run, and how many Legendary skins did it add?;"17 to 30 October 2024; 5 Legendary skins.";fandom:Overwatch 2 x My Hero Academia;https://overwatch.fandom.com/wiki/Overwatch_2_x_My_Hero_Academia;
+E01;esport;non;Where and when was the Overwatch tournament of the Esports World Cup 2024 held, and what was its prize pool?;"Riyadh, Saudi Arabia (Boulevard Riyadh City, Qiddiya Arena), 24-28 July 2024; $1,050,000.";liquipedia:Esports World Cup/2024;https://liquipedia.net/overwatch/Esports_World_Cup/2024;
+E02;esport;non;How did hero bans work at the Esports World Cup 2024 Overwatch event?;Each team bans 1 hero per map (affecting both teams), each hero only once per series, and the two bans must be from different roles.;liquipedia:Esports World Cup/2024;https://liquipedia.net/overwatch/Esports_World_Cup/2024;
+E03;esport;non;How many teams took part in the Esports World Cup 2024 Overwatch tournament?;16.;liquipedia:Esports World Cup/2024;https://liquipedia.net/overwatch/Esports_World_Cup/2024;
+E04;esport;non;Where were the OWCS 2024 World Finals held and what was the prize pool?;"Stockholm, Sweden (Stockholmsmässan), 22-24 November 2024; $500,000.";liquipedia:Overwatch Champions Series/2024/World Finals;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2024/World_Finals;
+E05;esport;non;In which city was the OWCS 2024 Major held?;Dallas, Texas (Kay Bailey Hutchison Convention Center), 31 May - 2 June 2024.;liquipedia:Overwatch Champions Series/2024/Major;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2024/Major;
+E06;esport;non;Where was the OWCS 2025 Champions Clash held?;Hangzhou, China (Hangzhou Esports Center), 18-20 April 2025.;liquipedia:Overwatch Champions Series/2025/Champions Clash;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2025/Champions_Clash;
+E07;esport;oui;Where was the OWCS 2025 Midseason Championship held and what was its prize pool?;"Riyadh, Saudi Arabia (stc Esports Arena), 31 July - 3 August 2025; $1,060,000.";liquipedia:Overwatch Champions Series/2025/Midseason Championship;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2025/Midseason_Championship;
+E08;esport;oui;Where and when were the OWCS 2025 World Finals held?;Stockholm, Sweden, 26-30 November 2025.;liquipedia:Overwatch Champions Series/2025/World Finals;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2025/World_Finals;
+E09;esport;oui;Where was the OWCS 2026 Champions Clash held?;Tachikawa, Tokyo, Japan (Arena Tachikawa Tachihi), 22-24 May 2026.;liquipedia:Overwatch Champions Series/2026/Champions Clash;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2026/Champions_Clash;
+E10;esport;oui;Where was the OWCS 2026 Midseason Championship held and what was its prize pool?;"Paris, France (Paris Expo Porte de Versailles), 29 July - 2 August 2026; $1,000,000.";liquipedia:Overwatch Champions Series/2026/Midseason Championship;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2026/Midseason_Championship;
+E11;esport;oui;Where will the OWCS 2026 World Finals be held?;Guangzhou, China (Guangzhou Gymnasium), 2-6 December 2026.;liquipedia:Overwatch Champions Series/2026/World Finals;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2026/World_Finals;Événement futur au moment du scraping.
+E12;esport;oui;Where was the Overwatch World Cup 2026 held?;Busan, South Korea (Busan Esports Arena), 20 August - 13 September 2026.;liquipedia:Overwatch World Cup/2026;https://liquipedia.net/overwatch/Overwatch_World_Cup/2026;
+E13;esport;non;Which venue hosted the Overwatch World Cup finals from 2016 to 2019?;The Anaheim Convention Center, Anaheim, California.;"liquipedia:Overwatch World Cup/2016;2017;2018;2019";https://liquipedia.net/overwatch/Overwatch_World_Cup/2016;
+E14;esport;non;Where were the Overwatch League 2023 Playoffs held?;Toronto, Canada (Mattamy Athletic Centre), 28 September - 1 October 2023.;liquipedia:Overwatch League/2023/Playoffs;https://liquipedia.net/overwatch/Overwatch_League/2023/Playoffs;
+E15;esport;non;Where were the Overwatch League 2022 Playoffs held?;Anaheim, California (Anaheim Convention Center).;liquipedia:Overwatch League/2022/Playoffs;https://liquipedia.net/overwatch/Overwatch_League/2022/Playoffs;
+E16;esport;non;Where were the 2018 Overwatch League Playoffs played and what was the prize pool?;"Blizzard Arena Los Angeles; $1,700,000.";liquipedia:Overwatch League/2018/Playoffs;https://liquipedia.net/overwatch/Overwatch_League/2018/Playoffs;
+E17;esport;non;What was the prize pool of the 2019 Overwatch League Playoffs?;$3,500,000.;liquipedia:Overwatch League/2019/Playoffs;https://liquipedia.net/overwatch/Overwatch_League/2019/Playoffs;
+E18;esport;non;Where was the Overwatch League 2023 Midseason Madness held?;Goyang, South Korea (Korea International Exhibition Center), 16-18 June 2023.;liquipedia:Overwatch League/2023/Midseason Madness;https://liquipedia.net/overwatch/Overwatch_League/2023/Midseason_Madness;
+E19;esport;non;In which country was the Overwatch APEX league held?;South Korea (OGN, Seoul).;liquipedia:Overwatch APEX/Season 1;https://liquipedia.net/overwatch/Overwatch_APEX/Season_1;
+E20;esport;non;Where was Overwatch Contenders 2018 Season 2 Europe played?;Paris (Espace Grande Arche).;liquipedia:Overwatch Contenders/2018/Season 2/Europe;https://liquipedia.net/overwatch/Overwatch_Contenders/2018/Season_2/Europe;
+E21;esport;non;Which major individual award did LIP win in the Overwatch League, and how did Plat Chat rank him?;"Grand Finals MVP; Plat Chat ranked him the 3rd best DPS player of all time.";liquipedia:LIP;https://liquipedia.net/overwatch/LIP;
+E22;esport;non;Which Overwatch League records does Profit hold?;Most matches played in OWL history (790), and first player to reach 10,000 total eliminations (12 September 2020).;liquipedia:Profit;https://liquipedia.net/overwatch/Profit;
+E23;esport;non;"In competitive Overwatch, what does it mean to ""Ajax"", and where does the term come from?";"Getting eliminated while casting Lúcio's Sound Barrier; from support player Ajax, who did it 3 times on Busan in the Contenders 2018 Season 3 grand finals (Fusion University vs ATL Academy).";liquipedia:Ajax;https://liquipedia.net/overwatch/Ajax;
+E24;esport;non;What milestone is the Brazilian player Win98 known for?;She was the first woman to ever win Overwatch Contenders.;liquipedia:Win98;https://liquipedia.net/overwatch/Win98;
+E25;esport;non;What age record did TR33 set when joining Odyssey in 2020?;Youngest player in Contenders North America, at 13 years and 152 days.;liquipedia:TR33;https://liquipedia.net/overwatch/TR33;
+E26;esport;non;What was GOATS in competitive Overwatch, and which tank player was a founding member of the roster?;"A team that popularized the 3-tank 3-support meta named after it; Coluge was a founding member.";liquipedia:Coluge;https://liquipedia.net/overwatch/Coluge;
+E27;esport;non;Which unfortunate Overwatch League record does Rakattack hold?;The lowest map winrate of any player with at least 80 maps played (11.4%), with the Vegas Eternal.;liquipedia:Rakattack;https://liquipedia.net/overwatch/Rakattack;
+E28;esport;non;Why were Lastro and Rascal fined in April 2020?;They were fined $1,000 each for inappropriate chat in an official Overwatch League match (5 April 2020).;liquipedia:Lastro;https://liquipedia.net/overwatch/Lastro;
+E29;esport;non;What is unique about Seicoe's nationality in Overwatch League history?;He was the only Austrian player in the Overwatch League (and he was born in Tokyo).;liquipedia:Seicoe;https://liquipedia.net/overwatch/Seicoe;
+E30;esport;non;Who was the youngest player at the OWCS 2024 Dallas Major?;Infekted, at 17.;liquipedia:Infekted;https://liquipedia.net/overwatch/Infekted;
+E31;esport;oui;What distinction did Stalk3r earn at the 2025 Esports Awards?;First Overwatch player of the OWCS era (eighth overall) to be a finalist for Esports PC Player of the Year.;liquipedia:Stalk3r;https://liquipedia.net/overwatch/Stalk3r;
+E32;esport;oui;What did Shu bring on stage during the OWCS 2025 Korea Stage 2 winning ceremony?;His pet dog, Nuri.;liquipedia:Shu;https://liquipedia.net/overwatch/Shu;
+E33;esport;non;Under which handle was the tank player Void previously known?;"""Selena"".";liquipedia:Void;https://liquipedia.net/overwatch/Void;
+E34;esport;non;What first did Joobi achieve in his career?;He was the first player signed directly from a collegiate Overwatch team to an Overwatch League team.;liquipedia:Joobi;https://liquipedia.net/overwatch/Joobi;
+E35;esport;non;Why does Luffy wear jersey number 66?;It is his mother's birth year (1966), and a lucky number in China.;liquipedia:Luffy;https://liquipedia.net/overwatch/Luffy;
+E36;esport;non;Which visual condition does the player Seeker have?;He is colorblind (deuteranopia).;liquipedia:Seeker;https://liquipedia.net/overwatch/Seeker;
+E37;esport;oui;For whom was Cao Jiale an emergency substitute on Team China in 2017, and when did he retire?;"He replaced Shy; he announced his retirement on 20 December 2025.";liquipedia:Cao Jiale;https://liquipedia.net/overwatch/Cao_Jiale;
+E38;esport;non;Which player did Plat Chat rank as the #1 main support of all time?;LeeJaeGon.;liquipedia:LeeJaeGon;https://liquipedia.net/overwatch/LeeJaeGon;
+E39;esport;non;Why was Steel banned from Valve events before playing Overwatch?;For taking part in the North American CS:GO match-fixing scandal.;liquipedia:Steel;https://liquipedia.net/overwatch/Steel;
+E40;esport;non;Where does Rakattack's jersey number 67 come from?;It was his old number as an offensive lineman.;liquipedia:Rakattack;https://liquipedia.net/overwatch/Rakattack;
+E41;esport;non;Who was the MVP of the Esports World Cup 2024 Overwatch tournament?;Shu (Crazy Raccoon).;liquipedia:Esports World Cup/2024;https://liquipedia.net/overwatch/Esports_World_Cup/2024;Réponse uniquement dans les templates du wikitext brut (absente du texte nettoyé) : mesure l'apport de l'extraction des templates.
+E42;esport;non;Who was the Grand Finals MVP of the Overwatch League 2021 Playoffs, and for which team did he play?;LIP, of the Shanghai Dragons.;liquipedia:Overwatch League/2021/Playoffs;https://liquipedia.net/overwatch/Overwatch_League/2021/Playoffs;Réponse uniquement dans les templates du wikitext brut.
+E43;esport;oui;Who was the MVP of the OWCS 2026 Midseason Championship?;Shu (ZETA DIVISION).;liquipedia:Overwatch Champions Series/2026/Midseason Championship;https://liquipedia.net/overwatch/Overwatch_Champions_Series/2026/Midseason_Championship;Réponse uniquement dans les templates du wikitext brut.
+U01;unanswerable;non;Who won the OWCS 2026 World Finals?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Event scheduled for 2-6 December 2026, after the corpus date.
+U02;unanswerable;non;What is the ultimate ability of the hero Kestrel?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Invented hero.
+U03;unanswerable;non;What type of map is Neo-Cairo Spire, and when was it released?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Invented map.
+U04;unanswerable;non;When was the Ironveil Arena map added to Overwatch?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Invented map.
+U05;unanswerable;non;What is Lumen's real name and nationality?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Invented hero.
+U06;unanswerable;non;Who was the MVP of the Overwatch World Cup 2027?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Future event, not in corpus.
+U07;unanswerable;non;What is Thornwick's position on the Talon council?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Invented character.
+U08;unanswerable;non;Which hero will be released in the season after Doctrine's release?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;"Unknown at corpus date; re-check after the Season 5 refresh."
+U09;unanswerable;non;What was the prize pool of the Valhalla Station Invitational?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Invented tournament.
+U10;unanswerable;non;In which year did Reinhardt become the strike commander of Overwatch?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;False premise: Reinhardt was never strike commander (Jack Morrison was). Expected: correct the premise.
+U11;unanswerable;non;What is the name of Winston's daughter?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;False premise: Winston has no daughter. Expected: correct the premise.
+U12;unanswerable;non;Who is the third Ye sibling, alongside Anran and Wuyang, at Wuxing University?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;False premise: only two siblings are known. Expected: correct the premise.
+U13;unanswerable;non;What is the cooldown of Sentinel Prime's Overdrive ability?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Invented hero and ability.
+U14;unanswerable;non;Which team won Overwatch Contenders 2026 Season 1 Europe?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;"Contenders ended in 2023; no such event."
+U15;unanswerable;non;On what date was Overwatch 3 announced?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;No such announcement in the corpus.
+U16;unanswerable;non;Which team did Profit join in 2027?;"UNANSWERABLE: the corpus does not contain this information; the model should say it does not know (or correct the false premise) instead of inventing an answer.";none;;Future, not in corpus.
