@@ -1,0 +1,51 @@
+# Configurations evaluees par `ow-bench run <nom>`.
+# Backends : ollama | openai | claude_cli | manual
+# rag = {k = 5} : les k passages les plus proches sont donnes au modele (module rag.retrieve : hybride bm25+dense, repli bm25 si pas d'embeddings).
+# Les noms de modeles locaux sont indicatifs (choix final avec le choix du SLM de base).
+
+[defaults]
+temperature = 0
+max_tokens = 512
+
+[[config]]
+name = "qwen3-4b-base"
+backend = "ollama"
+model = "qwen3:4b"
+think = false
+
+[[config]]
+name = "qwen3-14b"
+backend = "ollama"
+model = "qwen3:14b"
+think = false
+
+[[config]]
+name = "qwen3-14b-rag"
+backend = "ollama"
+model = "qwen3:14b"
+think = false
+rag = {k = 5}
+
+[[config]]
+name = "claude-sonnet-rag"
+backend = "claude_cli"
+model = "sonnet"
+rag = {k = 5}
+
+[[config]]
+name = "claude-opus"
+backend = "claude_cli"
+model = "opus"
+
+[[config]]
+name = "claude-sonnet"
+backend = "claude_cli"
+model = "sonnet"
+
+# Exemple de SLM fine-tune servi par llama.cpp / vLLM (WSL) :
+# [[config]]
+# name = "slm-sft"
+# backend = "openai"
+# model = "ow-slm-sft"
+# base_url = "http://localhost:8080/v1"
+# vram_mb = 4500
