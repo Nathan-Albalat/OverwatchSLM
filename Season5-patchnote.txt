@@ -1,0 +1,577 @@
+Notes de mise à jour – 6 octobre 2026
+Le règne de la Griffe – Saison 5 : Une lugubre doctrine
+Nouvel évènement – Chaos mystère : Jeux d’outre-tombe
+Terminez des défis pour obtenir des récompenses aussi cool que flippantes !
+
+Nouveau mode de jeu d’arcade – Folie mystère : Jeux d’outre-tombe
+Folie mystère est notre nouveau mode de l’évènement d’Halloween, qui combine des éléments de Personnages mystères, du Laboratoire du Dr Schakalstein et du mode Stadium. Sauf qu’ici, nous avons ajouté une règle spéciale : vous gagnez des pouvoirs en mourant ! Folie mystère est un mode en 5c5 en sélection libre, mais avec une composition fixée à 1 tank, 2 DPS et 2 soutiens, et dont le format se joue au meilleur des 3 manches sur des cartes Contrôle.
+
+Au début de la partie, un rôle vous est attribué aléatoirement, et vous pouvez choisir parmi 3 personnages au sein de ce rôle. Si vous préférez laisser votre destin entre les mains du hasard, vous pouvez utiliser un bouton « Aléatoire » qui choisira votre personnage parmi les 3 proposés et vous octroiera un petit bonus.
+
+Une fois la partie commencée, vous gagnerez de l’expérience de façon passive, mais aussi avec les éliminations et les soutiens d’éliminations. Une fois que vous aurez obtenu suffisamment d’expérience, vous gagnerez un niveau. Lorsque vous mourez ou entre deux manches, vous obtenez un nombre de choix de pouvoirs égal au nombre de niveaux gagnés depuis votre dernière mort, qui vous permettent de choisir entre 2 pouvoirs. Ceux-ci sont similaires aux bonus ou aux objets et pouvoirs du mode Stadium, et ils possèdent trois niveaux de rareté : ordinaire, épique ou légendaire. Les pouvoirs ordinaires ont des effets comparables aux bonus mineurs ou aux objets rares et épiques du mode Stadium, et ils possèdent des effets généralement orientés vers le soutien des personnages. Les pouvoirs épiques ont eux des effets comparables aux bonus majeurs ou aux pouvoirs du mode Stadium, et ils forment généralement la base de votre configuration. Enfin, les pouvoirs légendaires sont encore plus puissants que les autres et peuvent donner lieu à des combinaisons et des effets complètement dingues ! Quelques pouvoirs notables (et terrifiants) incluent Grosse frayeur qui vous transforme en objet du décor lorsque vous n’êtes pas en combat, vous permettant ainsi de prendre vos adversaires par surprise et de leur flanquer la frousse, ou encore Invocation de zomniaque qui vous permet de lancer une grenade qui fait apparaître un zomniaque en explosant. Lorsque vous mourez, vous obtenez également 10 % de charge de capacité ultime et réapparaissez avec un surplus de points de vie égal à 40 % de vos points de vie max. ainsi qu’avec une vitesse de déplacement augmentée de 30 % lorsque vous n’êtes pas en combat.
+
+Notre sinistre nouveau héros de soutien, Doctrine, sera également jouable dans le mode Folie mystère : Jeux d’outre-tombe !
+
+Mises à jour générales
+Mots interdits personnalisés
+Ajout d’une nouvelle option (Mots interdits personnalisés) dans le menu Social > Discussion écrite.
+Ajout d’informations concernant les mots interdits personnalisés dans la fenêtre des filtres à obscénités et la fenêtre de signalement.
+Les messages envoyés par les joueurs et les joueuses dans la discussion écrite et contenant un ou plusieurs mots interdits seront masqués avec un avertissement « Message potentiellement toxique (personnalisé) » et l’option d’afficher le message.
+Lorsque le mode streamer est activé, les joueurs et les joueuses devront confirmer vouloir voir et gérer leur liste de mots interdits personnalisés.
+Commentaire de l’équipe de développement : nos systèmes automatisés font de leur mieux pour masquer les messages problématiques par défaut, mais cette fonctionnalité offre à l’ensemble des joueurs et joueuses la possibilité de préciser les mots et phrases spécifiques qu’ils et elles ne veulent pas voir dans les discussions écrites. Ceci s’applique à tous les canaux de discussion écrite (chuchotement/groupe/escouade/partie).
+
+Anciens passes de combat non obtenus
+Vous pouvez désormais faire progresser les anciens passes de combat non obtenus des saisons précédentes, en plus du passe de combat de la saison en cours !
+
+Depuis l’écran d’accueil, rendez-vous dans Passes de combat > Passe classique pour voir la liste complète des passes disponibles.
+
+Les passes de combat que vous avez déjà achetés peuvent être activés, et vous pouvez ainsi poursuivre leur progression. Toute progression initialement effectuée lorsque vous aviez acheté un passe de combat est conservée lorsque vous achetez cet ancien passe de combat non obtenu.
+
+Le passe de combat de la saison 4 de 2026 ne pourra pas être activé dès le lancement de celle-ci et sera disponible à la mi-saison.
+Certaines récompenses, comme les modèles mythiques, les prismes mythiques, les pièces Overwatch, les bonus d’EXP et les titres, ne peuvent plus être obtenues dans les anciens passes de combat non obtenus.
+Les passes de combat classiques des saisons 1 à 15 sont disponibles à l’achat dans la boutique via le nouvel onglet « Anciens passes de combat non obtenus ».
+
+Les anciens passes de combat non obtenus verrouillés arriveront plus tard au cours des prochaines saisons.
+Afin d’obtenir de l’EXP de passe de combat pour un ancien passe de combat non obtenu, vous devez possédez ce dernier et l’activer depuis le menu « Passe classique ».
+
+Seul 1 ancien passe de combat non obtenu peut être actif à la fois en plus du passe de combat de la saison en cours.
+Mises à jour des parties compétitives
+Mises à jour : Système Challenger – Top 500
+Le classement par défaut du top 500 en Challenger se fait désormais en fonction du rang (et non plus du score de Challenger).
+Les titres obtenus en récompense de fin de saison font désormais référence au rang et non plus au score de Challenger.
+Le bonus de consécution a été supprimé.
+Commentaire de l’équipe de développement : en accordant une plus grande importance au rang au lieu du score de Challenger, nous souhaitons récompenser le talent de nos joueurs et joueuses plutôt que le temps de jeu effectif. Le score de Challenger reste cependant une condition nécessaire pour apparaître dans le classement. Seuls les 500 joueurs et joueuses ayant le score de Challenger le plus élevé figureront dans le classement, mais il est désormais possible d’être rang 1 tout en ayant le score de Challenger le plus faible de ces 500 joueurs et joueuses, du moment que vous avez le rang le plus élevé. Nous pensons que cette nouvelle direction permettra toujours d’empêcher les comptes ayant un rang élevé mais un très faible temps de jeu d’apparaître dans le classement, tout en récompensant plus fidèlement les joueurs et joueuses qui jouent le mieux tout au long d’une saison.
+
+Équilibrage des personnages
+Général
+Taille générale des « grands » projectiles hitscan réduite à 0,04 m (au lieu de 0,07 m).
+Taille générale des « petits » projectiles hitscan réduite à 0,02 m (au lieu de 0,04 m).
+Commentaire de l’équipe de développement : suite aux récentes mises à jour des masques de collision ayant permis de régler les divergences de détection des collisions entre les personnages, nous réduisons la taille des projectiles hitscan afin de maintenir un niveau d’efficacité similaire. Nous continuerons également de surveiller la façon dont ces modifications impactent la régularité des projectiles à temps de trajectoire.
+
+Refontes de personnages
+Chopper
+Chopper
+Commentaire de l’équipe de développement : nos deux objectifs principaux avec cette refonte de Chopper étaient de réduire la frustration engendrée par le côté létal du combo de Traquelard sur la plupart des personnages et de donner à Chopper un nouvel outil qui l’aiderait, lui et son équipe, comme le font traditionnellement les autres tanks. La transformation de son tir principal en une double salve de projectiles et les légers ajustements apportés à Traquelard devraient permettre à cette capacité de conserver son importance en tant qu’outil de perturbation des mouvements tout en réduisant sa létalité. De plus, la nouvelle capacité de Chopper, Compacteur de déchets, lui apporte ainsi qu’à son équipe une nouvelle façon de se rendre utile tout en conservant l’aspect redoutable de Chopper sur le champ de bataille. Lorsque Compacteur de déchets est actif, Chopper aspire tous les projectiles devant lui pour les convertir en un projectile explosif qu’il renvoie sur ses adversaires. Servant à la fois de capacité défensive et offensive, Compacteur de déchets devrait aider Chopper à réaliser des actions capables de renverser le cours d’un combat, plutôt que de simplement s’appuyer sur son combo capable d’éliminer des personnages en un coup.
+
+Ferrailleur – Bonus mineur
+
+Munitions rechargées augmentées à 4 (au lieu de 2).
+Lance-shrapnels – Bonus mineur
+
+Supprimé.
+Par ici mon cochon – Bonus mineur
+
+Nouveau bonus mineur.
+Pendant Équarrisseur, le temps de recharge de Traquelard est réduit de 80 %.
+Tour de cochon – Bonus majeur
+
+Supprimé.
+Rejets toxiques – Bonus majeur
+
+Nouveau bonus majeur.
+Les cibles adverses situées en face de Chopper pendant l’utilisation de Compacteur de déchets sont ralenties de 30 % et subissent 20 points de dégâts par seconde.
+
+Déferrailleur – Tir principal
+Le tir principal consiste désormais en 2 rafales de projectiles par salve.
+Munitions augmentées à 12 (au lieu de 6).
+Dégâts totaux par salve augmentés à 204 points (au lieu de 175).
+Multiplicateur de dégâts critiques réduit à x1,5 (au lieu de x2).
+Nombre de projectiles par rafale réduit à 16 (au lieu de 25).
+Dégâts des projectiles individuels réduits à 4,25 points (au lieu de 7).
+Tire désormais un plus grand projectile au centre de chaque rafale.
+Le projectile central inflige 34 points de dégâts.
+Dispersion réduite à 6 degrés (au lieu de 8).
+Portée d’atténuation des dégâts réduite à 20-35 m (au lieu de 30-50 m).
+Vitesse des projectiles augmentée à 100 mètres par seconde (au lieu de 80).
+
+Déferrailleur – Tir secondaire
+Supprimé.
+
+Compacteur de déchets
+Nouvelle capacité assignée par défaut au tir secondaire.
+Lorsqu’elle est active, Chopper commence à absorber les projectiles devant lui pendant 2 secondes.
+Une fois cette durée terminée, Chopper tire un projectile explosif dont les dégâts augmentent en fonction des dégâts absorbés. Le projectile tiré peut ainsi infliger entre 75 et 200 points de dégâts.
+L’explosion possède un rayon intérieur de 2 m et un rayon extérieur de 6 m, avec un multiplicateur d’atténuation des dégâts de 30 %.
+10 points de dégâts d’impact.
+Le taux de conversion est de 30 % des dégâts absorbés.
+Pénalité de vitesse de déplacement de 15 % lorsque la capacité est active.
+Temps de recharge de 10 s en 5c5.
+Temps de recharge de 11 s en 6c6.
+
+Traquelard
+Durée de l’étourdissement de la cible adverse après avoir été attirée réduite à 0,3 s (au lieu de 0,4 s).
+Distance finale de la cible par rapport à Chopper après avoir été attirée augmentée à 4,5 m (au lieu de 3 m).
+Temps de recharge réduit à 6 s (au lieu de 7 s) en 5c5.
+Temps de recharge réduit à 7 s (au lieu de 8 s) en 6c6.
+
+Inhalateur
+Durée max. réduite à 2 s (au lieu de 3 s).
+Soins sur la durée augmentés à 200 points par seconde (au lieu de 150 points par seconde).
+Réduction des dégâts abaissée à 35 % (au lieu de 40 %).
+Temps de recharge augmenté à 2 s (au lieu de 1,25 s).
+Sombra
+Sombra
+Commentaire de l’équipe de développement : Sombra fait son arrivée dans le rôle de soutien avec cette nouvelle refonte. Par le passé, son identité en tant que hackeuse et perturbatrice de génie était en décalage avec ce qu’un personnage de dégâts était censé apporter au combat. En transférant Sombra vers le rôle de soutien, nous voulons renforcer sa personnalité au sein de l’univers d’Overwatch tout en conservant ce qui fait la base de son gameplay.
+
+L’un des changements les plus notables de cette refonte concerne la suppression de sa capacité Piratage. Affronter Sombra signifiait bien souvent que l’on se retrouvait dans l’impossibilité d’utiliser des capacités sans pouvoir faire grand-chose. Bien que cela puisse être très amusant d’annuler des capacités-clés lorsque l’on joue Sombra, la plupart des joueurs et joueuses trouvaient cela pénible, frustrant et difficile à contrer. En supprimant Piratage de ses capacités principales, nous avons décidé d’ajouter un nouveau débuff que Sombra peut infliger aux adversaires : Affaiblissement. Celui-ci réduit de moitié les dégâts infligés et les soins prodigués par un personnage adverse. Un affaiblissement appliqué au bon moment peut renverser le cours d’un combat, tout comme Piratage le pouvait, sans toutefois complètement empêcher l’adversaire d’utiliser ses propres capacités.
+
+Passage du rôle d’héroïne de dégâts à héroïne de soutien.
+Passage du sous-rôle reconnaissance au sous-rôle tactique.
+Expérience requise pour obtenir le bonus mineur augmentée de 67 %.
+Expérience requise pour obtenir le bonus majeur augmentée de 69,5 %.
+Téléchargement crypté – Bonus mineur
+
+Supprimé.
+Impulsion électro-corrective – Bonus mineur
+
+Nouveau bonus mineur.
+IEM applique Correctif à tous les personnages alliés proches.
+Bande passante haut débit – Bonus majeur
+
+Supprimé.
+Paquet de données – Bonus majeur
+
+Nouveau bonus majeur.
+Lorsque vous piratez des kits de soins avec Correctif, son temps de recharge principal est réduit de 4 s.
+Multiplication virale – Bonus majeur
+
+Supprimé.
+Cybersécurité – Bonus majeur
+
+Nouveau bonus majeur.
+Le montant de soins de Cyberespace est doublé pour les personnages alliés ayant moins de 50 % de leurs points de vie.
+
+Pistolet mitrailleur
+Dégâts par projectile réduits à 7 points (au lieu de 8).
+Portée minimale avant la réduction des dégâts augmentée à 20 m (au lieu de 15 m).
+Dispersion maximale réduite à 2 degrés (au lieu de 2,3).
+Nombre de tirs nécessaires pour atteindre la dispersion maximale augmenté à 10 (au lieu de 6).
+
+IEM
+Coût de la capacité ultime augmenté de 67,5 %.
+Dégâts réduits à 20 % des points de vie actuels de la cible (au lieu de 25 %).
+
+Piratage
+Supprimé.
+
+Correctif
+Nouvelle capacité assignée par défaut au tir secondaire.
+Vous rendez un montant fixe de points de vie sur la durée à un personnage allié.
+Appliquer Correctif sur un personnage allié lui rend instantanément 65 points de vie, puis 25 points de vie par seconde pendant la durée de la capacité.
+Correctif reste appliqué à un personnage allié soit jusqu’à ce qu’il lui rende 175 points de vie, soit jusqu’à ce que 12 secondes se soient écoulées.
+Correctif peut également être appliqué aux kits de soins et à la plupart des déployables adverses afin de les pirater, ce qui ne nécessite aucune charge de Correctif et déclenche un temps de recharge distinct de 6 secondes.
+La durée du piratage appliqué aux kits de soins est réduite à 30 s (au lieu de 45 s).
+Le piratage des kits de soins ou des déployables peut être interrompu en subissant des dégâts, ce qui annule la capacité et déclenche le temps de recharge distinct de 6 secondes.
+Correctif peut être utilisé lorsque Sombra est sous l’effet de Furtivité, ce qui la révèle temporairement sans interrompre Furtivité.
+Temps de lancement de 0,5 s.
+Portée de 17 m.
+Possède 2 charges.
+Temps de recharge de 8 s.
+
+Virus
+Supprimé.
+
+Cyberespace
+Nouvelle capacité assignée par défaut à la touche Capacité 1.
+Vous lancez un projectile qui explose à l’impact en créant une zone qui affaiblit les adversaires et soigne les personnages alliés.
+L’explosion initiale inflige 40 points de dégâts aux adversaires et rend 40 points de vie aux personnages alliés.
+La zone d’effet inflige 25 points de dégâts par seconde aux adversaires et rend 30 points de vie par seconde aux personnages alliés.
+La zone d’effet dure 3 s.
+La zone d’effet a un rayon de 3 m.
+Les personnages adverses dans la zone d’effet sont affaiblis, ce qui est un nouvel effet de statut qui réduit de 50 % les dégâts infligés et les soins prodigués par la cible.
+
+Transducteur
+Durée de la furtivité augmentée à 6,5 s (au lieu de 5 s).
+Temps nécessaire pour entrer en furtivité augmenté à 0,75 s (au lieu de 0,3 s).
+Portée du projectile réduite à 12,5 m (au lieu de 18 m).
+Le bonus de vitesse de déplacement est désormais immédiatement actif après la téléportation (au lieu d’être actif après l’activation complète de furtivité).
+Temps de recharge augmenté à 7,5 s (au lieu de 6 s).
+
+Opportuniste
+Supprimé.
+
+Conspiratrice
+Nouveau passif.
+Les cibles adverses ayant leur capacité ultime complètement chargée vous sont révélées.
+Tank
+D.Va
+D.Va
+Commentaire de l’équipe de développement : l’augmentation de la cadence de tir de Micro-missiles réduit le temps nécessaire pour tirer la totalité des projectiles, ce qui augmente la vitesse à laquelle les dégâts sont infligés sans en augmenter le montant.
+
+
+Micro-missiles
+Cadence de tir augmentée à 14 tirs par seconde (au lieu de 11).
+Domina
+Domina
+Commentaire de l’équipe de développement : Domina a des difficultés à résister aux adversaires capables de lui mettre une pression constante en outrepassant sa matrice d’écrans. La réduction du temps de recharge de Charge cristalline et l’augmentation de l’effet de vol de vie de Reconstruction augmentent sa capacité à récupérer des points de vie durant les longs combats.
+
+
+Charge cristalline
+Temps de recharge réduit à 7 s (au lieu de 8 s).
+
+Reconstruction (passif)
+Vol de vie des capacités augmenté à 100 % (au lieu de 75 %).
+Dégâts
+Bastion
+Bastion
+Commentaire de l’équipe de développement : Reconfiguration de Bastion permet d’exercer une grande pression sur les lignes adverses pendant de longues périodes de temps. La réduction de sa durée permet de donner plus d’importance au timing de son utilisation tout en conservant son impact général.
+
+
+Reconfiguration
+Durée réduite à 5 s (au lieu de 6 s).
+Cassidy
+Cassidy
+Commentaire de l’équipe de développement : Soutien aéroporté de Jetpack Cat permet de créer des interactions uniques avec plusieurs capacités ultimes, mais son combo avec Implacable s’est avéré trop puissant et permet trop facilement à Cassidy de se repositionner où il veut et d’éliminer les cibles adverses. L’utilisation d’Implacable empêchera désormais Cassidy de s’attacher à Soutien aéroporté de Jetpack Cat. Nous continuerons de surveiller les autres interactions avec la capacité de notre félin préféré au cas par cas.
+
+
+Implacable
+Empêche désormais Cassidy de s’attacher à Soutien aéroporté de Jetpack Cat.
+Emre
+Emre
+Commentaire de l’équipe de développement : Emre est capable d’infliger beaucoup de dégâts, mais il peut parfois avoir du mal à sécuriser des éliminations. La réduction du temps de recharge de Cybergrenade augmente sa disponibilité et donne à Emre plus d’occasions de capitaliser sur ses gros dégâts.
+
+
+Cybergrenade
+Temps de recharge réduit à 9 s (au lieu de 10 s).
+Genji
+Genji
+Commentaire de l’équipe de développement : nous augmentons les dégâts de Frappe du vent afin d’améliorer la capacité de Genji à sécuriser des éliminations grâce à ses combos de base. Les modifications apportées à Lame du dragon visent à éviter de la rendre trop létale compte tenu de l’amélioration de Frappe du vent, tout en améliorant son efficacité globale.
+
+
+Frappe du vent
+Dégâts augmentés à 60 points (au lieu de 50).
+
+Lame du dragon
+Dégâts réduits à 100 points (au lieu de 110).
+Vitesse des coups d’épée augmentée de 15 %.
+Shion
+Shion
+Commentaire de l’équipe de développement : Rechargement éclair n’était pas assez efficace en tant que bonus mineur, et nous le remplaçons donc par Instinct de survie, qui offre une meilleure capacité de survie pour les styles de jeu agressifs en augmentant la durée du surplus de points de vie d’Esquive.
+
+Rechargement éclair – Bonus mineur
+
+Supprimé.
+Instinct de survie – Bonus mineur
+
+Nouveau bonus mineur.
+La durée du surplus de points de vie d’Esquive est augmentée de 1 s.
+Soutien
+Ana
+Ana
+Commentaire de l’équipe de développement : bien que Réveil difficile puisse être utile dans certaines situations, ce bonus était bien moins efficace que l’autre option proposée. Anesthésie locale améliore l’impact de Fléchette hypodermique en lui permettant d’affecter les adversaires à proximité, ce qui permet de capitaliser sur son utilisation lorsque l’équipe ennemie est regroupée.
+
+Réveil difficile – Bonus mineur
+
+Supprimé.
+Anesthésie locale – Bonus mineur
+
+Nouveau bonus mineur.
+Fléchette hypodermique explose à l’impact, ce qui ralentit les adversaires et leur inflige 45 points de dégâts en 3 s.
+Doctrine
+Doctrine
+Commentaire de l’équipe de développement : Doctrine a été dans l’ensemble bien reçu durant son week-end d’essai, mais il était trop puissant par rapport aux autres personnages de soutien. Ces ajustements ciblent plusieurs facettes de son arsenal, tout en préservant la nature et la fluidité de son gameplay. Les effets de Délivrance seront désormais appliqués plus rapidement, mais sur une plus courte durée afin de réduire la durée totale durant laquelle les personnages alliés et adverses sont affectés.
+
+Coût de la capacité ultime augmenté de 8 %.
+Transfusion – Bonus majeur
+
+Taux de conversion des dégâts et des soins réduit de 50 %.
+
+Drones revigorants
+Vitesse d’attaque réduite à 30 % (au lieu de 35 %).
+
+Élan enveloppé
+Temps de recharge augmenté à 8 s (au lieu de 7 s).
+Réduction des dégâts abaissée à 40 % (au lieu de 50 %).
+N’octroie plus de protection contre les dégâts critiques lorsqu’il est activé.
+
+Délivrance
+Cadence de tir des drones augmentée à 5 tirs par seconde (au lieu de 4).
+Durées du surplus de points de vie et de l’affaiblissement réduites à 6 s (au lieu de 8 s).
+Durée de la dissipation réduite à 4 s (au lieu de 5 s).
+Lúcio
+Lúcio
+Commentaire de l’équipe de développement : les modifications apportées précédemment à Mur de son ont réduit son efficacité plus que ce que nous avions imaginé. Nous repassons donc la durée de la dissipation du surplus de points de vie octroyé à sa valeur d’origine tout en conservant le montant de surplus de points de vie réduit. Chute de rythme est également ajustée indépendamment de la durée globale de Mur de son et voit sa durée réduite.
+
+Chute de rythme – Bonus mineur
+
+Volume max. est désormais activé pendant 4 s après avoir lancé Mur de son.
+
+Mur de son
+Durée augmentée à 6 s (au lieu de 5 s).
+Masques de collision des personnages
+Commentaire de l’équipe de développement : nous avons passé en revue une grande partie des effectifs afin d’ajuster leurs masques de collision et d’aligner leurs tailles sur ceux de personnages similaires. Vous trouverez ici les valeurs brutes des masques plutôt qu’un pourcentage afin de mieux comprendre chaque modification par rapport aux autres personnages. Les tailles des masques de collision ne sont pas homogénéisées de façon stricte en raison des différentes tailles des modèles visuels, des animations uniques et des nombreuses capacités de mouvement de chaque personnage, mais elles sont influencées par plusieurs facteurs tels que la portée d’engagement et la mobilité.
+
+Tout ceci a pour but de rendre plus homogène et plus cohérent le ressenti lorsque vous visez différents personnages, mais cela ne devrait néanmoins pas drastiquement modifier la façon de jouer de chaque personnage.
+
+Ana
+Ana
+Masque de collision de la tête augmenté à 18 (au lieu de 16,9)
+Anran
+Anran
+Masque de collision de la tête augmenté à 17 (au lieu de 15,2)
+Masque de collision du torse augmenté à 23 (au lieu de 18)
+Masques de collision des jambes augmentés à 19 (au lieu de 14,7)
+Ashe
+Ashe
+Masque de collision du torse augmenté à 25 (au lieu de 22,4)
+Masques de collision des jambes augmentés à 19 (au lieu de 16,7)
+Baptiste
+Baptiste
+Masque de collision de la tête augmenté à 16 (au lieu de 15,1)
+Bastion
+Bastion
+Masque de collision de la tête augmenté à 21,5 (au lieu de 20)
+Masque de collision du minigun sur son dos réduit à 18 (au lieu de 20)
+Masque de collision de l’avant-bras réduit à 15 (au lieu de 20)
+Cassidy
+Cassidy
+Masque de collision du torse réduit à 33 (au lieu de 37)
+Masques de collision des jambes réduits à 22 (au lieu de 24)
+Doomfist
+Doomfist
+Masque de collision de la tête augmenté à 21 (au lieu de 19,7)
+Masque de collision de la taille augmenté à 35 (au lieu de 30)
+Masques de collision des jambes augmentés à 26 (au lieu de 21)
+Masque de collision du poing réduit à 20 (au lieu de 24)
+Écho
+Écho
+Masque de collision de la tête augmenté à 18 (au lieu de 15,9)
+Masques de collision des jambes augmentés à 20 (au lieu de 14,6)
+Emre
+Emre
+Masque de collision de la tête augmenté à 18 (au lieu de 16)
+Masques de collision des jambes augmentés à 20 (au lieu de 17,5)
+Hanzo
+Hanzo
+Masque de collision de la tête augmenté à 18 (au lieu de 16)
+Danger
+Danger
+Masque de collision de la tête augmenté à 20 (au lieu de 18,5)
+Masques de collision des jambes augmentés à 24 (au lieu de 21,9)
+Illari
+Illari
+Masque de collision de la tête augmenté à 18 (au lieu de 14,9)
+Masque de collision du torse augmenté à 23,5 (au lieu de 20)
+Jetpack Cat
+Jetpack Cat
+Masque de collision de la tête augmenté à 18,5 (au lieu de 15,8)
+Masque de collision du torse augmenté à 17 (au lieu de 14,8)
+Masque de collision de la taille augmenté à 26 (au lieu de 19,5)
+Masques de collision des pattes arrière augmentés à 12 (au lieu de 9,7)
+Reine des Junkers
+Reine des Junkers
+Masque de collision de la tête augmenté à 19 (au lieu de 17,8)
+Masque de collision du torse augmenté à 28 (au lieu de 26,2)
+Masque de collision de la taille augmenté à 26 (au lieu de 23,8)
+Masques de collision des jambes augmentés à 22 (au lieu de 19,2)
+Chacal
+Chacal
+Masque de collision du torse réduit à 29 (au lieu de 32)
+Masques de collision des jambes augmentés à 20 (au lieu de 17,3)
+Juno
+Juno
+Masque de collision du torse augmenté à 23 (au lieu de 19)
+Masques de collision des mains réduits à 5 (au lieu de 8,5)
+Masques de collision des bras réduits à 7 (au lieu de 9)
+Kiriko
+Kiriko
+Masque de collision de la tête augmenté à 16 (au lieu de 14,9)
+Masque de collision du torse augmenté à 21 (au lieu de 17,7)
+Vital
+Vital
+Masque de collision de la tête augmenté à 17 (au lieu de 14,8)
+Masque de collision du torse augmenté à 25 (au lieu de 19,7)
+Masques de collision des jambes augmentés à 19 (au lieu de 15,5)
+Masque de collision de la taille augmenté à 20 (au lieu de 15,9)
+Lúcio
+Lúcio
+Masque de collision de la tête augmenté à 16 (au lieu de 13,2)
+Mauga
+Mauga
+Masque de collision de la tête augmenté à 23,5 (au lieu de 22)
+Masques de collision des mains réduits à 12 (au lieu de 16)
+Longueur des masques de collision des jambes réduite à 35 (au lieu de 50)
+Masque de collision du torse augmenté à 42 (au lieu de 40)
+Largeur du masque de collision du torse augmenté à 40 (au lieu de 30)
+Ange
+Ange
+Masque de collision de la tête augmenté à 17 (au lieu de 14,4)
+Masque de collision du torse augmenté à 24,5 (au lieu de 22,4)
+Masques de collision des jambes réduits à 20 (au lieu de 22,4)
+Mizuki
+Mizuki
+Hauteur du masque de collision de la tête augmenté à 10 (au lieu de 6)
+Masque de collision de la tête augmenté à 17,5 (au lieu de 16)
+Masque de collision du torse augmenté à 24 (au lieu de 22)
+Masques de collision des jambes augmentés à 19 (au lieu de 17)
+Moira
+Moira
+Masque de collision du torse réduit à 25 (au lieu de 27)
+Reinhardt
+Reinhardt
+Masques de collision des épaules réduits à 35 (au lieu de 40)
+Masques de collision des mains réduits à 20 (au lieu de 25)
+Masques de collision des pieds réduits à 30 (au lieu de 40)
+Sierra
+Sierra
+Masque de collision du torse augmenté à 23 (au lieu de 20,7)
+Masques de collision des jambes augmentés à 19 (au lieu de 16,7)
+Masques de collision des tibias augmentés à 19 (au lieu de 15)
+Hauteur des masques de collision des tibias réduite à 40 (au lieu de 54,9)
+Sojourn
+Sojourn
+Masque de collision de la tête augmenté à 16 (au lieu de 14,9)
+Masque de collision du torse augmenté à 23,5 (au lieu de 20,5)
+Masques de collision des jambes augmentés à 18,5 (au lieu de 17)
+Sombra
+Sombra
+Masque de collision de la tête augmenté à 16 (au lieu de 14)
+Masque de collision du torse réduit à 23 (au lieu de 25)
+Masques de collision des jambes augmentés à 18 (au lieu de 15)
+Symmetra
+Symmetra
+Masque de collision du torse augmenté à 24 (au lieu de 22,4)
+Masques de collision des jambes augmentés à 20 (au lieu de 22,4)
+Torbjörn
+Torbjörn
+Masque de collision de la tête augmenté à 20 (au lieu de 23,3)
+Masque de collision de la main-pince réduit à 11 (au lieu de 15)
+Tracer
+Tracer
+Masque de collision du torse augmenté à 24 (au lieu de 22,4)
+Masques de collision des jambes réduits à 20 (au lieu de 22,4)
+Venture
+Venture
+Masque de collision du torse augmenté à 25 (au lieu de 22,9)
+Masques de collision des jambes augmentés à 21 (au lieu de 17)
+Bouldozer
+Bouldozer
+Masque de collision de la tête augmenté à 25 (au lieu de 22)
+Masque de collision du torse augmenté à 87,5 (au lieu de 83,5)
+Wuyang
+Wuyang
+Masque de collision de la tête augmenté à 16 (au lieu de 14,85)
+Masque de collision du torse augmenté à 23 (au lieu de 20,2)
+Zenyatta
+Zenyatta
+Masque de collision de la tête réduit à 17 (au lieu de 20)
+Masque de collision du torse réduit à 30 (au lieu de 32)
+Masques de collision des jambes réduits à 22 (au lieu de 24)
+Mises à jour du jeu standard
+Mises à jour du volet d’informations détaillées
+La vitesse des projectiles et la taille des projectiles ont été ajoutées aux volets d’informations de toutes les armes et capacités concernées.
+Le mot-clé « Millimétrique » a été ajouté pour décrire les attaques qui ont une « taille » égale à 0.
+Plusieurs rubriques et nouveaux mots-clés ont été ajoutés afin de décrire plus en détail les mécaniques complexes de certaines capacités héroïques.
+Plusieurs modifications et correctifs de bugs ont été réalisés suite aux retours de la communauté.
+Protections
+Les tanks qui disposent de capacités de réduction des dégâts et de surplus de points de vie ont désormais plus de chances de réaliser des protections lorsqu’ils ou elles utilisent ces capacités et se font prendre pour cible à la place des personnages alliés à proximité.
+Nous avons augmenté la durée de la fenêtre et réduit le seuil de dégâts atténués pour les protections dans le but de permettre à un plus grand nombre de personnages tanks d’obtenir davantage de protections.
+Système de marquage
+Nous avons supprimé le texte apparaissant dans la fenêtre de discussion écrite lorsque l’on marque des adversaires et qui avait été ajouté lors de la saison 4, car celui-ci finissait très vite par remplir totalement la fenêtre de discussion.
+Personnages mystères
+La limite de 3 tanks au maximum a été restaurée.
+Système de vote pour les cartes
+Désormais, les 2 cartes que vous avez jouées au cours des 2 dernières heures ne vous seront plus proposées dans le vote des cartes.
+Les modes Escorte et Hybride seront désormais considérés comme étant le même mode afin de vous proposer au moins deux modes de jeu différents lors du vote des cartes. Cela signifie que si deux des trois cartes visibles sont des cartes Escorte et Hybride, la troisième sera une carte d’un autre mode. La carte aléatoire ne suit pas ces règles et peut être une carte de n’importe quel mode.
+Mises à jour des cartes
+Nouvelle carte Escorte – Grímsvötn
+
+Entrez avec fracas dans la saison avec notre toute nouvelle carte Escorte, Grímsvötn, lieu de détention des plus redoutables profils criminels du globe.
+
+Cartes d’Halloween
+
+Des versions halloweenesques d’Hollywood, de la Tour de Lijiang et de Château Guillard sont disponibles jusqu’au 3 novembre dans tous les modes de jeu.
+
+Eichenwalde
+Goulet d’étranglement
+Correction d’une ancienne ligne de vue vraiment pénible à travers deux ouvertures près du premier goulet d’étranglement de la carte.
+Before and After
+Mise à jour du mode Stadium
+Changements généraux
+Les parties rapides sont désormais en sélection libre, mais avec les limites de rôles suivantes : 1 tank, 2 DPS, 3 soutiens. 1 tank au minimum est requis.
+Le gain de santé passif obtenu grâce aux crédits a été réduit de 50 %.
+Commentaire de l’équipe de développement : le passage au format en sélection libre des parties rapides a pour but de réduire le temps passé en file d’attente, notamment pour les joueurs et joueuses soutien du mode Stadium. Ce changement est expérimental et n’affecte pas les parties compétitives, et nous garderons un œil sur celui-ci. Cela nous aidera également à déterminer le meilleur moyen de réduire les temps d’attente de Stadium pour l’ensemble des joueurs et joueuses de ce mode.
+
+La modification apportée au gain de santé passif vise à réduire l’achat d’objets offensifs en diminuant la capacité de survie que chacun obtenait de base.
+
+Modifications apportées aux objets
+Limiteur El-Sa’ka – Objet général d’arme épique
+
+La réduction des soins reçus par la cible est désormais appliquée avec tous les dégâts d’arme.
+Réduction des soins augmentée à 40 % (au lieu de 35 %).
+Durée de la réduction des soins abaissée à 2 s (au lieu de 3 s).
+Cybervenin – Objet général de capacité épique
+
+Réduction des soins augmentée à 40 % (au lieu de 35 %).
+IEM ultime – Objet général de capacité épique
+
+Nouveau.
+25 points de vie.
+5 % de vitesse d’attaque.
+5 % de réduction des temps de recharge.
+Durant 3 s après avoir utilisé votre charge de capacité ultime, vos dégâts appliquent 100 % de réduction des soins pendant 5 s.
+Coût : 9 000.
+Surcharge biolumineuse – Objet général de survie rare
+
+Supprimé.
+Intervention divine – Objet général de survie épique
+
+Boucliers augmentés à 75 points (au lieu de 50).
+Catalyseur nébuleux – Objet général de survie épique
+
+Points de vie augmentés à 75 (au lieu de 50).
+Fiole d’équarrissage – Objet général de survie épique
+
+Réduction de surplus de points de vie augmentée à 40 % (au lieu de 35 %).
+Fragment de siphon – Gadget
+
+Réduction des soins augmentée à 40 % (au lieu de 35 %).
+Commentaire de l’équipe de développement : ces changements visent à réduire l’efficacité des configurations et des compositions d’équipe orientées vers la capacité de survie, et à renforcer certains objets de survie compte tenu de la réduction générale du gain passif de points de vie. Nous n’hésiterons pas à ajuster tout cela en fonction des retours et des résultats de ces changements.
+
+Stadium
+Fixed a bug where Stadium Combined Leaderboards did not show any placements.
+Fixed a bug where Stadium Quick Play games did not grant the appropriate amount of match XP.
+Corrections de bugs
+Général
+Correction de plusieurs bugs mineurs affectant le système de marquage depuis sa refactorisation de la saison 4. N’hésitez pas à nous contacter si vous rencontrez toujours des problèmes ou des bugs après cette mise à jour !
+Correction d’un bug à cause duquel le modèle Made My Night de Moira lui faisait dire « bonjour » de façon un peu trop enthousiaste.
+Correction d’un bug à cause duquel vous pouviez parfois vous retrouver avec 3 tanks dans le mode Personnages mystères.
+Correction d’un bug à cause duquel l’icône de mort due à l’environnement n’était parfois pas affichée.
+Personnages
+Anran
+
+Correction d’un problème à cause duquel Flambée ondoyante n’était pas prise en compte pour certains défis liés aux soins prodigués.
+Emre
+
+Correction d’un problème à cause duquel les réductions du temps de rechargement se cumulaient deux fois avec le fusil à rafales synthétique.
+Freja
+
+Correction d’un problème à cause duquel les réductions du temps de rechargement ne s’appliquaient pas à l’arbalète Rafale.
+Hanzo
+
+Correction d’un problème à cause duquel Frappe du dragon était comptabilisée en tant que dégâts d’arme pour les défis.
+Correction d’un problème à cause duquel les dégâts de Rafale n’étaient pas correctement comptabilisés pour les défis.
+Chacal
+
+Correction d’un problème à cause duquel les réductions du temps de rechargement se cumulaient deux fois avec le lance-grenades.
+Ramattra
+
+Correction d’un problème à cause duquel les réductions du temps de rechargement ne s’appliquaient pas à l’accélérateur du vide.
+Chopper
+
+Correction d’un problème à cause duquel les réductions du temps de rechargement se cumulaient deux fois avec le déferrailleur.
+Shion
+
+Correction d’un problème à cause duquel les réductions du temps de rechargement se cumulaient deux fois avec les pistolets kira.
+Vendetta
+
+Correction d’un problème à cause duquel les dégâts d’Entaille fulgurante n’étaient pas correctement comptabilisés pour les défis.
+Fatale
+
+Correction d’un problème à cause duquel les réductions du temps de rechargement ne s’appliquaient pas au Baiser de la veuve.
+Zarya
+
+Correction d’un problème à cause duquel les réductions du temps de rechargement ne s’appliquaient pas au canon à particules.
+Stadium
+Correction d’un problème à cause duquel les classements combinés du mode Stadium n’affichaient aucune partie de placement.
+Correction d’un problème à cause duquel les parties rapides du mode Stadium n’octroyaient pas le bon montant d’EXP.
