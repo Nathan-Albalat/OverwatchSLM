@@ -7,7 +7,15 @@ en le comparant, sur un même jeu de questions, à des LLM locaux (7-14B) et à 
 ## Matériel et environnement
 - PC Windows 11 : RTX 5070 Ti **16 Go VRAM** (Blackwell, sm_120 → PyTorch avec **CUDA ≥ 12.8** obligatoire),
   Ryzen 7 9800X3D, 32 Go RAM, ~680 Go libres.
-- Python 3.12 géré par **uv** (pas de Python système). Tout se lance via `uv run ...`.
+- Python 3.12 géré par **uv** (pas de Python système).
+- **Smart App Control (Windows) est actif** et bloque les `.exe` du venv (`.venv/Scripts/python.exe`, `ow-*.exe`,
+  `uv sync`/`uv run` : os error 4551). Lancer avec l'interpréteur de base uv + les paquets du venv :
+  `PYTHONPATH=.venv/Lib/site-packages ~/.local/share/uv/python/cpython-3.12-windows-x86_64-none/python.exe -m <pkg>.cli ...`
+  (dépendances : `uv add --no-sync X` puis `uv pip install X`). Les commandes `uv run ...` / `.venv/Scripts/python.exe`
+  plus bas sont à lire avec cette substitution.
+- **Traitements longs (génération)** : les lancer en processus indépendant (`Start-Process` PowerShell, sortie
+  redirigée vers `data/qa/*.log`), jamais en tâche de fond Claude Code : celles-ci sont tuées quand la RAM libre
+  tombe (le modèle Ollama occupe ~16 Go de RAM).
 - Ollama local (`http://localhost:11434`), modèle de génération `qwen3.6:35b-a3b` (MoE, ~100 tok/s, `think:false`).
 - Pas de WSL pour l'instant ; à installer pour le fine-tuning (Unsloth/bitsandbytes plus simples sous Linux).
 - Le PC est mis en veille la nuit : **tout traitement long doit être reprenable** (append JSONL + skip des ids faits).
