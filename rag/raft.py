@@ -6,6 +6,7 @@ le tirage de chaque exemple depend uniquement de (graine, id), donc d'une relanc
 """
 import json
 import random
+import re
 import signal
 from collections import defaultdict
 from pathlib import Path
@@ -39,16 +40,32 @@ def trunc(text, n):
     return text if len(w) <= n else " ".join(w[:n]) + " ..."
 
 
-def answer_in(answer, text):
-    """Les elements cles de la reponse (tous les nombres, >= 80 % des entites) figurent-ils dans le texte ?"""
+def _has_word(e, low):
+    return re.search(r"(?<!\w)" + re.escape(e) + r"(?!\w)", low) is not None
+
+
+def answer_in(answer, text, question=None):
+    """Les elements cles de la reponse (tous les nombres, >= 80 % des entites) figurent-ils dans le texte ?
+
+    Avec `question` (cas sans oracle, decision « refus annule ») : seuls comptent les elements de la reponse
+    absents de la question (le sujet nomme dans la question est dans tous les distracteurs de la meme page et
+    ne prouve rien) ; rien a verifier -> False (refus) ; et le passage doit citer >= 50 % des entites de la
+    question (un nombre isole comme « 1 » ne suffit pas s'il parle d'autre chose).
+    """
     nums = _numbers(answer)
     ents = _keys(answer) - nums
+    low = text.lower()
+    if question is not None:
+        qk = _keys(question)
+        nums, ents = nums - qk, ents - qk
+        qents = qk - _numbers(question)
+        if qents and sum(_has_word(e, low) for e in qents) / len(qents) < 0.5:
+            return False
     if not nums and not ents:
         return False
-    low = text.lower()
     if nums and not nums <= _numbers(text):
         return False
-    return not ents or sum(e in low for e in ents) / len(ents) >= 0.8
+    return not ents or sum(_has_word(e, low) for e in ents) / len(ents) >= 0.8
 
 
 def stratified(pairs, n, rng):
@@ -107,28 +124,45 @@ def make_example(p, ix, k, p_oracle, mode, seed, max_words):
         passages.insert(rng.randrange(len(passages) + 1), {"id": oracle["id"], "text": otext})
         target, kind = p["answer"], "oracle"
     else:
-        dis = retrieve(p["question"], k, mode, exclude_ids=[oracle["id"]])
-        passages = [{"id": d["id"], "text": trunc(d["text"], max_words)} for d in dis]
-        if any(answer_in(p["answer"], d["text"]) for d in passages):
-            target, kind = p["answer"], "refusal_cancelled"
-        else:
-            target, kind = rng.choice(REFUSALS), "refusal"
+        # Refus : les distracteurs qui pourraient contenir la reponse sont ecartes et remplaces par les suivants
+        # du retriever, pour que la cible « je ne sais pas » soit justifiee par construction.
+        dis = retrieve(p["question"], k + 16, mode, exclude_ids=[oracle["id"]])
+        passages, removed = [], 0
+        for d in dis:
+            t = trunc(d["text"], max_words)
+            if answer_in(p["answer"], t, p["question"]):
+                removed += 1
+            elif len(passages) < k:
+                passages.append({"id": d["id"], "text": t})
+        target, kind = rng.choice(REFUSALS), "refusal"
+        if len(passages) < k:
+            # Reponse presente dans presque tous les candidats (ex. etapes d'une carte recopiees dans chaque page de
+            # strategie de heros) : la refuser serait faux, on garde les passages tels quels et la reponse.
+            passages = [{"id": d["id"], "text": trunc(d["text"], max_words)} for d in dis[:k]]
+            target, kind = p["answer"], "answer_in_distractor"
     msgs = build_messages(p["question"], passages) + [{"role": "assistant", "content": target}]
-    return {"id": p["id"], "kind": p["kind"], "type": kind, "oracle_id": oracle["id"],
-            "passage_ids": [d["id"] for d in passages], "messages": msgs}
+    ex = {"id": p["id"], "kind": p["kind"], "type": kind, "oracle_id": oracle["id"],
+          "passage_ids": [d["id"] for d in passages], "messages": msgs}
+    if not with_oracle:
+        ex["removed"] = removed
+    return ex
 
 
 def _tokens(ex):
     return sum(len(m["content"].split()) for m in ex["messages"]) * 1.35
 
 
-def compute_stats(out_dir):
+def compute_stats(out_dir, k=4):
     st = {}
     for split in ("train", "val"):
         rows = C.read_jsonl(out_dir / f"raft_{split}.jsonl")
-        cnt = {t: sum(r["type"] == t for r in rows) for t in ("oracle", "refusal", "refusal_cancelled")}
+        cnt = {t: sum(r["type"] == t for r in rows) for t in ("oracle", "refusal", "answer_in_distractor")}
+        ref = [r for r in rows if r["type"] == "refusal"]
         toks = [_tokens(r) for r in rows]
         st[split] = {"n": len(rows), **cnt,
+                     "refusal_with_removed": sum(r.get("removed", 0) > 0 for r in ref),
+                     "removed_distractors": sum(r.get("removed", 0) for r in ref),
+                     "short_context": sum(len(r["passage_ids"]) < k for r in rows),
                      "by_kind": {kd: sum(r["kind"] == kd for r in rows) for kd in ("llm", "template")},
                      "avg_tokens_est": round(sum(toks) / len(toks)) if toks else 0,
                      "max_tokens_est": round(max(toks)) if toks else 0,
@@ -172,7 +206,7 @@ def run(n=15000, k=4, p_oracle=0.8, mode=None, seed=0, out_dir=None, template_sh
         if reason != "termine":
             break
     st = {"params": {"n": n, "k": k, "p_oracle": p_oracle, "mode": mode, "seed": seed,
-                     "template_share": template_share, "max_words": max_words}, **compute_stats(out_dir)}
+                     "template_share": template_share, "max_words": max_words}, **compute_stats(out_dir, k)}
     (out_dir / "raft_stats.json").write_text(json.dumps(st, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Arret: {reason}. {n_done} exemples ecrits. Stats -> {out_dir / 'raft_stats.json'}")
     print(json.dumps({s: st[s] for s in ("train", "val")}, ensure_ascii=False))

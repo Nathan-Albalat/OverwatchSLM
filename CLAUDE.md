@@ -97,7 +97,9 @@ Query: `), fusion RRF (k=60), max 2 passages/page.
 - Mise a jour : cache d'embeddings par sha1(texte) (`data/rag/emb_cache*`) : apres le refresh, `index` n'encode que les textes nouveaux/modifies et
   affiche « N encodes, M repris du cache, duree » = cout de mise a jour du RAG pour le rapport.
 - RAFT : source `data/dataset/pairs.jsonl` (paires finales, exportees par `build-dataset`), ~10 % de templates ; avec p=0.8 oracle + k-1 distracteurs du vrai
-  retriever, sinon k distracteurs : reponse conservee si ses elements cles (nombres + entites) sont dans un passage (`refusal_cancelled`), sinon refus fixe.
+  retriever, sinon k distracteurs et refus fixe : tout distracteur qui pourrait contenir la reponse (elements cles de la reponse absents de la question, mots entiers,
+  passage citant >= 50 % des entites de la question) est ecarte et remplace par le suivant (pool k+16) ; si la reponse est dans presque tous les
+  candidats, exemple `answer_in_distractor` (reponse gardee). Test 600 ex. : 447 oracle / 117 refus / 6 answer_in_distractor (ancien critere : 55 % de « refus annules »).
   Format de prompt = `bench.prompts.build_messages` (identique a l'eval). Tirage deterministe par (graine, id) : reprise sans doublon.
 
 ### Jeu de données (`build-dataset` -> `data/dataset/`)
