@@ -1,5 +1,7 @@
 # OW-SLM — Small Language Model spécialisé Overwatch
 
+Brain: Année INFO5/VTI
+
 Projet d'UE (échéance : **début novembre 2026**). Objectif : montrer la pertinence d'un SLM dans certains
 cas d'usage, en construisant un petit modèle spécialisé sur Overwatch (lore, gameplay, patchs, esport) et
 en le comparant, sur un même jeu de questions, à des LLM locaux (7-14B) et à des modèles frontier.
