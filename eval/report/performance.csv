@@ -1,0 +1,4 @@
+﻿config;latence p50 s;latence p95 s;ttft p50 s;tok/s median;VRAM Mo;cout/requete USD
+claude-opus;5.74;11.59;2.66;202.5;n/a;0.0147
+claude-sonnet;5.70;11.55;3.26;395.7;n/a;0.0085
+claude-sonnet-rag;3.14;5.08;1.68;264.4;n/a;0.0204

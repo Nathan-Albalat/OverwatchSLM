@@ -1,0 +1,4 @@
+﻿config;n unanswerable;taux d'hallucination %;n repondables;taux d'abstention %
+claude-opus;16;0.0;211;30.3
+claude-sonnet;16;0.0;211;41.7
+claude-sonnet-rag;16;0.0;211;4.7

@@ -1,0 +1,4 @@
+﻿config;lore;gameplay;esport;patch;maps_modes;unanswerable
+claude-opus;72.5 (n=51);85.0 (n=50);26.7 (n=43);15.5 (n=42);72.0 (n=25);100.0 (n=16)
+claude-sonnet;57.8 (n=51);69.0 (n=50);12.8 (n=43);4.8 (n=42);56.0 (n=25);100.0 (n=16)
+claude-sonnet-rag;95.1 (n=51);100.0 (n=50);81.4 (n=43);92.9 (n=42);100.0 (n=25);100.0 (n=16)
