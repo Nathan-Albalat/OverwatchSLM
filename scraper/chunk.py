@@ -2,7 +2,7 @@ import json
 import re
 from collections import Counter
 
-from .config import CLEAN, DATA
+from .config import CLEAN, DATA, SOURCES
 
 CHUNKS = DATA / "chunks" / "chunks.jsonl"
 MIN_CHUNK_WORDS = 60
@@ -96,7 +96,7 @@ def run():
     CHUNKS.parent.mkdir(parents=True, exist_ok=True)
     cnt = Counter()
     with open(CHUNKS, "w", encoding="utf-8") as out:
-        for src in ("fandom", "liquipedia"):
+        for src in SOURCES:
             p = CLEAN / f"{src}.jsonl"
             if not p.exists():
                 continue

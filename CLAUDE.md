@@ -45,7 +45,7 @@ gen/
                     tournois Liquipedia ; MVP/awards via AwardPrizePool du wikitext brut) -> data/qa/templates.jsonl
   build_dataset.py  filtrage + export (lecture seule de data/qa, relançable pendant une génération)
 eval/
-  test_set.jsonl|csv  jeu de test figé (227 questions) — NE JAMAIS l'utiliser pour l'entraînement
+  test_set.jsonl|csv  jeu de test figé (235 questions) — NE JAMAIS l'utiliser pour l'entraînement
 rag/                RAG + exemples RAFT (CLI `ow-rag`) ; index dans data/rag/ (ignore par git)
   common.py bm25.py embed.py   tokenisation, BM25 maison (numpy seul), embeddings Ollama /api/embed
   index.py retrieve.py         `index` ; retrieve(question, k, mode, exclude_ids) hybride RRF (repli bm25 sans embeddings)
@@ -62,6 +62,7 @@ data/               (ignoré par git) raw/ clean/ chunks/ qa/ dataset/ train/
 ### Commandes
 ```
 uv run ow-scrape fandom|liquipedia [--limit N] [--first TITRE]   # collecte (reprenable)
+uv run ow-scrape blizzard --month 2026/10   # notes de patch officielles (les wikis ont 2-4 semaines de retard)
 uv run ow-scrape clean && uv run ow-scrape stats && uv run ow-scrape chunk
 uv run ow-scrape generate [--only nonsensitive|sensitive|all] [--source ...] [--max-chunks N] [--until HH:MM] [--sleep-after]
 uv run ow-scrape fandom|liquipedia --refresh --dry-run          # liste les pages dont le revid a changé (rien écrit)
@@ -156,6 +157,7 @@ Arrêt propre de la génération : créer `data/qa/STOP` (le supprimer avant de 
 |---|---|---|---|
 | Overwatch Fandom wiki | CC-BY-SA | 2 237 | ~2,7 M mots (~3,6 M tokens) |
 | Liquipedia Overwatch | CC-BY-SA 3.0 (attribution obligatoire) | ~5 577 | ~1,1 M mots (~1,5 M tokens) |
+| Notes de patch officielles Blizzard (`ow-scrape blizzard --month 2026/10`) | © Blizzard, citer la source | 1 (6 oct. 2026) | ~4 800 mots, 15 chunks sensibles |
 
 - Chunks : **14 161** (9 888 non sensibles / 4 273 sensibles = pages héros et notes de patch).
 - Règles Liquipedia : ≤ 1 req / 2 s, `action=parse` ≤ 1 / 30 s (donc interdit à grande échelle), UA avec contact, gzip.
@@ -168,16 +170,17 @@ Arrêt propre de la génération : créer `data/qa/STOP` (le supprimer avant de 
   - Le jour du scraping fixe la « date de connaissance » du modèle : les stats de héros changent à chaque patch.
 
 ## Jeu de test (`eval/test_set.jsonl`)
-227 questions en **anglais** (comme le corpus), validées par l'utilisateur, champs
+235 questions en **anglais** (comme le corpus), validées par l'utilisateur, champs
 `id, category, temporal, question, answer, source, note`.
-- Catégories : lore 51, gameplay 50, esport 43, patch 42, maps_modes 25, **unanswerable 16**.
-- `temporal=true` (66) : faits postérieurs à ~avril 2025 → pièges pour les modèles frontier (date de coupure).
+- Catégories : lore 51, gameplay 50, esport 43, patch 50 (dont S01-S08 Saison 5), maps_modes 25, **unanswerable 16**.
+- `temporal=true` (74) : faits postérieurs à ~avril 2025 → pièges pour les modèles frontier (date de coupure).
 - `unanswerable` (U01-U16) : événements futurs, entités inventées, prémisses fausses → mesure l'hallucination
   (comportement attendu : « je ne sais pas » ou correction de la prémisse).
 - E41-E43 : réponse uniquement dans les templates bruts (mesure l'apport de l'extraction des templates).
 - Règle : toute paire d'entraînement trop proche d'une question du test est supprimée (`build-dataset`, voir stats.json).
-- À mettre à jour après le refresh Saison 5 : T04, T42, U08 et les questions de valeurs « actuelles »
-  (T14, T18, T21, T22, T27, T39, G06, G10, G18, G23, G30, G35).
+- Refresh Saison 5 (12 oct. 2026) : T04 reformulée au passé, U08 toujours sans réponse ; valeurs « actuelles »
+  (G06, G10, G18, G23, G30, G35) et questions de patch datées inchangées par le patch du 6 oct. Ajout de S01-S08
+  (patch du 6 oct., source = notes officielles Blizzard ; S06 Ana : absente de Fandom, seulement dans les notes).
 
 ## Choix méthodologiques
 
@@ -226,7 +229,7 @@ génération et d'entraînement après la Saison 5).
 
 ## Feuille de route
 - [x] Scraping Fandom + Liquipedia, nettoyage, stats
-- [x] Jeu de test figé (227 questions)
+- [x] Jeu de test figé (227 questions + 8 Saison 5)
 - [x] Lot 1 : correction des patchs Liquipedia, chunking, générateur reprenable
 - [ ] Génération Qwen des chunks non sensibles (en cours, reprenable)
 - [x] Lot 2 : Q/R par templates (infobox, MVP), mode `--refresh` (revid), filtrage (doublons, ancrage,

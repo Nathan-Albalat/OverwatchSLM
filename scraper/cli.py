@@ -19,13 +19,15 @@ def main():
                         help="avec --refresh : ne traite que ce titre et ses sous-pages Titre/... (repetable)")
         sp.add_argument("--out-dir", default=None,
                         help="repertoire du pages.jsonl (defaut data/raw/<source>) ; utile pour tester")
+    bz = sub.add_parser("blizzard", help="notes de patch officielles (page mensuelle) -> data/raw/blizzard")
+    bz.add_argument("--month", action="append", required=True, help="AAAA/MM (repetable), ex. 2026/10")
     sub.add_parser("clean", help="nettoie les donnees brutes")
     sub.add_parser("stats", help="volumetrie")
     sub.add_parser("chunk", help="decoupe data/clean en chunks")
     g = sub.add_parser("generate", help="genere les paires Q/R via Ollama (reprenable)")
     g.add_argument("--model", default="qwen3.6:35b-a3b")
     g.add_argument("--only", choices=["nonsensitive", "sensitive", "all"], default="nonsensitive")
-    g.add_argument("--source", choices=["fandom", "liquipedia"], default=None)
+    g.add_argument("--source", choices=["fandom", "liquipedia", "blizzard"], default=None)
     g.add_argument("--limit", type=int, default=None, help="ne considere que les N premiers chunks de la selection")
     g.add_argument("--max-chunks", type=int, default=None, help="max de chunks generes dans ce run")
     g.add_argument("--until", default=None, help="HH:MM : arret entre deux chunks a cette heure")
@@ -47,6 +49,9 @@ def main():
     elif args.cmd == "liquipedia":
         from . import liquipedia
         liquipedia.run(args.limit, args.first, args.refresh, args.dry_run, args.out_dir, args.only_title)
+    elif args.cmd == "blizzard":
+        from . import blizzard
+        blizzard.run(args.month)
     elif args.cmd == "clean":
         from . import clean
         clean.run()

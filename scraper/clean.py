@@ -211,11 +211,21 @@ def clean_liquipedia(rec):
     }
 
 
+# ------------------------------------------------------- Blizzard (deja en texte)
+
+def clean_blizzard(rec):
+    return {
+        "source": "blizzard", "pageid": rec["pageid"], "title": rec["title"], "url": rec["url"],
+        "categories": rec.get("categories", []), "revid": rec.get("revid"),
+        "text": _tidy(rec["text"]), "license": rec.get("license"),
+    }
+
+
 # ------------------------------------------------------------------------ driver
 
 def run():
     CLEAN.mkdir(parents=True, exist_ok=True)
-    for src, fn in (("fandom", clean_fandom), ("liquipedia", clean_liquipedia)):
+    for src, fn in (("fandom", clean_fandom), ("liquipedia", clean_liquipedia), ("blizzard", clean_blizzard)):
         raw = RAW / src / "pages.jsonl"
         if not raw.exists():
             continue

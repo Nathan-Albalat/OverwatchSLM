@@ -36,6 +36,8 @@ from pathlib import Path
 
 from rapidfuzz import fuzz, process
 
+from scraper.config import SOURCES
+
 ROOT = Path(__file__).resolve().parent.parent
 CHUNKS = ROOT / "data" / "chunks" / "chunks.jsonl"
 CLEAN = ROOT / "data" / "clean"
@@ -194,7 +196,7 @@ def load_all():
         for line in f:
             c = json.loads(line)
             chunks[c["id"]] = c
-    for src in ("fandom", "liquipedia"):
+    for src in SOURCES:
         p = CLEAN / f"{src}.jsonl"
         if p.exists():
             with open(p, encoding="utf-8") as f:

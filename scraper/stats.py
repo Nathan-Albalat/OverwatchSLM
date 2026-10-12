@@ -1,7 +1,7 @@
 import json
 from collections import Counter
 
-from .config import CLEAN, DATA, MIN_WORDS, RAW
+from .config import CLEAN, DATA, MIN_WORDS, RAW, SOURCES
 
 
 def _count_lines(path):
@@ -13,7 +13,7 @@ def _count_lines(path):
 
 def run():
     result = {}
-    for src in ("fandom", "liquipedia"):
+    for src in SOURCES:
         path = CLEAN / f"{src}.jsonl"
         if not path.exists():
             continue
