@@ -48,7 +48,8 @@ class OllamaBackend(Backend):
         c = self.cfg
         return {"model": c["model"], "messages": messages, "stream": True, "think": c.get("think", False),
                 "keep_alive": c.get("keep_alive", "30m"),
-                "options": {"temperature": c.get("temperature", 0), "num_predict": max_tokens}}
+                "options": {"temperature": c.get("temperature", 0), "num_predict": max_tokens,
+                            "num_ctx": c.get("num_ctx", 8192)}}   # defaut Ollama trop court pour 5 passages RAG
 
     def prepare(self):
         # requete de chauffe non comptee : evite de mesurer le chargement du modele

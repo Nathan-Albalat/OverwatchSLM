@@ -55,7 +55,8 @@ bench/              banc d'evaluation (CLI `ow-bench`) ; eval/ reste le dossier 
   prompts.py        SYSTEM_PROMPT (= gen.build_dataset) + format RAG (passages numerotes puis question), reutilise par RAFT
   backends.py       ollama (streaming, ttft, VRAM via /api/ps) | openai (llama.cpp/vLLM) | claude_cli (`claude -p`, abonnement) | manual
   run.py / judge.py / report.py / cli.py   run reprenable, LLM-juge par lots, tableaux
-data/               (ignoré par git) raw/ clean/ chunks/ qa/ dataset/
+train/              fine-tuning QLoRA (WSL) : configs.toml, data.py, run.py, export.py (GGUF + Modelfile), cli.py, modelfiles/qwen3.tmpl
+data/               (ignoré par git) raw/ clean/ chunks/ qa/ dataset/ train/
 ```
 
 ### Commandes
@@ -108,6 +109,31 @@ Query: `), fusion RRF (k=60), max 2 passages/page.
   passage citant >= 50 % des entites de la question) est ecarte et remplace par le suivant (pool k+16) ; si la reponse est dans presque tous les
   candidats, exemple `answer_in_distractor` (reponse gardee). Test 600 ex. : 447 oracle / 117 refus / 6 answer_in_distractor (ancien critere : 55 % de « refus annules »).
   Format de prompt = `bench.prompts.build_messages` (identique a l'eval). Tirage deterministe par (graine, id) : reprise sans doublon.
+
+### Fine-tuning (`train/`, QLoRA Unsloth + TRL, **dans WSL**)
+```
+# lancement (cwd = depot, via train/py.sh qui active ~/venvs/unsloth et fixe PYTHONPATH) :
+wsl -d Ubuntu-24.04 -- bash /mnt/c/Users/albal/Projet/SLM/train/py.sh list|run <run> [--resume] [--max-steps N] [--limit N] [--tag T] [--data F --val-data F] [--init-from RUN]|summary
+wsl -d Ubuntu-24.04 -- bash /mnt/c/Users/albal/Projet/SLM/train/export.sh <run> [--quant q4_k_m] [--tag T]   # cwd ~/work (compile llama.cpp cote WSL)
+ollama create ow-<run> -f data\train\<run>\gguf\Modelfile      # cote Windows, puis : ow-bench run slm-4b-sft ...
+```
+- Runs dans `train/configs.toml` : `qwen3-4b-sft`, `qwen3-4b-cpt`, `qwen3-4b-cpt-sft` (`init_from` = adapter du CPT), `qwen3-4b-raft`,
+  `qwen3-1.7b-raft`. Defauts : max_seq 4096, LoRA r=32/alpha=32 sur 7 modules, lr 2e-4 cosine, batch 4 x accum 4, AdamW 8 bits, bf16.
+  Les entrainements complets se lancent apres le refresh Saison 5 et `ow-rag raft --n 15000`, de nuit, en processus independant
+  (`Start-Process cmd /c "wsl ... > data/train/<run>.log 2>&1"`).
+- Format : `prompt` = gabarit chat Qwen3 `enable_thinking=False` (finit par `<think>\n\n</think>\n\n`), `completion` = reponse + `<|im_end|>` ;
+  la loss ne porte que sur la completion (TRL `completion_only_loss`, masque replie dans `labels`). CPT : texte brut + EOS, loss partout.
+  Exemples > max_seq ecartes (comptes dans les stats), jamais tronques. L'exemple decode et le resume du masque s'affichent au demarrage.
+- Sorties (`data/train/<run>/`, ignore par git) : `checkpoints/` (tous les 200 pas, 2 gardes), `adapter/`, `train_stats.json` (temps, s/ex, tok/s,
+  VRAM, losses), `gguf/` (`model.gguf` + `Modelfile`). `python -m train.cli summary` -> `eval/report/training.md`.
+- Arret propre : creer `data/train/<run>/STOP` (sauvegarde puis arret ; supprime a la reprise). Reprise : meme commande + `--resume`
+  (dernier checkpoint). Un reboot tue le processus ; la veille simple non.
+- Export : `Modelfile` = TEMPLATE/PARAMETER de `hf.co/unsloth/Qwen3-*-GGUF:Q4_K_M` (`train/modelfiles/qwen3.tmpl`), avec le bloc `<think>` vide
+  ajoute a l'amorce de reponse (format d'entrainement) ; les GGUF de base Unsloth n'en ont pas mais ne pensent pas avec `think:false`.
+  `unsloth_compiled_cache/` (cree a la racine par Unsloth) est ignore par git.
+- Mesures du test de fumee (code valide, pas des resultats) : Qwen3-4B SFT packing ~3 000 tok/s, pic VRAM 14,3 Go (batch 4 x 4096) ; CPT 4B 6,8 Go ;
+  RAFT 1.7B ~0,56 s/ex (0,37 hors eval/surcout) pic 11,3 Go ; GGUF 1.7B Q4_K_M 1,1 Go, export ~1 min apres compilation de llama.cpp (premier export ~4 min).
+- Banc : bras « + RAG » des SLM en **k=4** (comme les exemples RAFT) ; frontier et 14B + RAG restent en k=5 (a signaler dans le rapport).
 
 ### Jeu de données (`build-dataset` -> `data/dataset/`)
 `train.jsonl` / `val.jsonl` (format chat `messages`, split 95/5 **par page**), `cpt.jsonl` (`{"text"}` par chunk, hors
@@ -210,7 +236,8 @@ génération et d'entraînement après la Saison 5).
 - [ ] Après Saison 5 (6 oct.) : refresh, chunks sensibles, mise à jour des réponses du test
 - [ ] Index RAG (embeddings locaux) + construction des exemples RAFT (code prêt et testé en bm25 ; reste : embeddings Ollama quand le GPU est libre, `eval` dense/hybrid, `raft --n 15000`)
 - [x] Installation WSL2 + PyTorch CUDA 12.8 + Unsloth (test QLoRA 1.7B/4B OK)
-- [ ] Fine-tunings (SFT, CPT+SFT, RAFT)
+- [x] Code de fine-tuning `train/` (SFT, CPT, RAFT, export GGUF -> Ollama -> banc), valide sur de petits runs
+- [ ] Entrainements complets (SFT, CPT+SFT, RAFT 4B ; RAFT 1.7B) apres le refresh Saison 5
 - [x] Banc d'évaluation (`bench/`, code prêt ; vérifié sur Claude Sonnet, backend Ollama non testé)
 - [ ] Lancer le banc sur toutes les configurations (SLM fine-tunés, LLM locaux, frontier), vérification manuelle, rédaction
 

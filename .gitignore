@@ -3,3 +3,4 @@ data/
 __pycache__/
 *.pyc
 data/bench_cwd/
+unsloth_compiled_cache/

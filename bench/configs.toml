@@ -1,17 +1,37 @@
 # Configurations evaluees par `ow-bench run <nom>`.
 # Backends : ollama | openai | claude_cli | manual
 # rag = {k = 5} : les k passages les plus proches sont donnes au modele (module rag.retrieve : hybride bm25+dense, repli bm25 si pas d'embeddings).
-# Les noms de modeles locaux sont indicatifs (choix final avec le choix du SLM de base).
 
 [defaults]
 temperature = 0
 max_tokens = 512
 
+# SLM de base : memes poids et meme quantification (GGUF Q4_K_M Unsloth) que les modeles fine-tunes exportes.
 [[config]]
 name = "qwen3-4b-base"
 backend = "ollama"
-model = "qwen3:4b"
+model = "hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M"
 think = false
+
+[[config]]
+name = "qwen3-4b-rag"
+backend = "ollama"
+model = "hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M"
+think = false
+rag = {k = 4}
+
+[[config]]
+name = "qwen3-1.7b-base"
+backend = "ollama"
+model = "hf.co/unsloth/Qwen3-1.7B-GGUF:Q4_K_M"
+think = false
+
+[[config]]
+name = "qwen3-1.7b-rag"
+backend = "ollama"
+model = "hf.co/unsloth/Qwen3-1.7B-GGUF:Q4_K_M"
+think = false
+rag = {k = 4}
 
 [[config]]
 name = "qwen3-14b"
@@ -49,3 +69,33 @@ model = "sonnet"
 # model = "ow-slm-sft"
 # base_url = "http://localhost:8080/v1"
 # vram_mb = 4500
+
+# SLM fine-tunes (train/ -> export GGUF -> `ollama create ow-<run> -f data\train\<run>\gguf\Modelfile`).
+# k = 4 pour les bras SLM + RAG (base et RAFT) : les exemples RAFT sont construits avec k = 4, on compare a contexte egal.
+# Les configs frontier et 14B + RAG gardent k = 5 (le run claude-sonnet-rag existe deja en k = 5).
+[[config]]
+name = "slm-4b-sft"
+backend = "ollama"
+model = "ow-qwen3-4b-sft"
+think = false
+
+[[config]]
+name = "slm-4b-cpt-sft"
+backend = "ollama"
+model = "ow-qwen3-4b-cpt-sft"
+think = false
+
+[[config]]
+name = "slm-4b-raft-rag"
+backend = "ollama"
+model = "ow-qwen3-4b-raft"
+think = false
+rag = {k = 4}
+
+[[config]]
+name = "slm-1.7b-raft-rag"
+backend = "ollama"
+model = "ow-qwen3-1.7b-raft"
+think = false
+rag = {k = 4}
+
