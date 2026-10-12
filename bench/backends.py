@@ -61,9 +61,11 @@ class OllamaBackend(Backend):
             raise BackendError(f"ollama indisponible ou modele absent ({self.cfg['model']}): {e}")
 
     def _vram_mb(self):
+        # les modeles crees en local (ollama create) sont listes avec le suffixe :latest
+        names = {self.cfg["model"], f"{self.cfg['model']}:latest"}
         try:
             for m in requests.get(f"{self.url}/api/ps", timeout=10).json().get("models", []):
-                if m.get("name") == self.cfg["model"] or m.get("model") == self.cfg["model"]:
+                if m.get("name") in names or m.get("model") in names:
                     return round(m.get("size_vram", 0) / 1e6)
         except requests.RequestException:
             pass
