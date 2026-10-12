@@ -19,7 +19,12 @@ en le comparant, sur un même jeu de questions, à des LLM locaux (7-14B) et à 
   redirigée vers `data/qa/*.log`), jamais en tâche de fond Claude Code : celles-ci sont tuées quand la RAM libre
   tombe (le modèle Ollama occupe ~16 Go de RAM).
 - Ollama local (`http://localhost:11434`), modèle de génération `qwen3.6:35b-a3b` (MoE, ~100 tok/s, `think:false`).
-- Pas de WSL pour l'instant ; à installer pour le fine-tuning (Unsloth/bitsandbytes plus simples sous Linux).
+- **WSL2 Ubuntu 24.04** (utilisateur `albal`, 15 Go RAM par défaut, GPU visible) pour le fine-tuning : venv
+  `~/venvs/unsloth` (torch 2.11+cu128, unsloth 2026.10, transformers 5.17, trl 1.13). Commandes root via
+  `wsl -d Ubuntu-24.04 -u root -- ...` (pas de sudo interactif). Lancer depuis Windows en processus indépendant
+  (`Start-Process cmd /c "wsl -d Ubuntu-24.04 -- bash script.sh > log 2>&1"`). Données lues via `/mnt/c/...`.
+  Test QLoRA (r=16, 4 bits, lot 4x2, ~1 950 tokens/ex RAFT) : Qwen3-1.7B 0,37 s/ex (3,0 Go VRAM),
+  Qwen3-4B 0,78 s/ex (5,5 Go) → RAFT 15k ≈ 1 h 30 / 3 h 15 par epoch.
 - Le PC est mis en veille la nuit : **tout traitement long doit être reprenable** (append JSONL + skip des ids faits).
 
 ## Architecture du dépôt
@@ -204,7 +209,8 @@ génération et d'entraînement après la Saison 5).
       après la sortie de la Saison 5, `build-dataset` à relancer en fin de génération)
 - [ ] Après Saison 5 (6 oct.) : refresh, chunks sensibles, mise à jour des réponses du test
 - [ ] Index RAG (embeddings locaux) + construction des exemples RAFT (code prêt et testé en bm25 ; reste : embeddings Ollama quand le GPU est libre, `eval` dense/hybrid, `raft --n 15000`)
-- [ ] Installation WSL2 + PyTorch CUDA 12.8 + Unsloth, fine-tunings (SFT, CPT+SFT, RAFT)
+- [x] Installation WSL2 + PyTorch CUDA 12.8 + Unsloth (test QLoRA 1.7B/4B OK)
+- [ ] Fine-tunings (SFT, CPT+SFT, RAFT)
 - [x] Banc d'évaluation (`bench/`, code prêt ; vérifié sur Claude Sonnet, backend Ollama non testé)
 - [ ] Lancer le banc sur toutes les configurations (SLM fine-tunés, LLM locaux, frontier), vérification manuelle, rédaction
 
