@@ -1,0 +1,66 @@
+# Entrainements QLoRA (package train/, a lancer dans WSL : voir CLAUDE.md, section Fine-tuning).
+# Un bloc [[run]] par entrainement ; les cles de [defaults] sont surchargees par le run.
+
+[defaults]
+max_seq_length = 4096
+load_in_4bit = true
+lora_r = 32
+lora_alpha = 32
+lora_dropout = 0.0
+target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+lr = 2e-4
+lr_scheduler = "cosine"
+warmup_ratio = 0.03
+optim = "adamw_8bit"
+seed = 0
+batch = 4
+grad_accum = 4
+eval_every = 500      # pas
+eval_samples = 300    # exemples de val (sous-echantillon deterministe)
+save_every = 200      # pas
+save_total_limit = 2
+packing = false
+
+[[run]]
+name = "qwen3-4b-sft"
+model = "unsloth/Qwen3-4B"
+stage = "sft"
+data = "data/dataset/train.jsonl"
+val_data = "data/dataset/val.jsonl"
+epochs = 2
+packing = true
+
+[[run]]
+name = "qwen3-4b-cpt"
+model = "unsloth/Qwen3-4B"
+stage = "cpt"
+data = "data/dataset/cpt.jsonl"
+epochs = 1
+lr = 5e-5
+packing = true
+
+[[run]]
+name = "qwen3-4b-cpt-sft"
+model = "unsloth/Qwen3-4B"
+stage = "sft"
+data = "data/dataset/train.jsonl"
+val_data = "data/dataset/val.jsonl"
+epochs = 2
+packing = true
+init_from = "qwen3-4b-cpt"   # reprend l'adapter du run CPT
+
+[[run]]
+name = "qwen3-4b-raft"
+model = "unsloth/Qwen3-4B"
+stage = "raft"
+data = "data/dataset/raft_train.jsonl"
+val_data = "data/dataset/raft_val.jsonl"
+epochs = 1
+
+[[run]]
+name = "qwen3-1.7b-raft"
+model = "unsloth/Qwen3-1.7B"
+stage = "raft"
+data = "data/dataset/raft_train.jsonl"
+val_data = "data/dataset/raft_val.jsonl"
+epochs = 1
