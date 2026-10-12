@@ -157,9 +157,10 @@ Arrêt propre de la génération : créer `data/qa/STOP` (le supprimer avant de 
 |---|---|---|---|
 | Overwatch Fandom wiki | CC-BY-SA | 2 237 | ~2,7 M mots (~3,6 M tokens) |
 | Liquipedia Overwatch | CC-BY-SA 3.0 (attribution obligatoire) | ~5 577 | ~1,1 M mots (~1,5 M tokens) |
-| Notes de patch officielles Blizzard (`ow-scrape blizzard --month 2026/10`) | © Blizzard, citer la source | 1 (6 oct. 2026) | ~4 800 mots, 15 chunks sensibles |
+| Notes de patch officielles Blizzard (`ow-scrape blizzard --month 2026/10`) | © Blizzard, citer la source | 1 (6 oct. 2026) | ~4 800 mots, 42 chunks sensibles |
 
-- Chunks : **14 161** (9 888 non sensibles / 4 273 sensibles = pages héros et notes de patch).
+- Chunks : **14 208** (9 891 non sensibles / 4 317 sensibles = pages héros et notes de patch). Notes Blizzard découpées
+  finement (`FINE_SOURCES` dans `chunk.py`, un chunk par héros) : la fusion standard rendait Genji/Ana introuvables par le RAG.
 - Règles Liquipedia : ≤ 1 req / 2 s, `action=parse` ≤ 1 / 30 s (donc interdit à grande échelle), UA avec contact, gzip.
 - Limites connues :
   - **Vainqueurs de tournois absents du texte** (calculés depuis les brackets/LPDB) ; une extraction naïve des

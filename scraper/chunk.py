@@ -8,6 +8,11 @@ CHUNKS = DATA / "chunks" / "chunks.jsonl"
 MIN_CHUNK_WORDS = 60
 TARGET, MAX_WORDS = 450, 600
 SOFT_MIN = 250
+# Notes de patch officielles : une entree par heros (souvent < 60 mots). La fusion standard jusqu'a 250 mots
+# noie Genji dans un chunk intitule « Tank > Domina » et la recherche ne le retrouve plus : on coupe a chaque
+# titre de role/heros (niveau <= 3) des 30 mots, a chaque section (niveau 2), et on garde les petits chunks.
+FINE_SOURCES = {"blizzard"}
+FINE_MIN, FINE_MIN_CHUNK = 30, 10
 
 SENSITIVE_CATS = {"heroes", "stadium hero pages", "patches", "patch"}
 SKIP_HEADINGS = re.compile(
@@ -63,7 +68,7 @@ def _split_long(para):
     return parts
 
 
-def chunk_page(rec):
+def chunk_page(rec, fine=False):
     blocks = []
     for path, para, is_h in _blocks(rec["text"]):
         if _wc(para) > MAX_WORDS:
@@ -73,7 +78,9 @@ def chunk_page(rec):
     groups, cur, n = [], [], 0
     for b in blocks:
         w = _wc(b[1])
-        if cur and (n + w > MAX_WORDS or (b[2] and n >= SOFT_MIN) or n + w > TARGET and n >= SOFT_MIN):
+        if cur and (n + w > MAX_WORDS or (b[2] and n >= (FINE_MIN if fine else SOFT_MIN))
+                    or (fine and b[1].startswith("## "))
+                    or n + w > TARGET and n >= SOFT_MIN):
             groups.append(cur)
             cur, n = [], 0
         cur.append(b)
@@ -84,7 +91,7 @@ def chunk_page(rec):
     for g in groups:
         body = "\n\n".join(b[1] for b in g)
         # un groupe ne contenant que des titres n'a pas d'interet
-        if _wc(re.sub(r"^#+ .*$", "", body, flags=re.M)) < MIN_CHUNK_WORDS:
+        if _wc(re.sub(r"^#+ .*$", "", body, flags=re.M)) < (FINE_MIN_CHUNK if fine else MIN_CHUNK_WORDS):
             continue
         path = next((b[0] for b in g if not b[1].startswith("#")), g[0][0])
         head = f"Page: {rec['title']}" + (f"\nSection: {path}" if path else "")
@@ -104,7 +111,7 @@ def run():
                 for line in f:
                     rec = json.loads(line)
                     sens = _is_sensitive(rec)
-                    for i, (path, text) in enumerate(chunk_page(rec)):
+                    for i, (path, text) in enumerate(chunk_page(rec, fine=src in FINE_SOURCES)):
                         out.write(json.dumps({
                             "id": f"{src}:{rec['pageid']}:{i}", "revid": rec.get("revid"),
                             "source": src, "title": rec["title"], "section": path,
