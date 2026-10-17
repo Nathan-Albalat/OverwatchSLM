@@ -16,6 +16,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | qwen3-14b-rag | 235 | 90.6 | 90.0 | 207 | 12 | 7 | 9 | 0 |
 | qwen3-4b-base | 235 | 4.7 | 3.2 | 5 | 12 | 195 | 11 | 12 |
 | qwen3-4b-rag | 235 | 86.6 | 85.6 | 194 | 19 | 14 | 8 | 0 |
+| slm-1.7b-raft-rag | 235 | 80.6 | 79.7 | 178 | 23 | 25 | 8 | 1 |
 | slm-4b-raft-rag | 235 | 83.6 | 82.4 | 187 | 19 | 9 | 20 | 0 |
 | slm-4b-raft-v2-rag | 235 | 83.8 | 82.6 | 187 | 20 | 16 | 12 | 0 |
 
@@ -32,6 +33,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | qwen3-14b-rag | 95.1 (n=51) | 94.0 (n=50) | 79.1 (n=43) | 85.0 (n=50) | 100.0 (n=25) | 100.0 (n=16) |
 | qwen3-4b-base | 2.9 (n=51) | 3.0 (n=50) | 3.5 (n=43) | 1.0 (n=50) | 8.0 (n=25) | 25.0 (n=16) |
 | qwen3-4b-rag | 92.2 (n=51) | 89.0 (n=50) | 72.1 (n=43) | 81.0 (n=50) | 98.0 (n=25) | 100.0 (n=16) |
+| slm-1.7b-raft-rag | 79.4 (n=51) | 85.0 (n=50) | 66.3 (n=43) | 78.0 (n=50) | 96.0 (n=25) | 93.8 (n=16) |
 | slm-4b-raft-rag | 84.3 (n=51) | 87.0 (n=50) | 68.6 (n=43) | 81.0 (n=50) | 96.0 (n=25) | 100.0 (n=16) |
 | slm-4b-raft-v2-rag | 84.3 (n=51) | 87.0 (n=50) | 68.6 (n=43) | 82.0 (n=50) | 96.0 (n=25) | 100.0 (n=16) |
 
@@ -48,6 +50,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | qwen3-14b-rag | 87.2 (n=74) | 91.4 (n=145) | 91.8 (n=164) | 84.5 (n=55) |
 | qwen3-4b-base | 2.0 (n=74) | 3.8 (n=145) | 3.4 (n=164) | 2.7 (n=55) |
 | qwen3-4b-rag | 79.7 (n=74) | 88.6 (n=145) | 87.2 (n=164) | 80.9 (n=55) |
+| slm-1.7b-raft-rag | 77.7 (n=74) | 80.7 (n=145) | 81.4 (n=164) | 74.5 (n=55) |
 | slm-4b-raft-rag | 79.7 (n=74) | 83.8 (n=145) | 85.1 (n=164) | 74.5 (n=55) |
 | slm-4b-raft-v2-rag | 81.8 (n=74) | 83.1 (n=145) | 85.4 (n=164) | 74.5 (n=55) |
 
@@ -66,6 +69,7 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 | qwen3-14b-rag | 16 | 0.0 | 219 | 4.1 |
 | qwen3-4b-base | 16 | 75.0 | 219 | 5.0 |
 | qwen3-4b-rag | 16 | 0.0 | 219 | 3.7 |
+| slm-1.7b-raft-rag | 16 | 6.2 | 219 | 3.7 |
 | slm-4b-raft-rag | 16 | 0.0 | 219 | 9.1 |
 | slm-4b-raft-v2-rag | 16 | 0.0 | 219 | 5.5 |
 
@@ -82,6 +86,7 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 | qwen3-14b-rag | 1.24 | 1.89 | 0.87 | 74.6 | 10468 | 0.0000 |
 | qwen3-4b-base | 0.28 | 0.57 | 0.04 | 211.1 | 3873 | 0.0000 |
 | qwen3-4b-rag | 0.46 | 0.78 | 0.29 | 193.4 | 3873 | 0.0000 |
+| slm-1.7b-raft-rag | 0.21 | 0.28 | 0.15 | 382.7 | 2158 | 0.0000 |
 | slm-4b-raft-rag | 0.38 | 0.50 | 0.27 | 204.1 | 3873 | 0.0000 |
 | slm-4b-raft-v2-rag | 0.37 | 0.51 | 0.27 | 207.4 | 3873 | 0.0000 |
 

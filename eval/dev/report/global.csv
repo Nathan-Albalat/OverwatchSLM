@@ -1,4 +1,4 @@
 ﻿config;n;score global %;score repondables %;correct;partial;incorrect;abstained;hallucinated
 qwen3-4b-rag;327;83.3;81.8;262;21;26;18;0
-slm-4b-raft-rag;327;80.3;78.5;255;15;17;40;0
 slm-4b-raft-v2-rag;327;87.2;86.0;279;12;21;15;0
+slm-1.7b-raft-rag;327;83.8;82.3;264;20;30;13;0
