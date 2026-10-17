@@ -6,6 +6,8 @@ def main():
     import sys
     sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(prog="ow-bench")
+    ap.add_argument("--set", default="test", choices=["test", "dev"],
+                    help="dev = eval/dev_set.jsonl, sorties sous eval/dev/ (reglages sans toucher au test)")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     r = sub.add_parser("run", help="pose les questions du test a une ou plusieurs configurations (reprenable)")
@@ -36,6 +38,8 @@ def main():
 
     sub.add_parser("list", help="liste les configurations")
     a = ap.parse_args()
+    from bench import common as C
+    C.use_set(a.set)
 
     if a.cmd == "run":
         from bench.run import run

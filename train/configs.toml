@@ -53,8 +53,19 @@ init_from = "qwen3-4b-cpt"   # reprend l'adapter du run CPT
 name = "qwen3-4b-raft"
 model = "unsloth/Qwen3-4B"
 stage = "raft"
-data = "data/dataset/raft_train.jsonl"
-val_data = "data/dataset/raft_val.jsonl"
+# donnees reellement utilisees (13 oct.) : jeu v1, deplace apres la correction de la sauvegarde relue par build-dataset
+data = "data/backup/raft_v1/raft_train.jsonl"
+val_data = "data/backup/raft_v1/raft_val.jsonl"
+epochs = 1
+
+# v2 (diagnostic du 17 oct., voir rag/augment.py) : p_oracle 0.9, 50 % des questions non-refus reformulees,
+# faux refus retires apres verification par le LLM local. Seules les donnees changent par rapport a qwen3-4b-raft.
+[[run]]
+name = "qwen3-4b-raft-v2"
+model = "unsloth/Qwen3-4B"
+stage = "raft"
+data = "data/dataset/raft_v2/raft_train_final.jsonl"
+val_data = "data/dataset/raft_v2/raft_val_final.jsonl"
 epochs = 1
 
 [[run]]

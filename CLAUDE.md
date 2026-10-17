@@ -110,6 +110,12 @@ Query: `), fusion RRF (k=60), max 2 passages/page.
   passage citant >= 50 % des entites de la question) est ecarte et remplace par le suivant (pool k+16) ; si la reponse est dans presque tous les
   candidats, exemple `answer_in_distractor` (reponse gardee). Test 600 ex. : 447 oracle / 117 refus / 6 answer_in_distractor (ancien critere : 55 % de « refus annules »).
   Format de prompt = `bench.prompts.build_messages` (identique a l'eval). Tirage deterministe par (graine, id) : reprise sans doublon.
+- **RAFT v2** (`rag/augment.py`, LLM local, reprenable, STOP = `data/rag/STOP`) : diagnostic du RAFT 4B v1 = sur-abstention sur le test
+  seulement (3 % de refus sur les oracles de raft_val) car les questions d'entrainement recopient le passage oracle ; ~12 % des refus
+  sont faux. `raft --p-oracle 0.9 --out-dir data/dataset/raft_v2` puis `augment paraphrase` (50 % des non-refus reformules),
+  `augment verify` (refus verifies par qwen3.6), `augment apply` -> `raft_{train,val}_final.jsonl` (run `qwen3-4b-raft-v2`).
+- **Jeu de dev** (`rag.cli devset` -> `eval/dev_set.jsonl`, 300 paires val reformulees + 30 sans reponse generees) : regler les variantes
+  avec `ow-bench --set dev run|judge|report` (sorties sous `eval/dev/`), le jeu de test ne sert qu'a la mesure finale.
 
 ### Fine-tuning (`train/`, QLoRA Unsloth + TRL, **dans WSL**)
 ```

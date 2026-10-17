@@ -16,12 +16,28 @@ CONFIGS = Path(__file__).resolve().parent / "configs.toml"
 STOP_FILE = RUNS / "STOP"
 
 
+def use_set(name):
+    """`--set dev` : jeu de developpement (eval/dev_set.jsonl) avec ses propres runs, jugements et rapport sous
+    eval/dev/, pour regler les variantes sans regarder le jeu de test. A appeler avant d'importer run/judge/report."""
+    global TEST_SET, RUNS, JUDGMENTS, REVIEW, REPORT, COVERAGE, STOP_FILE
+    if name == "test":
+        return
+    if name != "dev":
+        raise SystemExit(f"jeu inconnu: {name} (test | dev)")
+    base = EVAL / "dev"
+    TEST_SET, RUNS, JUDGMENTS = EVAL / "dev_set.jsonl", base / "runs", base / "judgments"
+    REVIEW, REPORT, STOP_FILE = base / "review", base / "report", base / "runs" / "STOP"
+    COVERAGE = base / "no_coverage.jsonl"     # pas de couverture : paires val, jamais vues a l'entrainement
+    if not TEST_SET.exists():
+        raise SystemExit(f"{TEST_SET} absent : lancer `rag.cli devset`")
+
+
 def qhash(q):
     return hashlib.sha1((q["question"] + q["answer"]).encode("utf-8")).hexdigest()[:12]
 
 
-def load_test(path=TEST_SET):
-    qs = read_jsonl(path)
+def load_test(path=None):
+    qs = read_jsonl(path or TEST_SET)
     for q in qs:
         q["qhash"] = qhash(q)
     return qs

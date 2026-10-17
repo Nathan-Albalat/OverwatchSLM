@@ -31,6 +31,17 @@ def main():
     r.add_argument("--template-share", type=float, default=0.1)
     r.add_argument("--max-words", type=int, default=400, help="troncature des passages")
 
+    g = sub.add_parser("augment", help="corrections RAFT par LLM local : paraphrase | verify | apply (reprenable)")
+    g.add_argument("step", choices=["paraphrase", "verify", "apply"])
+    g.add_argument("--dir", default="data/dataset/raft_v2", help="dossier des raft_{train,val}.jsonl")
+    g.add_argument("--share", type=float, default=0.5, help="paraphrase : part des exemples non-refus reformules")
+    g.add_argument("--seed", type=int, default=0)
+
+    dv = sub.add_parser("devset", help="eval/dev_set.jsonl : paires val reformulees + questions sans reponse (LLM)")
+    dv.add_argument("--n", type=int, default=300)
+    dv.add_argument("--unanswerable", type=int, default=30)
+    dv.add_argument("--seed", type=int, default=0)
+
     q = sub.add_parser("query", help="affiche les passages retournes pour une question")
     q.add_argument("question")
     q.add_argument("--k", type=int, default=5)
@@ -47,6 +58,13 @@ def main():
     elif a.cmd == "raft":
         from rag import raft
         raft.run(a.n, a.k, a.p_oracle, a.mode, a.seed, a.out_dir, a.template_share, a.max_words)
+    elif a.cmd == "augment":
+        from rag import augment
+        {"paraphrase": lambda: augment.paraphrase(a.dir, a.share, a.seed), "verify": lambda: augment.verify(a.dir),
+         "apply": lambda: augment.apply(a.dir)}[a.step]()
+    elif a.cmd == "devset":
+        from rag import augment
+        augment.devset(a.n, a.unanswerable, a.seed)
     elif a.cmd == "query":
         from rag.retrieve import retrieve
         for n, p in enumerate(retrieve(a.question, a.k, a.mode), 1):
