@@ -9,6 +9,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 |---|---|---|---|---|---|---|---|---|
 | qwen3-4b-rag | 327 | 83.3 | 81.8 | 262 | 21 | 26 | 18 | 0 |
 | slm-4b-raft-rag | 327 | 80.3 | 78.5 | 255 | 15 | 17 | 40 | 0 |
+| slm-4b-raft-v2-rag | 327 | 87.2 | 86.0 | 279 | 12 | 21 | 15 | 0 |
 
 ## Par categorie (score %)
 
@@ -16,6 +17,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 |---|---|---|---|---|---|---|
 | qwen3-4b-rag | 78.0 (n=82) | 65.0 (n=10) | 86.5 (n=163) | 74.0 (n=25) | 77.5 (n=20) | 100.0 (n=27) |
 | slm-4b-raft-rag | 68.3 (n=82) | 65.0 (n=10) | 87.7 (n=163) | 66.0 (n=25) | 67.5 (n=20) | 100.0 (n=27) |
+| slm-4b-raft-v2-rag | 80.5 (n=82) | 60.0 (n=10) | 92.9 (n=163) | 76.0 (n=25) | 77.5 (n=20) | 100.0 (n=27) |
 
 ## Temporel / couvert (questions repondables, score %)
 
@@ -23,6 +25,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 |---|---|---|---|---|
 | qwen3-4b-rag | n/a (n=0) | 81.8 (n=300) | n/a | n/a |
 | slm-4b-raft-rag | n/a (n=0) | 78.5 (n=300) | n/a | n/a |
+| slm-4b-raft-v2-rag | n/a (n=0) | 86.0 (n=300) | n/a | n/a |
 
 Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/test_coverage.jsonl`, heuristique indicative). Fichier absent : colonnes n/a.
 
@@ -32,6 +35,7 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 |---|---|---|---|---|
 | qwen3-4b-rag | 27 | 0.0 | 300 | 6.0 |
 | slm-4b-raft-rag | 27 | 0.0 | 300 | 13.3 |
+| slm-4b-raft-v2-rag | 27 | 0.0 | 300 | 5.0 |
 
 ## Performance
 
@@ -39,6 +43,7 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 |---|---|---|---|---|---|---|
 | qwen3-4b-rag | 0.42 | 0.81 | 0.23 | 204.8 | 3873 | 0.0000 |
 | slm-4b-raft-rag | 0.34 | 0.48 | 0.24 | 205.4 | 3873 | 0.0000 |
+| slm-4b-raft-v2-rag | 0.34 | 0.48 | 0.23 | 208.9 | 3873 | 0.0000 |
 
 Local : cout = 0. Claude : cout = equivalent API (abonnement, pas une depense reelle). Pour `claude_cli`, tok/s et latence sont indicatifs (reseau inclus, tokens de reflexion inclus). VRAM lue via Ollama (`/api/ps`), pas `nvidia-smi`.
 

@@ -1,3 +1,4 @@
 ﻿config;lore;gameplay;esport;patch;maps_modes;unanswerable
 qwen3-4b-rag;78.0 (n=82);65.0 (n=10);86.5 (n=163);74.0 (n=25);77.5 (n=20);100.0 (n=27)
 slm-4b-raft-rag;68.3 (n=82);65.0 (n=10);87.7 (n=163);66.0 (n=25);67.5 (n=20);100.0 (n=27)
+slm-4b-raft-v2-rag;80.5 (n=82);60.0 (n=10);92.9 (n=163);76.0 (n=25);77.5 (n=20);100.0 (n=27)

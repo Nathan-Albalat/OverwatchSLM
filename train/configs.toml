@@ -72,6 +72,7 @@ epochs = 1
 name = "qwen3-1.7b-raft"
 model = "unsloth/Qwen3-1.7B"
 stage = "raft"
-data = "data/dataset/raft_train.jsonl"
-val_data = "data/dataset/raft_val.jsonl"
+# recette v2 retenue (dev 17 oct. : RAFT 4B v2 87.2 % vs 4B + RAG 83.3 % vs RAFT v1 80.3 %)
+data = "data/dataset/raft_v2/raft_train_final.jsonl"
+val_data = "data/dataset/raft_v2/raft_val_final.jsonl"
 epochs = 1
