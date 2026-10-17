@@ -1,0 +1,3 @@
+﻿config;temporel;non temporel;couvert;non couvert
+qwen3-4b-rag;n/a (n=0);81.8 (n=300);n/a;n/a
+slm-4b-raft-rag;n/a (n=0);78.5 (n=300);n/a;n/a
