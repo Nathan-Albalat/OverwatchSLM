@@ -9,5 +9,7 @@ qwen3-14b-rag;16;0.0;219;4.1
 qwen3-4b-base;16;75.0;219;5.0
 qwen3-4b-rag;16;0.0;219;3.7
 slm-1.7b-raft-rag;16;6.2;219;3.7
+slm-4b-cpt-sft;16;100.0;219;0.5
 slm-4b-raft-rag;16;0.0;219;9.1
 slm-4b-raft-v2-rag;16;0.0;219;5.5
+slm-4b-sft;16;100.0;219;0.5
