@@ -8,6 +8,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | config | n | score global % | score repondables % | correct | partial | incorrect | abstained | hallucinated |
 |---|---|---|---|---|---|---|---|---|
 | qwen3-4b-rag | 327 | 83.3 | 81.8 | 262 | 21 | 26 | 18 | 0 |
+| slm-4b-raft-rag | 327 | 80.3 | 78.5 | 255 | 15 | 17 | 40 | 0 |
 | slm-4b-raft-v2-rag | 327 | 87.2 | 86.0 | 279 | 12 | 21 | 15 | 0 |
 | slm-1.7b-raft-rag | 327 | 83.8 | 82.3 | 264 | 20 | 30 | 13 | 0 |
 
@@ -16,6 +17,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | config | lore | gameplay | esport | patch | maps_modes | unanswerable |
 |---|---|---|---|---|---|---|
 | qwen3-4b-rag | 78.0 (n=82) | 65.0 (n=10) | 86.5 (n=163) | 74.0 (n=25) | 77.5 (n=20) | 100.0 (n=27) |
+| slm-4b-raft-rag | 68.3 (n=82) | 65.0 (n=10) | 87.7 (n=163) | 66.0 (n=25) | 67.5 (n=20) | 100.0 (n=27) |
 | slm-4b-raft-v2-rag | 80.5 (n=82) | 60.0 (n=10) | 92.9 (n=163) | 76.0 (n=25) | 77.5 (n=20) | 100.0 (n=27) |
 | slm-1.7b-raft-rag | 78.0 (n=82) | 70.0 (n=10) | 89.6 (n=163) | 62.0 (n=25) | 72.5 (n=20) | 100.0 (n=27) |
 
@@ -24,6 +26,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | config | temporel | non temporel | couvert | non couvert |
 |---|---|---|---|---|
 | qwen3-4b-rag | n/a (n=0) | 81.8 (n=300) | n/a | n/a |
+| slm-4b-raft-rag | n/a (n=0) | 78.5 (n=300) | n/a | n/a |
 | slm-4b-raft-v2-rag | n/a (n=0) | 86.0 (n=300) | n/a | n/a |
 | slm-1.7b-raft-rag | n/a (n=0) | 82.3 (n=300) | n/a | n/a |
 
@@ -34,6 +37,7 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 | config | n unanswerable | taux d'hallucination % | n repondables | taux d'abstention % |
 |---|---|---|---|---|
 | qwen3-4b-rag | 27 | 0.0 | 300 | 6.0 |
+| slm-4b-raft-rag | 27 | 0.0 | 300 | 13.3 |
 | slm-4b-raft-v2-rag | 27 | 0.0 | 300 | 5.0 |
 | slm-1.7b-raft-rag | 27 | 0.0 | 300 | 4.3 |
 
@@ -42,6 +46,7 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 | config | latence p50 s | latence p95 s | ttft p50 s | tok/s median | VRAM Mo | cout/requete USD |
 |---|---|---|---|---|---|---|
 | qwen3-4b-rag | 0.42 | 0.81 | 0.23 | 204.8 | 3873 | 0.0000 |
+| slm-4b-raft-rag | 0.34 | 0.48 | 0.24 | 205.4 | 3873 | 0.0000 |
 | slm-4b-raft-v2-rag | 0.34 | 0.48 | 0.23 | 208.9 | 3873 | 0.0000 |
 | slm-1.7b-raft-rag | 0.20 | 0.30 | 0.14 | 384.1 | 2158 | 0.0000 |
 
