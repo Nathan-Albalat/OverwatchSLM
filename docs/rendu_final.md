@@ -262,6 +262,28 @@ Même sur les faits **couverts**, c'est-à-dire présents dans ses données d'en
 
 Le jeu de dev n'a pas vu ce défaut, faute de questions composées. **Une v3 n'a pas été entraînée** : ses corrections auraient été conçues à partir des erreurs du test, ce qui revient à régler le système sur le test (§8). Elle figure dans les perspectives (§9).
 
+### 4.8 D'où viennent les erreurs des bras + RAG : recherche ou lecture ?
+
+Pour chaque question répondable non jugée `correct` (partielle, incorrecte ou abstention), `qwen3.6` vérifie si les passages reçus contenaient la réponse de référence (`bench/errors.py`, même prompt que la vérification des refus RAFT ; `eval/report/error_sources.md`). Si la réponse est absente, c'est une erreur de **recherche** : aucun modèle ne pouvait répondre à partir de son contexte. Si elle est présente, c'est une erreur de **lecture**.
+
+| Configuration | Erreurs | Recherche | Partiel | Lecture |
+|---|---|---|---|---|
+| Claude Sonnet + RAG (k=5) | 21 | 12 (57 %) | 1 | 8 (38 %) |
+| Qwen3-14B + RAG (k=5) | 33 | 13 (39 %) | 2 | 18 (55 %) |
+| Qwen3-4B + RAG | 46 | 14 (30 %) | 2 | 29 (63 %) |
+| Qwen3-4B RAFT v1 + RAG | 48 | 13 (27 %) | 3 | 31 (65 %) |
+| Qwen3-4B RAFT v2 + RAG | 48 | 13 (27 %) | 2 | 32 (67 %) |
+| Qwen3-1.7B + RAG | 54 | 14 (26 %) | 2 | 37 (69 %) |
+| Qwen3-1.7B RAFT v2 + RAG | 56 | 13 (23 %) | 2 | 40 (71 %) |
+
+(1 question non vérifiée par bras k=4, sortie JSON invalide.)
+
+**Lecture.**
+- **La limite propre au RAG est la même pour tous** : 12 à 14 questions (~6 % des 219) dont la réponse n'était dans aucun des passages reçus (ex. E32 : la page du joueur Shu n'est pas remontée, seules des pages de tournoi l'ont été). Plus de passages ou un meilleur moteur de recherche (reranker, découpe) sont les seuls leviers.
+- **Plus le modèle est petit, plus ses erreurs sont des erreurs de lecture** : 38 % pour Sonnet, 55 % pour le 14B, 63 à 71 % pour les SLM. Pour un modèle fort, c'est la recherche qui limite ; pour un SLM, c'est la lecture, en grande partie des réponses incomplètes aux questions composées (§4.7).
+- Le RAFT ne réduit pas le nombre d'erreurs de lecture sur ce test, ce qui est cohérent avec §4.7 : il apprend à s'abstenir et à repérer le bon passage, mais pas à répondre à toutes les parties d'une question.
+- Vérification automatique par un LLM local : indicative. Contrôlée à la main sur E32 (recherche), L18 (partiel) et quelques erreurs de lecture (G30 : le passage donne bien 750 PV pour Roadhog, le 4B s'est trompé).
+
 ---
 
 ## 5. Coûts
