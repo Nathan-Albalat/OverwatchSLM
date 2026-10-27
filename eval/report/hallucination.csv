@@ -2,6 +2,7 @@
 claude-opus;16;0.0;219;32.4
 claude-sonnet;16;0.0;219;43.8
 claude-sonnet-rag;16;0.0;219;5.0
+claude-sonnet-web;0;n/a;74;16.2
 qwen3-1.7b-base;16;87.5;219;4.6
 qwen3-1.7b-rag;16;18.8;219;1.8
 qwen3-14b;16;62.5;219;7.8

@@ -464,7 +464,7 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 
 ## 8. Limites et points à vérifier
 
-- **Juge LLM en cours de vérification manuelle** : 112 verdicts (8 par configuration, stratifiés par verdict : les abstentions et hallucinations y sont surreprésentées) dans `eval/review/sample.csv`. L'accord et le kappa s'afficheront dans le rapport.
+- **Juge LLM vérifié à la main** : 112 verdicts tirés (8 par configuration, stratifiés par verdict : les abstentions et hallucinations y sont surreprésentées), 111 relus (`eval/review/sample.csv`, précisions du relecteur dans `human_note`). **Accord 100 %, kappa de Cohen 1,00.** Limites : un seul relecteur, qui voyait le verdict et la justification du juge en relisant (biais de confirmation possible) ; échantillon stratifié, donc l'accord porte surtout sur les cas difficiles et ne se transpose pas directement à l'ensemble des réponses.
 - **Biais de construction** : le test et l'index proviennent du même corpus, ce qui avantage les bras RAG face aux frontier sans RAG. Les questions temporelles et la Saison 5 montrent toutefois un vrai besoin d'information fraîche.
 - **Le test a été consulté pour le diagnostic du RAFT** (v1 puis v2) : les écarts observés dessus servent d'explication, pas de réglage. C'est pour cette raison qu'il n'y a pas eu de v3.
 - **k différent** entre les bras : 4 pour les SLM, 5 pour le 14B et Sonnet.
@@ -475,7 +475,7 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 ## 9. Reste à faire et perspectives
 
 Reste à faire :
-- [ ] Vérification manuelle du juge (`eval/review/sample.csv`, colonne `human_verdict`), puis `ow-bench report`
+- [x] Vérification manuelle du juge : accord 100 %, kappa 1,00 (111 verdicts)
 - [ ] Mesure de la consommation électrique (`nvidia-smi --query-gpu=power.draw`) pendant un banc
 - [ ] Démo sur le Mac (GGUF RAFT 1.7B ou 4B + index RAG)
 - [ ] Présentation de soutenance ; citer Fandom et Liquipedia (CC-BY-SA, attribution) et Blizzard (notes de patch)

@@ -10,6 +10,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | claude-opus | 235 | 56.0 | 52.7 | 120 | 23 | 21 | 71 | 0 |
 | claude-sonnet | 235 | 43.2 | 39.0 | 91 | 21 | 27 | 96 | 0 |
 | claude-sonnet-rag | 235 | 93.8 | 93.4 | 217 | 7 | 0 | 11 | 0 |
+| claude-sonnet-web | 74 | 73.6 | 73.6 | 51 | 7 | 4 | 12 | 0 |
 | qwen3-1.7b-base | 235 | 2.3 | 1.6 | 3 | 5 | 203 | 10 | 14 |
 | qwen3-1.7b-rag | 235 | 80.9 | 80.8 | 183 | 14 | 31 | 4 | 3 |
 | qwen3-14b | 235 | 12.6 | 10.7 | 21 | 17 | 170 | 17 | 10 |
@@ -29,6 +30,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | claude-opus | 72.5 (n=51) | 85.0 (n=50) | 26.7 (n=43) | 13.0 (n=50) | 72.0 (n=25) | 100.0 (n=16) |
 | claude-sonnet | 57.8 (n=51) | 69.0 (n=50) | 12.8 (n=43) | 4.0 (n=50) | 56.0 (n=25) | 100.0 (n=16) |
 | claude-sonnet-rag | 95.1 (n=51) | 100.0 (n=50) | 81.4 (n=43) | 92.0 (n=50) | 100.0 (n=25) | 100.0 (n=16) |
+| claude-sonnet-web | 100.0 (n=7) | 100.0 (n=7) | 75.0 (n=10) | 66.0 (n=50) | n/a (n=0) | n/a (n=0) |
 | qwen3-1.7b-base | 0.0 (n=51) | 1.0 (n=50) | 3.5 (n=43) | 0.0 (n=50) | 6.0 (n=25) | 12.5 (n=16) |
 | qwen3-1.7b-rag | 83.3 (n=51) | 86.0 (n=50) | 67.4 (n=43) | 75.0 (n=50) | 100.0 (n=25) | 81.2 (n=16) |
 | qwen3-14b | 18.6 (n=51) | 9.0 (n=50) | 2.3 (n=43) | 8.0 (n=50) | 18.0 (n=25) | 37.5 (n=16) |
@@ -48,6 +50,7 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | claude-opus | 15.5 (n=74) | 71.7 (n=145) | 58.8 (n=164) | 34.5 (n=55) |
 | claude-sonnet | 5.4 (n=74) | 56.2 (n=145) | 46.6 (n=164) | 16.4 (n=55) |
 | claude-sonnet-rag | 92.6 (n=74) | 93.8 (n=145) | 95.1 (n=164) | 88.2 (n=55) |
+| claude-sonnet-web | 73.6 (n=74) | n/a (n=0) | 71.7 (n=53) | 78.6 (n=21) |
 | qwen3-1.7b-base | 0.0 (n=74) | 2.4 (n=145) | 1.5 (n=164) | 1.8 (n=55) |
 | qwen3-1.7b-rag | 75.0 (n=74) | 83.8 (n=145) | 82.0 (n=164) | 77.3 (n=55) |
 | qwen3-14b | 6.1 (n=74) | 13.1 (n=145) | 11.6 (n=164) | 8.2 (n=55) |
@@ -69,6 +72,7 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 | claude-opus | 16 | 0.0 | 219 | 32.4 |
 | claude-sonnet | 16 | 0.0 | 219 | 43.8 |
 | claude-sonnet-rag | 16 | 0.0 | 219 | 5.0 |
+| claude-sonnet-web | 0 | n/a | 74 | 16.2 |
 | qwen3-1.7b-base | 16 | 87.5 | 219 | 4.6 |
 | qwen3-1.7b-rag | 16 | 18.8 | 219 | 1.8 |
 | qwen3-14b | 16 | 62.5 | 219 | 7.8 |
@@ -88,6 +92,7 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 | claude-opus | 5.78 | 11.65 | 2.62 | 202.5 | n/a | 0.0148 |
 | claude-sonnet | 5.62 | 11.52 | 3.25 | 390.4 | n/a | 0.0084 |
 | claude-sonnet-rag | 3.14 | 5.11 | 1.69 | 264.4 | n/a | 0.0203 |
+| claude-sonnet-web | 16.72 | 30.32 | 1.98 | 66.3 | n/a | 0.0336 |
 | qwen3-1.7b-base | 0.17 | 0.34 | 0.04 | 414.2 | 2158 | 0.0000 |
 | qwen3-1.7b-rag | 0.24 | 0.39 | 0.16 | 362.4 | 2158 | 0.0000 |
 | qwen3-14b | 0.64 | 1.39 | 0.04 | 77.3 | 10468 | 0.0000 |
@@ -104,7 +109,7 @@ Local : cout = 0. Claude : cout = equivalent API (abonnement, pas une depense re
 
 ## Accord juge / verification manuelle
 
-Pas encore de verification manuelle (`ow-bench review-export`, puis remplir `human_verdict`).
+Echantillon verifie : 111 reponses ; accord 100.0 % ; kappa de Cohen 1.00.
 
 ## Cout de mise a jour (Saison 5)
 
