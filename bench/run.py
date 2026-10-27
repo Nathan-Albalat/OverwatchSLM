@@ -95,6 +95,8 @@ def run(names, limit=None, ids=None, category=None):
                            "cost_usd": res["cost_usd"],
                            "rag_ids": [p["id"] for p in passages] if passages else None,
                            "ts": dt.datetime.now().isoformat(timespec="seconds")}
+                    if res.get("raw_meta"):
+                        row["meta"] = res["raw_meta"]
                     out.write(json.dumps(row, ensure_ascii=False) + "\n")
                     out.flush()
                     n += 1

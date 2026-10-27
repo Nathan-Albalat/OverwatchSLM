@@ -106,3 +106,12 @@ model = "ow-qwen3-1.7b-raft"
 think = false
 rag = {k = 4}
 
+
+# LLM frontier + recherche web (outil WebSearch de Claude Code) : le concurrent qui « se met a jour » sans RAG.
+# Lance sur les questions temporelles seulement (--ids). Cout = tokens + 10 $ / 1 000 recherches (compte dans meta.usage).
+[[config]]
+name = "claude-sonnet-web"
+backend = "claude_cli"
+model = "sonnet"
+tools = "WebSearch"
+system_extra = "You can use the WebSearch tool to look up current information about Overwatch before answering."

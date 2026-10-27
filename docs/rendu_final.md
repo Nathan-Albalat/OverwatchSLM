@@ -111,6 +111,7 @@ Un jeu « v1 reconstruit » (13 oct., après le problème n°7) existe aussi, ma
 | 5 | **SLM + RAFT + RAG** | Qwen3-4B (v1 et v2), Qwen3-1.7B (v2) | 4 passages |
 | 6 | LLM local | Qwen3-14B (Ollama) | ± 5 passages |
 | 7 | Frontier | Claude Sonnet, Claude Opus (`claude -p`) | Sonnet ± 5 passages |
+| 8 | Frontier + recherche web | Claude Sonnet + outil WebSearch | recherche web libre (74 questions temporelles seulement, §5.2) |
 
 - **Évaluation** : un juge LLM (Claude Sonnet) note chaque réponse correct, partial, incorrect ou abstained ; pour les questions sans réponse, correct ou hallucinated. La référence fait foi. Score = correct + 0,5 × partial.
 - La température vaut 0 et le mode thinking est désactivé pour les modèles Qwen.
@@ -308,13 +309,42 @@ Le RAFT v2 a été ralenti ~25 min par une autre application qui utilisait le GP
 
 Le coût des jugements n'est pas enregistré dans les fichiers.
 
-### 5.2 Coût d'usage (par requête)
+### 5.2 Coût d'usage (par requête) : SLM local contre LLM + recherche web
 
-- **SLM local** :
-  - coût marginal nul (électricité exceptée, *à mesurer : `nvidia-smi --query-gpu=power.draw`*) ;
-  - 0,2 à 0,4 s par réponse avec RAG ;
-  - 2,2 à 3,9 Go de VRAM, possible sur un portable.
-- **Frontier** : 0,008 à 0,02 $ par requête en équivalent API, 3 à 6 s de latence, dépendance au réseau et au fournisseur. Ordre de grandeur pour 10 000 requêtes par jour avec Sonnet + RAG : ~200 $ par jour.
+Le vrai concurrent d'un SLM + RAG n'est pas un LLM nu, mais un **LLM frontier équipé d'un outil de recherche web**, qui se met à jour seul. Nous l'avons ajouté comme bras `claude-sonnet-web` (outil WebSearch de Claude Code, sur les 74 questions temporelles), et mesuré la consommation électrique des bras locaux (`bench/power.py`, `eval/report/power.jsonl`).
+
+**Protocole énergie** : puissance de la carte graphique relevée 10 fois par seconde (`nvidia-smi`) pendant les 235 questions, consommation au repos (21 à 28 W) soustraite ; encodage des questions inclus ; CPU **estimé** à 35 W pendant une inférence GPU (charge légère, valeur moyenne) et à 120 W (TDP du Ryzen 7 9800X3D, majorant) pour l'inférence sur CPU seul. Les autres composants (carte mère, RAM, disque) et la consommation au repos de la machine ne sont pas comptés. Prix : **0,2001 €/kWh** (tarif bleu EDF, option Base 6 kVA, en vigueur depuis le 1er août 2026). Tarifs API officiels Anthropic : Sonnet 5.5 à 2 $ / 10 $ par million de tokens en entrée / sortie, recherche web à 10 $ pour 1 000 recherches. Change : 1 € ≈ 1,12 $ (11 oct. 2026).
+
+| Configuration | Score temporel (74 q.) | Saison 5 | Latence | Énergie / question | Coût / question | 10 000 questions / jour pendant 1 an |
+|---|---|---|---|---|---|---|
+| Claude Sonnet seul | 5,4 % | 0/8 | 5,6 s | — | 0,007 $ | — |
+| **Claude Sonnet + recherche web** | **73,6 %** | 4/8 + 1 p. | **16,7 s** (p95 30,7 s) | — | **0,033 $ ≈ 0,030 €** | **~108 500 €** |
+| Claude Sonnet + notre RAG (API) | 92,6 % | 7/8 | 3,1 s | — | 0,011 $ ≈ 0,010 € | ~35 900 € |
+| Qwen3 14B + RAG (GPU) | 87,2 % | 7/8 | 1,3 s | 0,092 Wh | 1,8 × 10⁻⁵ € | 67 € |
+| Qwen3 4B + RAG (GPU) | 79,7 % | 5/8 + 1 p. | 0,51 s | 0,029 Wh | 5,9 × 10⁻⁶ € | 21 € |
+| Qwen3 4B RAFT v2 + RAG (GPU) | 81,8 % | 6/8 + 1 p. | 0,41 s | 0,024 Wh | 4,8 × 10⁻⁶ € | 17 € |
+| **Qwen3 1.7B RAFT v2 + RAG (GPU)** | 77,7 % | 6/8 + 1 p. | **0,26 s** | **0,012 Wh** | **2,3 × 10⁻⁶ €** | **8 €** |
+| Qwen3 1.7B RAFT v2 + RAG (CPU seul) | (idem) | (idem) | 4,1 s | 0,135 Wh | 2,7 × 10⁻⁵ € | 99 € |
+| Qwen3 4B + RAG (CPU seul) | (idem) | (idem) | 10,4 s | 0,348 Wh | 7,0 × 10⁻⁵ € | 254 €* |
+
+\* 10,4 s par question : une seule machine plafonne à ~8 300 questions par jour en traitement séquentiel. Sur CPU seul, les réponses sont identiques à celles du GPU (mêmes poids), seule la vitesse change ; la mesure CPU porte sur 60 (1.7B) et 30 (4B) questions. Coût Sonnet + recherche web : ~6 000 tokens en entrée (pages de résultats incluses), ~900 en sortie, ~1,2 recherche par question ; ce calcul retrouve le coût équivalent rapporté par `claude -p` (0,034 $). Le bras web n'a pas été passé sur les questions sans réponse.
+
+**Lecture.**
+- **Sonnet + recherche web se met bien à jour** (5,4 % → 73,6 % sur les questions temporelles), mais il fait **moins bien que nos SLM + RAG** (77,7 à 81,8 %) : il tombe sur des articles de presse ou des pages obsolètes plutôt que sur les notes officielles (S04 : refus faute de source fiable). Un index construit sur des sources choisies vaut mieux qu'une recherche web générique.
+- **Coût marginal** : par question, le SLM local coûte de **1 000 fois** (1.7B sur CPU) à **13 000 fois** (1.7B sur GPU) moins cher que Sonnet + recherche web, et de 360 à 4 300 fois moins que Sonnet + RAG via l'API.
+- **Latence** : 0,3 à 0,5 s contre 17 s.
+
+**Amortissement du matériel** (prix d'achat ÷ économie par question, face à Sonnet + recherche web / Sonnet + RAG API) :
+
+| Matériel | Questions pour amortir | À 1 000 questions / jour |
+|---|---|---|
+| RTX 5070 Ti (~1 200 €, notre machine) | 40 400 / 122 200 | 40 / 122 jours |
+| Machine sans carte graphique à 300 € (1.7B sur CPU) | 10 100 / 30 600 | 10 / 31 jours |
+| Machine à 150 € ou machine déjà possédée | 5 000 / 15 300, ou immédiat | 5 / 15 jours |
+
+Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortement monté en 2026 : le Raspberry Pi 5 16 Go est passé à 205 $). Le 1.7B quantifié tient en 1,1 Go de fichier et ~2,2 Go de mémoire ; un PC à 4-8 Go de RAM suffit, mais un processeur d'entrée de gamme sera plus lent que notre Ryzen 7 9800X3D (latence de 4 s mesurée ici, à multiplier).
+
+**Limites de cette comparaison** : CPU estimé et non mesuré ; consommation au repos de la machine non comptée (pour un service allumé 24 h/24, elle dépasse la consommation marginale : la carte seule consomme ~26 W au repos, soit ~46 €/an) ; l'énergie et l'infrastructure côté fournisseur sont incluses dans le prix de l'API, pas mesurées. Le coût de construction (génération 25,7 h, entraînement) est un coût unique, non amorti ici.
 
 ### 5.3 Coût de mise à jour (Saison 5, sortie le 6 oct. 2026)
 

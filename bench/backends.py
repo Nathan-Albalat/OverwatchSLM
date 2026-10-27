@@ -46,10 +46,12 @@ class OllamaBackend(Backend):
 
     def _payload(self, messages, max_tokens):
         c = self.cfg
+        options = {"temperature": c.get("temperature", 0), "num_predict": max_tokens,
+                   "num_ctx": c.get("num_ctx", 8192)}   # defaut Ollama trop court pour 5 passages RAG
+        if "num_gpu" in c:   # 0 = tout sur CPU (mesure d'une config minimale sans carte graphique)
+            options["num_gpu"] = c["num_gpu"]
         return {"model": c["model"], "messages": messages, "stream": True, "think": c.get("think", False),
-                "keep_alive": c.get("keep_alive", "30m"),
-                "options": {"temperature": c.get("temperature", 0), "num_predict": max_tokens,
-                            "num_ctx": c.get("num_ctx", 8192)}}   # defaut Ollama trop court pour 5 passages RAG
+                "keep_alive": c.get("keep_alive", "30m"), "options": options}
 
     def prepare(self):
         # requete de chauffe non comptee : evite de mesurer le chargement du modele
@@ -166,9 +168,14 @@ class ClaudeCliBackend(Backend):
     def answer(self, messages):
         system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
         user = "\n\n".join(m["content"] for m in messages if m["role"] == "user")
-        cmd = [self.exe, "-p", "--output-format", "json", "--tools", "", "--system-prompt", system,
+        tools = self.cfg.get("tools", "")   # ex. "WebSearch" : bras LLM + recherche web
+        if tools and self.cfg.get("system_extra"):
+            system += "\n\n" + self.cfg["system_extra"]
+        cmd = [self.exe, "-p", "--output-format", "json", "--tools", tools, "--system-prompt", system,
                "--setting-sources", "", "--strict-mcp-config", "--no-session-persistence",
                "--model", self.cfg["model"]]
+        if tools:
+            cmd += ["--allowedTools", tools]
         last = ""
         for attempt in range(3):
             t0 = time.time()
@@ -209,7 +216,8 @@ class ClaudeCliBackend(Backend):
             if res["out_tokens"] and api and ttft is not None and api > ttft:
                 res["tok_s"] = res["out_tokens"] / ((api - ttft) / 1000)
             res["cost_usd"] = d.get("total_cost_usd", 0.0)
-            res["raw_meta"] = {"duration_ms": d.get("duration_ms"), "duration_api_ms": api}
+            res["raw_meta"] = {"duration_ms": d.get("duration_ms"), "duration_api_ms": api,
+                               "num_turns": d.get("num_turns"), "usage": u}
             return res
         raise BackendError(f"claude -p echoue apres 3 essais: {last}")
 
