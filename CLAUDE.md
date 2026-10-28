@@ -90,6 +90,10 @@ uv run ow-bench export-questions <config> / import-answers <config> <csv>   # ba
 - RAG : une config avec `rag` appelle `rag.retrieve.retrieve(question, k) -> [{'id','text'}]` (package `rag/`, voir section RAG/RAFT).
 - Juge : verdicts correct/partial/incorrect/abstained (unanswerable : correct/hallucinated), la reference fait foi. Score : correct=1, partial=0.5.
 - Si `uv sync` echoue (build bloque par une strategie de controle d'application Windows), lancer `.venv/Scripts/python.exe -m bench.cli ...`.
+- **Normalisation de la question** (`rag/rewrite.py`) : option de config `rewrite = true` (configs `qwen3-4b-rag-rw`, `slm-4b-raft-v2-rag-rw`, k=4). La question est d'abord
+  corrigee (noms d'entites mal ecrits, rapidfuzz >= 80, mots courants/du corpus exclus) puis reformulee en une question complete par le modele qui repond (Ollama, temp. 0) ;
+  elle sert a la recherche ET au prompt. Le run enregistre `rewritten` et `rewrite_s` ; `latency_s` = generation seule, latence totale = `latency_s + rewrite_s`.
+  Cache append-only `data/rag/rewrite_cache.jsonl` (cle modele + question, ignore par git) -> reproductible ; `rewrite_s` = duree mesuree a l'origine.
 
 ### RAG et exemples RAFT (`ow-rag`, package `rag/`)
 ```
@@ -114,6 +118,11 @@ Query: `), fusion RRF (k=60), max 2 passages/page.
   seulement (3 % de refus sur les oracles de raft_val) car les questions d'entrainement recopient le passage oracle ; ~12 % des refus
   sont faux. `raft --p-oracle 0.9 --out-dir data/dataset/raft_v2` puis `augment paraphrase` (50 % des non-refus reformules),
   `augment verify` (refus verifies par qwen3.6), `augment apply` -> `raft_{train,val}_final.jsonl` (run `qwen3-4b-raft-v2`).
+- **RAFT v3** (`rag/augment.py`, part de `raft_v2/raft_*_final.jsonl`, passages inchanges) : diagnostic du v2 = reponses courtes, un seul fait sur
+  les questions composees, questions « joueur » (mots-cles, fautes) mal comprises. `augment compose` (LLM qwen3.6, reprenable, 30 % des oracles :
+  2e paire du meme `chunk_id`, question composee + reponse complete -> `raft_v3/compose.jsonl`), `augment noisy` (apercu) ; `augment apply3`
+  (+ 15 % de questions bruitees deterministes, sans LLM) -> `data/dataset/raft_v3/raft_{train,val}_final.jsonl` + `augment_stats.json`
+  (`--dir raft_v3 --src raft_v2 --share --seed --limit`) ; run `qwen3-4b-raft-v3`, config banc `slm-4b-raft-v3-rag`.
 - **Jeu de dev** (`rag.cli devset` -> `eval/dev_set.jsonl`, 300 paires val reformulees + 30 sans reponse generees) : regler les variantes
   avec `ow-bench --set dev run|judge|report` (sorties sous `eval/dev/`), le jeu de test ne sert qu'a la mesure finale.
 

@@ -115,3 +115,91 @@ backend = "claude_cli"
 model = "sonnet"
 tools = "WebSearch"
 system_extra = "You can use the WebSearch tool to look up current information about Overwatch before answering."
+
+# v2 de la recherche : fiche (infobox) de l'entite nommee dans la question ajoutee aux passages (rag.retrieve, entity).
+# "front" : la fiche remplace le 4e passage ; "add" : elle s'ajoute (5 passages). A regler sur --set dev / player.
+[[config]]
+name = "slm-4b-raft-v2-rag-ent"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v2"
+think = false
+rag = {k = 4, entity = "front"}
+
+[[config]]
+name = "slm-4b-raft-v2-rag-ent5"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v2"
+think = false
+rag = {k = 4, entity = "add"}
+
+
+[[config]]
+name = "qwen3-4b-rag-rw"
+backend = "ollama"
+model = "hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M"
+think = false
+rewrite = true
+rag = {k = 4}
+
+[[config]]
+name = "slm-4b-raft-v2-rag-rw"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v2"
+think = false
+rewrite = true
+rag = {k = 4}
+
+[[config]]
+name = "slm-4b-raft-v3-rag"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v3"
+think = false
+rag = {k = 4}
+
+# Balayage RAG (28 oct.) sur --set dev : plus de passages, plus de passages par page (defaut : k = 4, 2 par page)
+[[config]]
+name = "slm-4b-raft-v2-rag-k6"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v2"
+think = false
+rag = {k = 6}
+
+[[config]]
+name = "slm-4b-raft-v2-rag-mpp3"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v2"
+think = false
+rag = {k = 4, max_per_page = 3}
+
+# Consigne de recence dans le prompt RAG (bench/prompts.RAG_HEADERS["recent"]) et combinaisons pour le jeu joueurs
+[[config]]
+name = "slm-4b-raft-v2-rag-recent"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v2"
+think = false
+rag = {k = 4}
+rag_header = "recent"
+
+[[config]]
+name = "qwen3-4b-rag-rw-k6"
+backend = "ollama"
+model = "hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M"
+think = false
+rewrite = true
+rag = {k = 6}
+
+[[config]]
+name = "slm-4b-raft-v2-rag-rw-k6"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v2"
+think = false
+rewrite = true
+rag = {k = 6}
+
+[[config]]
+name = "slm-4b-raft-v3-rag-rw"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v3"
+think = false
+rewrite = true
+rag = {k = 4}

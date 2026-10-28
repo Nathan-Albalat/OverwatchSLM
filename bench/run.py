@@ -37,13 +37,13 @@ def done_keys(path):
     return {(r["id"], r["qhash"]) for r in C.read_jsonl(path)}
 
 
-def _retrieve(question, k):
+def _retrieve(question, k, **opts):
     try:
         from rag.retrieve import retrieve
     except ImportError:
         raise SystemExit("Index RAG absent : le module rag.retrieve (lot RAG) n'existe pas encore. "
                          "Il doit exposer retrieve(question, k) -> liste de dicts {'id', 'text'}.")
-    return retrieve(question, k)
+    return retrieve(question, k, **opts)
 
 
 def run(names, limit=None, ids=None, category=None):
@@ -77,11 +77,18 @@ def run(names, limit=None, ids=None, category=None):
                     if C.STOP_FILE.exists():
                         reason = "fichier STOP"
                         break
-                    passages = None
+                    passages, question, rewrite_s = None, q["question"], None
+                    if cfg.get("rewrite"):
+                        # normalisation (fautes d'entites + reformulation par le modele qui repond) : la question
+                        # normalisee sert a la recherche ET au prompt ; le qhash reste celui de la question d'origine
+                        from rag.rewrite import normalize
+                        question, info = normalize(q["question"], cfg["model"])
+                        rewrite_s = round(info["rewrite_s"], 3)
                     if cfg.get("rag"):
-                        passages = _retrieve(q["question"], cfg["rag"].get("k", 5))
+                        passages = _retrieve(question, cfg["rag"].get("k", 5),
+                                             **{o: v for o, v in cfg["rag"].items() if o != "k"})
                     try:
-                        res = backend.answer(build_messages(q["question"], passages))
+                        res = backend.answer(build_messages(question, passages, cfg.get("rag_header", "default")))
                     except RateLimitError as e:
                         reason = f"limite d'abonnement/quota ({e})"
                         break
@@ -95,6 +102,11 @@ def run(names, limit=None, ids=None, category=None):
                            "cost_usd": res["cost_usd"],
                            "rag_ids": [p["id"] for p in passages] if passages else None,
                            "ts": dt.datetime.now().isoformat(timespec="seconds")}
+                    if cfg.get("rewrite"):
+                        # latency_s = generation seule (comparable aux autres bras) ; la reecriture est a part :
+                        # latence totale = latency_s + rewrite_s (duree mesuree a l'origine, meme si lue du cache)
+                        row["rewritten"] = question
+                        row["rewrite_s"] = rewrite_s
                     if res.get("raw_meta"):
                         row["meta"] = res["raw_meta"]
                     out.write(json.dumps(row, ensure_ascii=False) + "\n")

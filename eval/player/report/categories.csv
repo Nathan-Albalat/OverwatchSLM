@@ -1,0 +1,5 @@
+﻿config;lore;gameplay;esport;patch;maps_modes;unanswerable
+qwen3-4b-rag;100.0 (n=4);61.1 (n=9);n/a (n=0);100.0 (n=1);n/a (n=0);100.0 (n=1)
+slm-4b-raft-v2-rag;100.0 (n=4);27.8 (n=9);n/a (n=0);100.0 (n=1);n/a (n=0);100.0 (n=1)
+slm-4b-raft-v2-rag-ent;100.0 (n=4);33.3 (n=9);n/a (n=0);100.0 (n=1);n/a (n=0);100.0 (n=1)
+slm-4b-raft-v2-rag-ent5;100.0 (n=4);33.3 (n=9);n/a (n=0);100.0 (n=1);n/a (n=0);100.0 (n=1)

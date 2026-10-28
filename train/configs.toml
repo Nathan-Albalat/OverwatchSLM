@@ -76,3 +76,12 @@ stage = "raft"
 data = "data/dataset/raft_v2/raft_train_final.jsonl"
 val_data = "data/dataset/raft_v2/raft_val_final.jsonl"
 epochs = 1
+
+[[run]]
+name = "qwen3-4b-raft-v3"
+model = "unsloth/Qwen3-4B"
+stage = "raft"
+# RAFT v3 = v2 + 30 % de questions composees (reponses completes) + 15 % de questions « joueur » (mots-cles, fautes)
+data = "data/dataset/raft_v3/raft_train_final.jsonl"
+val_data = "data/dataset/raft_v3/raft_val_final.jsonl"
+epochs = 1

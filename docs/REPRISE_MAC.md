@@ -54,6 +54,7 @@ uv run python -m demo.demo --model ow-qwen3-1.7b-raft   # le plus petit modèle
 Commandes : `/compare` (la question suivante est posée sans RAG puis avec), `/rag` (active ou coupe le RAG),
 `/sources` (affiche ou masque les passages trouvés), `/model NOM`, `/aide`, `/quitter`.
 Chaque réponse affiche le temps total, le temps de recherche, le délai avant le premier mot, les tokens/s et la mémoire du modèle.
+La question est **normalisée par défaut** (fautes de noms corrigées, question complète reformulée par le modèle ; elle s'affiche en gris quand elle diffère de la saisie, son temps est dans les statistiques) : `--no-rewrite` au lancement ou `/rewrite` pour la couper.
 
 **Déroulé proposé (diapo « Démo »)** :
 1. `/compare` puis « What is Roadhog's Chain Hook cooldown in 5v5 after the 6 October 2026 patch? »

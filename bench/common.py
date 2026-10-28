@@ -22,14 +22,16 @@ def use_set(name):
     global TEST_SET, RUNS, JUDGMENTS, REVIEW, REPORT, COVERAGE, STOP_FILE
     if name == "test":
         return
-    if name != "dev":
-        raise SystemExit(f"jeu inconnu: {name} (test | dev)")
-    base = EVAL / "dev"
-    TEST_SET, RUNS, JUDGMENTS = EVAL / "dev_set.jsonl", base / "runs", base / "judgments"
+    if name not in ("dev", "player"):
+        raise SystemExit(f"jeu inconnu: {name} (test | dev | player)")
+    # player : questions posees par de vrais joueurs (eval/player_set.jsonl), sorties sous eval/player/
+    base = EVAL / name
+    TEST_SET = EVAL / ("dev_set.jsonl" if name == "dev" else "player_set.jsonl")
+    RUNS, JUDGMENTS = base / "runs", base / "judgments"
     REVIEW, REPORT, STOP_FILE = base / "review", base / "report", base / "runs" / "STOP"
     COVERAGE = base / "no_coverage.jsonl"     # pas de couverture : paires val, jamais vues a l'entrainement
     if not TEST_SET.exists():
-        raise SystemExit(f"{TEST_SET} absent : lancer `rag.cli devset`")
+        raise SystemExit(f"{TEST_SET} absent" + (" : lancer `rag.cli devset`" if name == "dev" else ""))
 
 
 def qhash(q):

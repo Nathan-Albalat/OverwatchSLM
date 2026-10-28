@@ -1,4 +1,7 @@
 """retrieve(question, k) : recherche hybride BM25 + dense (RRF). Signature attendue par bench/run.py."""
+import re
+import unicodedata
+
 import numpy as np
 
 from rag import common as C
@@ -45,7 +48,7 @@ def _dense(question, ix, n):
     return [(int(i), float(s[i])) for i in idx]
 
 
-def retrieve(question, k=5, mode=None, exclude_ids=(), max_per_page=MAX_PER_PAGE):
+def retrieve(question, k=5, mode=None, exclude_ids=(), max_per_page=MAX_PER_PAGE, entity=False):
     ix = get_index()
     mode = resolve_mode(mode, ix)
     excl = set(exclude_ids)
@@ -76,4 +79,55 @@ def retrieve(question, k=5, mode=None, exclude_ids=(), max_per_page=MAX_PER_PAGE
                     "text": d["text"], "score": round(sc, 5)})
         if len(out) >= k:
             break
+    if entity:
+        out = _with_entity_cards(question, ix, out, k, excl, mode=entity)
     return out
+
+
+# ------------------------------------------------------------------ fiches des entites citees (v2 de la recherche)
+
+def _norm(s):
+    s = unicodedata.normalize("NFKD", s.lower())
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    return " " + re.sub(r"[^a-z0-9]+", " ", s).strip() + " "
+
+
+def _entities(ix):
+    """Pages Fandom d'entites (heros, personnages, lieux et cartes) : titre normalise -> position de leur fiche
+    (chunk 0, qui porte l'infobox : nationalite, vrai nom, role, localisation...)."""
+    if "entities" not in _state:
+        ent = {}
+        for i, d in enumerate(ix.docs):
+            if d["source"] != "fandom" or not d["id"].endswith(":0") or "/" in d["title"]:
+                continue
+            head = d["text"][:1500]
+            if "\nName: " in head and ("[Game info]" in head or "[Background]" in head
+                                       or re.search(r"\nLocation: ", head)):
+                t = _norm(d["title"])
+                if len(t.strip()) >= 3:
+                    ent[t] = i
+        _state["entities"] = ent
+    return _state["entities"]
+
+
+def _with_entity_cards(question, ix, out, k, excl, mode=True, max_cards=2):
+    """Si la question nomme une entite, sa fiche entre dans les passages (en tete), a nombre de passages constant :
+    les questions d'attribut (« What country is Sigma from? ») ratent sinon la fiche, mal classee par BM25 et
+    les embeddings (« country » != « Nationality », bloc de champs peu « semantique »)."""
+    q = _norm(question)
+    found = sorted((t for t in _entities(ix) if t in q), key=len, reverse=True)
+    cards, seen = [], {p["id"] for p in out}
+    for t in found:
+        if any(t in c_t for c_t, _ in cards):      # « Soldier 76 » plutot que « Soldier » (titre englobe)
+            continue
+        d = ix.docs[_entities(ix)[t]]
+        if d["id"] not in excl:
+            cards.append((t, d))
+        if len(cards) >= max_cards:
+            break
+    new = [{"id": d["id"], "title": d["title"], "section": d["section"], "source": d["source"],
+            "text": d["text"], "score": None} for _, d in cards if d["id"] not in seen]
+    if not new:
+        return out
+    # entity="add" : la fiche s'ajoute (k + 1 ou 2 passages) ; sinon elle remplace le dernier passage
+    return new + out if mode == "add" else (new + out)[:k]

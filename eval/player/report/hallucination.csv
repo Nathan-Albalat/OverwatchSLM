@@ -1,0 +1,5 @@
+﻿config;n unanswerable;taux d'hallucination %;n repondables;taux d'abstention %
+qwen3-4b-rag;1;0.0;14;0.0
+slm-4b-raft-v2-rag;1;0.0;14;7.1
+slm-4b-raft-v2-rag-ent;1;0.0;14;14.3
+slm-4b-raft-v2-rag-ent5;1;0.0;14;14.3

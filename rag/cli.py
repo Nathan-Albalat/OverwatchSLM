@@ -31,10 +31,14 @@ def main():
     r.add_argument("--template-share", type=float, default=0.1)
     r.add_argument("--max-words", type=int, default=400, help="troncature des passages")
 
-    g = sub.add_parser("augment", help="corrections RAFT par LLM local : paraphrase | verify | apply (reprenable)")
-    g.add_argument("step", choices=["paraphrase", "verify", "apply"])
-    g.add_argument("--dir", default="data/dataset/raft_v2", help="dossier des raft_{train,val}.jsonl")
-    g.add_argument("--share", type=float, default=0.5, help="paraphrase : part des exemples non-refus reformules")
+    g = sub.add_parser("augment", help="corrections RAFT par LLM local : paraphrase | verify | apply | compose | noisy | apply3 (reprenable)")
+    g.add_argument("step", choices=["paraphrase", "verify", "apply", "compose", "noisy", "apply3"])
+    g.add_argument("--dir", default=None, help="dossier de travail/sortie (defaut raft_v2 ; raft_v3 pour compose|apply3)")
+    g.add_argument("--src", default="data/dataset/raft_v2", help="v3 : dossier des raft_{train,val}_final.jsonl de depart")
+    g.add_argument("--limit", type=int, default=None, help="v3 : nombre d'exemples (essais)")
+    g.add_argument("--share-noisy", type=float, default=0.15, help="v3 : part des exemples non-refus bruites")
+    g.add_argument("--share", type=float, default=None,
+                   help="paraphrase : part reformulee (defaut 0.5) ; compose : part composee des oracles (defaut 0.3)")
     g.add_argument("--seed", type=int, default=0)
 
     dv = sub.add_parser("devset", help="eval/dev_set.jsonl : paires val reformulees + questions sans reponse (LLM)")
@@ -60,8 +64,12 @@ def main():
         raft.run(a.n, a.k, a.p_oracle, a.mode, a.seed, a.out_dir, a.template_share, a.max_words)
     elif a.cmd == "augment":
         from rag import augment
-        {"paraphrase": lambda: augment.paraphrase(a.dir, a.share, a.seed), "verify": lambda: augment.verify(a.dir),
-         "apply": lambda: augment.apply(a.dir)}[a.step]()
+        d = a.dir or ("data/dataset/raft_v3" if a.step in ("compose", "noisy", "apply3") else "data/dataset/raft_v2")
+        {"paraphrase": lambda: augment.paraphrase(d, 0.5 if a.share is None else a.share, a.seed),
+         "verify": lambda: augment.verify(d), "apply": lambda: augment.apply(d),
+         "compose": lambda: augment.compose(d, a.src, 0.3 if a.share is None else a.share, a.seed, a.limit),
+         "noisy": lambda: augment.noisy(a.src, a.limit, a.share_noisy, a.seed),
+         "apply3": lambda: augment.apply3(d, a.src, a.share_noisy, a.seed)}[a.step]()
     elif a.cmd == "devset":
         from rag import augment
         augment.devset(a.n, a.unanswerable, a.seed)

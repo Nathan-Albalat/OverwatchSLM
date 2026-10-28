@@ -6,7 +6,7 @@ def main():
     import sys
     sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(prog="ow-bench")
-    ap.add_argument("--set", default="test", choices=["test", "dev"],
+    ap.add_argument("--set", default="test", choices=["test", "dev", "player"],
                     help="dev = eval/dev_set.jsonl, sorties sous eval/dev/ (reglages sans toucher au test)")
     sub = ap.add_subparsers(dest="cmd", required=True)
 

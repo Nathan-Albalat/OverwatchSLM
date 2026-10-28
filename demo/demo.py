@@ -1,5 +1,7 @@
 """Demo de soutenance : poser des questions au SLM, avec ou sans RAG, en affichant latence et memoire.
 Meme prompt et meme recherche que le banc (bench.prompts + rag.retrieve, k = 4).
+La question est normalisee par defaut (rag.rewrite : fautes de noms corrigees, question reformulee par le modele) ;
+--no-rewrite ou /rewrite pour la desactiver.
 
 Usage :
   python -m demo.demo                                  # interactif, RAFT 4B v2 + RAG
@@ -8,6 +10,7 @@ Usage :
 
 Commandes en mode interactif :
   /rag           active ou coupe le RAG          /compare   la prochaine question : sans RAG puis avec
+  /rewrite       active ou coupe la normalisation de la question (fautes, question elliptique)
   /model NOM     change de modele Ollama         /sources   affiche ou masque les passages trouves
   /aide          rappelle les commandes          /quitter   (ou Ctrl+D)
 """
@@ -76,8 +79,16 @@ def warm_up(model):
     print(c(f" pret ({time.time() - t0:.1f} s)", DIM))
 
 
-def answer(question, model, use_rag, show_sources):
-    passages, t_rag = None, 0.0
+def answer(question, model, use_rag, show_sources, rewrite=False):
+    passages, t_rag, t_rw = None, 0.0, 0.0
+    if rewrite:
+        from rag.rewrite import normalize
+        t0 = time.time()
+        norm, _ = normalize(question, model, OLLAMA)
+        t_rw = time.time() - t0
+        if norm != question:
+            print(c(f"  Question normalisee : {norm}", DIM))
+        question = norm
     if use_rag:
         from rag.retrieve import retrieve
         t0 = time.time()
@@ -106,10 +117,11 @@ def answer(question, model, use_rag, show_sources):
                 print(piece, end="", flush=True)
             if d.get("done"):
                 final = d
-    total = time.time() - t0 + t_rag
+    total = time.time() - t0 + t_rag + t_rw
     tok_s = final.get("eval_count", 0) / (final.get("eval_duration", 1) / 1e9) if final.get("eval_duration") else 0
     mem = model_memory(model)
-    stats = [f"{total:.2f} s au total", f"recherche {t_rag * 1000:.0f} ms" if use_rag else None,
+    stats = [f"{total:.2f} s au total", f"normalisation {t_rw:.2f} s" if rewrite else None,
+             f"recherche {t_rag * 1000:.0f} ms" if use_rag else None,
              f"premier mot {ttft:.2f} s" if ttft else None, f"{tok_s:.0f} tokens/s" if tok_s else None,
              f"memoire du modele {mem:.1f} Go" if mem else None]
     print("\n" + c("  " + " | ".join(s for s in stats if s), GREEN) + "\n")
@@ -120,15 +132,17 @@ def main():
     ap.add_argument("--model", default=DEFAULT_MODEL)
     ap.add_argument("--no-rag", action="store_true", help="demarrer sans RAG")
     ap.add_argument("--ask", help="poser une seule question puis quitter")
+    ap.add_argument("--no-rewrite", action="store_true", help="ne pas normaliser la question avant la recherche")
     ap.add_argument("--compare", action="store_true", help="avec --ask : sans RAG puis avec RAG")
     a = ap.parse_args()
     model, use_rag, show_sources, compare_next = a.model, not a.no_rag, True, False
+    rewrite = not a.no_rewrite
     check_ollama(model)
     warm_up(model)
     if a.ask:
         if a.compare:
-            answer(a.ask, model, False, show_sources)
-        answer(a.ask, model, True if a.compare else use_rag, show_sources)
+            answer(a.ask, model, False, show_sources, rewrite)
+        answer(a.ask, model, True if a.compare else use_rag, show_sources, rewrite)
         return
     print(c("OW-SLM : un petit modele specialise Overwatch, 100 % local. /aide pour les commandes.\n", BOLD))
     while True:
@@ -146,6 +160,9 @@ def main():
             elif cmd == "/rag":
                 use_rag = not use_rag
                 print(c(f"RAG {'active' if use_rag else 'coupe'}", DIM))
+            elif cmd == "/rewrite":
+                rewrite = not rewrite
+                print(c(f"Normalisation de la question {'activee' if rewrite else 'coupee'}", DIM))
             elif cmd == "/compare":
                 compare_next = True
                 print(c("La prochaine question sera posee sans RAG, puis avec RAG.", DIM))
@@ -161,11 +178,11 @@ def main():
             continue
         try:
             if compare_next:
-                answer(q, model, False, show_sources)
-                answer(q, model, True, show_sources)
+                answer(q, model, False, show_sources, rewrite)
+                answer(q, model, True, show_sources, rewrite)
                 compare_next = False
             else:
-                answer(q, model, use_rag, show_sources)
+                answer(q, model, use_rag, show_sources, rewrite)
         except requests.RequestException as e:
             print(c(f"\nErreur Ollama : {e}", RED))
 

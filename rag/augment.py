@@ -15,6 +15,7 @@ Etapes (toutes reprenables : append JSONL par id, arret propre par data/rag/STOP
 import hashlib
 import json
 import random
+import re
 import signal
 from collections import Counter
 from pathlib import Path
@@ -131,10 +132,11 @@ def _loop(items, out_path, fn, desc):
     return reason == "termine"
 
 
-def _examples(d):
+def _examples(d, suffix=""):
+    d = Path(d)
     out = []
     for split in ("train", "val"):
-        for e in C.read_jsonl(d / f"raft_{split}.jsonl"):
+        for e in C.read_jsonl(d / f"raft_{split}{suffix}.jsonl"):
             e["split"] = split
             out.append(e)
     return out
@@ -178,7 +180,7 @@ def apply(d, drop=("yes", "partial")):
     ver = {r["id"]: r["verdict"] for r in C.read_jsonl(d / "verify.jsonl")}
     stats = {"drop_verdicts": list(drop)}
     for split in ("train", "val"):
-        rows = C.read_jsonl(d / f"raft_{split}.jsonl")
+        rows = C.read_jsonl(d / f"raft_{split}{suffix}.jsonl")
         refusals = [e for e in rows if e["type"] == "refusal"]
         unverified = sum(e["id"] not in ver for e in refusals)
         if unverified:
@@ -249,3 +251,200 @@ def devset(n=300, n_unanswerable=30, seed=0, template_share=0.1):
                 out.write(json.dumps(rows[it["id"]], ensure_ascii=False) + "\n")
     cats = Counter(r["category"] for r in rows.values())
     print(f"{len(rows)} questions -> {DEV_SET} {dict(cats)}")
+
+
+# ---------------------------------------------------------------- RAFT v3 : questions composees et questions « joueur »
+# Diagnostic du RAFT v2 : reponses trop courtes (14,5 mots contre 25 pour le 4B de base), un seul fait sur les questions
+# composees, abstention sur les questions combinees, questions tapees vite (mots-cles, fautes) mal comprises.
+#   compose   LLM : deuxieme paire du meme chunk -> question composee + reponse complete   -> <dir>/compose.jsonl
+#   noisy     deterministe : apercu des questions reecrites en style « joueur » (mots-cles, minuscules, faute eventuelle)
+#   apply3    <src>/raft_{train,val}_final.jsonl + compose + noisy -> <dir>/raft_{train,val}_final.jsonl + augment_stats.json
+COMPOSE_PROMPT = """You build a question-answering dataset about the video game Overwatch. Two facts come from the same wiki passage.
+
+Fact 1 - question: {q1}
+Fact 1 - answer: {a1}
+
+Fact 2 - question: {q2}
+Fact 2 - answer: {a2}
+
+Write:
+- ONE natural compound question, the way a player would ask it in one sentence, that asks for both facts
+  (for example "X, and Y?" or "What is X and what about Y?"). Name the subject explicitly (hero, team, tournament, patch...).
+  Do not copy the wording of the two questions word for word.
+- ONE complete answer in one to three sentences that gives BOTH facts, names the subject, and uses only the information above.
+
+Reply with JSON only: {{"question": "<compound question>", "answer": "<complete answer>"}}"""
+
+_RE_KEY = re.compile(r"\d+(?:[.,]\d+)*|[A-Z][\w'-]+")
+_RE_NUM = re.compile(r"\d+(?:[.,]\d+)*")
+
+
+def _norm(s):
+    return " ".join(re.findall(r"\w+", s.lower()))
+
+
+def _jaccard(a, b):
+    a, b = set(_norm(a).split()), set(_norm(b).split())
+    return len(a & b) / max(1, len(a | b))
+
+
+def _distractor_texts(e):
+    """Textes des passages non oracle d'un exemple (decoupage sur « [i] » du prompt RAFT, aligne sur passage_ids)."""
+    ctx, _ = split_user(e["messages"][-2]["content"])
+    parts = re.split(r"\n\n\[(\d+)\] ", "\n\n" + ctx.split("\n\n", 1)[1])
+    texts = [parts[i + 1] for i in range(1, len(parts) - 1, 2)]
+    return [t for t, pid in zip(texts, e.get("passage_ids", [])) if pid != e.get("oracle_id")]
+
+
+def _answer_leaks(answer, distractors):
+    """Vrai si la reponse apparait mot pour mot dans un distracteur, ou si tous ses elements cles (>= 2 : nombres,
+    noms propres) y figurent."""
+    na = _norm(answer)
+    keys = {k.lower() for k in _RE_KEY.findall(answer)}
+    for t in distractors:
+        nt = _norm(t)
+        if na and na in nt:
+            return True
+        if len(keys) >= 2 and all(_norm(k) in nt for k in keys):
+            return True
+    return False
+
+
+def _compose_items(src, share, seed, limit=None):
+    pairs = list(C.read_jsonl(C.PAIRS))
+    by_id = {p["id"]: p for p in pairs}
+    by_chunk = {}
+    for p in pairs:
+        by_chunk.setdefault(p["chunk_id"], []).append(p)
+    items, st = [], Counter()
+    for e in _examples(src, "_final"):
+        if e["type"] != "oracle" or _frac("compose|" + e["id"], seed) >= share:
+            continue
+        p1 = by_id.get(e["id"])
+        if p1 is None:
+            st["sans_paire"] += 1
+            continue
+        a1 = e["messages"][-1]["content"]
+        cands = [p for p in by_chunk.get(e["oracle_id"], []) if p["id"] != p1["id"] and p["split"] == p1["split"]
+                 and _jaccard(p["answer"], a1) < 0.5 and _jaccard(p["answer"], p1["answer"]) < 0.5
+                 and _jaccard(p["question"], p1["question"]) < 0.8]
+        if not cands:
+            st["sans_partenaire"] += 1
+            continue
+        dist = _distractor_texts(e)
+        cands.sort(key=lambda p: (_jaccard(p["answer"], a1), p["id"]))
+        part = next((p for p in cands if not _answer_leaks(p["answer"], dist)), None)
+        if part is None:
+            st["partenaire_dans_distracteur"] += 1
+            continue
+        _, q1 = split_user(e["messages"][-2]["content"])
+        items.append({"id": e["id"], "q1": q1, "a1": a1, "partner": part})
+        st["ok"] += 1
+    print(f"[compose] selection: {dict(st)}")
+    return items[:limit] if limit else items
+
+
+def compose(dst, src, share=0.3, seed=0, limit=None):
+    dst, src = Path(dst), Path(src)
+    dst.mkdir(parents=True, exist_ok=True)
+    items = _compose_items(src, share, seed, limit)
+
+    def fn(it):
+        p = it["partner"]
+        v = ask_json(COMPOSE_PROMPT.format(q1=it["q1"], a1=it["a1"], q2=p["question"], a2=p["answer"]),
+                     temperature=0.3, num_predict=500)
+        q, a = str(v.get("question", "")).strip(), str(v.get("answer", "")).strip()
+        if len(q) < 15 or len(a.split()) < 8:
+            raise ValueError("question ou reponse composee trop courte")
+        return {"partner_id": p["id"], "question": q, "answer": a}
+    return _loop(items, dst / "compose.jsonl", fn, "compose")
+
+
+_NOISE_DROP = set("what which who whom whose when where why is are was were do does did the a an can could would will "
+                  "has have had be been tell me please".split())
+
+
+def noisy_question(q, key, seed=0):
+    """Variante « joueur » deterministe (par key) ; renvoie q inchange si le resultat perdrait des entites ou nombres."""
+    rng = random.Random(f"{seed}|{key}")
+    toks = q.split()
+    if rng.random() < 0.7:       # style mots-cles : on retire interrogatifs, auxiliaires, articles
+        kept = [t for t in toks if re.sub(r"\W", "", t.lower()) not in _NOISE_DROP or re.search(r"\d", t)]
+    else:                        # simple minuscules / ponctuation
+        kept = toks[:]
+    if len(kept) < 2:
+        return q
+    out = " ".join(kept)
+    out = re.sub(r"[?!,;:]", "", out) if rng.random() < 0.5 else out.rstrip("?")
+    if rng.random() < 0.85:
+        out = out.lower()
+    ents = {w.lower() for w in re.findall(r"[A-Z][\w'-]+", q)}
+    if rng.random() < 0.15:      # une faute de frappe, sur un mot alphabetique >= 5 lettres qui n'est pas une entite
+        ws = out.split()
+        cand = [i for i, w in enumerate(ws) if len(w) >= 5 and w.isalpha() and w.lower() not in ents]
+        if cand:
+            i = rng.choice(cand)
+            w, j = ws[i], rng.randrange(1, len(ws[i]) - 2)
+            ws[i] = (w[:j] + w[j + 1] + w[j] + w[j + 2:]) if rng.random() < 0.5 else (w[:j] + w[j + 1:])
+            out = " ".join(ws)
+    low = out.lower()
+    if any(n not in low for n in _RE_NUM.findall(q)):
+        return q
+    if any(re.sub(r"'s$", "", w.lower()) not in low for w in re.findall(r"[A-Z][\w'-]+", q)[1:]):
+        return q
+    return out
+
+
+def _noisy_selected(e, share, seed):
+    return e["type"] != "refusal" and _frac("noisy|" + e["id"], seed) < share
+
+
+def noisy(src, limit=10, share=0.15, seed=0):
+    """Apercu de n variantes bruitees (le calcul reel se fait dans apply3)."""
+    n = 0
+    for e in _examples(src, "_final"):
+        if not _noisy_selected(e, share, seed):
+            continue
+        _, q = split_user(e["messages"][-2]["content"])
+        nq = noisy_question(q, e["id"], seed)
+        if nq != q:
+            print(f"  {q}\n    -> {nq}")
+            n += 1
+            if n >= (limit or 10):
+                break
+
+
+def apply3(dst, src, share_noisy=0.15, seed=0):
+    dst, src = Path(dst), Path(src)
+    comp = {r["id"]: r for r in C.read_jsonl(dst / "compose.jsonl")}
+    stats = {"src": str(src), "share_noisy": share_noisy, "seed": seed}
+    wc = lambda e: len(e["messages"][-1]["content"].split())
+    for split in ("train", "val"):
+        rows = C.read_jsonl(src / f"raft_{split}_final.jsonl")
+        st, before, after = Counter(n_in=len(rows)), [], []
+        with open(dst / f"raft_{split}_final.jsonl", "w", encoding="utf-8") as out:
+            for e in rows:
+                before.append(wc(e))
+                ctx, q = split_user(e["messages"][-2]["content"])
+                if e["type"] == "oracle" and e["id"] in comp:
+                    c = comp[e["id"]]
+                    e["messages"][-2]["content"] = ctx + SEP + c["question"]
+                    e["messages"][-1]["content"] = c["answer"]
+                    e["composed"], e["partner_id"] = True, c["partner_id"]
+                    st["composed"] += 1
+                elif _noisy_selected(e, share_noisy, seed):
+                    nq = noisy_question(q, e["id"], seed)
+                    if nq != q:
+                        e["messages"][-2]["content"] = ctx + SEP + nq
+                        e["noisy"] = True
+                        st["noisy"] += 1
+                st[e["type"]] += 1
+                st["n_out"] += 1
+                after.append(wc(e))
+                out.write(json.dumps(e, ensure_ascii=False) + "\n")
+        st = dict(st)
+        st["mean_answer_words_before"] = round(sum(before) / max(1, len(before)), 2)
+        st["mean_answer_words_after"] = round(sum(after) / max(1, len(after)), 2)
+        stats[split] = st
+    (dst / "augment_stats.json").write_text(json.dumps(stats, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(json.dumps(stats, ensure_ascii=False))
