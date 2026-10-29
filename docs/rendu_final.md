@@ -376,6 +376,11 @@ Pour chaque question répondable non jugée `correct` (partielle, incorrecte ou 
 - **La limite propre au RAG est la même pour tous** : 12 à 14 questions (~6 % des 219) dont la réponse n'était dans aucun des passages reçus (ex. E32 : la page du joueur Shu n'est pas remontée, seules des pages de tournoi l'ont été). Plus de passages ou un meilleur moteur de recherche (reranker, découpe) sont les seuls leviers.
 - **Plus le modèle est petit, plus ses erreurs sont des erreurs de lecture** : 38 % pour Sonnet, 55 % pour le 14B, 63 à 71 % pour les SLM. Pour un modèle fort, c'est la recherche qui limite ; pour un SLM, c'est la lecture, en grande partie des réponses incomplètes aux questions composées (§4.7).
 - Le RAFT ne réduit pas le nombre d'erreurs de lecture sur ce test, ce qui est cohérent avec §4.7 : il apprend à s'abstenir et à repérer le bon passage, mais pas à répondre à toutes les parties d'une question.
+- **Marge d'un reranker** (29 oct.) : pour les 14 erreurs de recherche du 4B + RAG et de Sonnet + RAG, `qwen3.6` vérifie si la réponse figure dans les
+  **20 premiers** passages (par groupes de 5). Trouvée pour **6 sur 14** (rangs 5, 6, 7, 9, 16, 17 : T19, T32, T36, E12, T01, E17), dont 4 dans le top 10 ;
+  absente du top 20 pour 8 (E16, E32, E34, E36, E38, G49, L38, S08). Un reranker parfait sur le top 20 gagnerait donc **au plus ~6 questions sur 219
+  (+2,7 points)**, ~4 en pratique (top 10), soit de l'ordre du bruit d'exécution, pour +1 à 2 s par question : **non implémenté**. Les 8 autres demandent
+  une autre découpe ou une autre requête (questions « quel héros… » sans nom, voir J39 en §4.9).
 - **Bruit** : deux exécutions du même 4B + RAG (mêmes passages pour les 14 questions dont le verdict change) donnent 46 puis 36 erreurs, dont 29 puis 20 de lecture.
   Le nombre d'erreurs de recherche (13-14) est stable ; les écarts de lecture entre le 4B et ses RAFT (28 à 32) sont dans ce bruit (§4.11).
 - Vérification automatique par un LLM local : indicative. Contrôlée à la main sur E32 (recherche), L18 (partiel) et quelques erreurs de lecture (G30 : le passage donne bien 750 PV pour Roadhog, le 4B s'est trompé).
@@ -401,7 +406,9 @@ Sonnet + RAG : jargon 5/7, liste 2,5/5. Toutes les configurations plafonnent sur
 - **Les RAFT perdent 4 à 7 questions** sur le 4B de base : ils s'abstiennent beaucoup plus (7 contre 2) et ratent du jargon (rez, Bap) et des fiches simples
   (ancien nom de Cassidy, phrase de l'ultime de Sigma). L'entraînement les a rendus prudents et moins souples hors de la distribution des données RAFT.
 - **Échecs communs** : J39 (Sombra devenue support en Saison 5 : les notes du 6 oct. ne sont pas retrouvées, « DPS » et « support » contre « Support role » et
-  « rework » ; erreur de recherche, tous s'abstiennent), J18 (« champion des Junkers » : tous répondent Junker Queen ; question ambiguë, référence à valider),
+  « rework » ; erreur de recherche, tous s'abstiennent. Dès que la question nomme Sombra (« Is Sombra a support now? », « What role is Sombra now? »,
+  « sombra role »), la note du patch est retrouvée et le 4B répond Support, avec la source ; « What role is Sombra in Season 5? » retrouve la note mais le 4B
+  répond qu'elle ne parle pas de la Saison 5 : la note est datée « October 6, 2026 », pas « Season 5 »), J18 (« champion des Junkers » : tous répondent Junker Queen ; question ambiguë, référence à valider),
   J08 (héros de la Saison 4, liste), J28-J29 (absents du corpus : abstention, sauf le 14B qui invente sur J28).
 
 ### 4.10 Normalisation de la question (`rag/rewrite.py`, sans entraînement)
@@ -687,7 +694,8 @@ Reste à faire :
 - [ ] Présentation de soutenance ; citer Fandom et Liquipedia (CC-BY-SA, attribution) et Blizzard (notes de patch)
 
 Perspectives (non réalisées) :
-- **Recherche** : reranker des ~20 meilleurs passages (le 4B juge leur pertinence, +1-2 s), découpe par capacité ; c'est la limite commune à tous les modèles (§4.8, J39).
+- **Recherche** : la limite commune à tous les modèles (§4.8). Un reranker du top 20 récupérerait au plus 6 des 14 erreurs de recherche (mesuré, §4.8) ;
+  le reste demande une autre découpe (par capacité) ou de transformer les questions « quel héros… » sans nom (J39) en recherche par attribut, via une table structurée.
 - **Questions de liste** (héros d'une saison, d'un rôle) : table structurée des héros interrogée directement plutôt que des passages ; tous les modèles y échouent.
 - **Jeu joueurs plus grand** (100-200 questions) et jeu de dev construit sur de vraies questions, pour régler sans biais vers le RAFT.
 - Plusieurs graines et intervalles de confiance (bootstrap) pour les écarts de quelques points.
