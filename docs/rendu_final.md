@@ -597,6 +597,9 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 - **Smart App Control** (Windows) bloque les `.exe` des venv, `uv run` et `uv sync`. Contournement : interpréteur de base uv avec `PYTHONPATH` vers les paquets du venv.
 - **Fine-tuning sous WSL2** (Ubuntu 24.04) : Unsloth et bitsandbytes s'utilisent mal sous Windows, et le GPU Blackwell exige CUDA ≥ 12.8.
 - **Mémoire** : le modèle de génération occupe ~16 Go de RAM, WSL jusqu'à 15 Go pendant un entraînement, et les tâches de fond longues sont tuées si la RAM manque. Tous les traitements longs sont donc lancés en processus indépendants et sont **reprenables** (append JSONL, fichiers STOP, `--resume`). Les entraînements de la nuit du 17 oct. ont tourné en une chaîne unique (script `.bat`, fichier d'état), sans surveillance.
+- **Assistance et surveillance** : le code a été écrit avec Claude Code (Claude Opus 5.5), qui a aussi lancé les chaînes longues (génération Q/R, données RAFT,
+  entraînements, exports, bancs, jugements), les a enregistrées dans un panneau de suivi et les a surveillées, souvent de nuit : relance après un arrêt,
+  diagnostic des échecs (chaîne qui attendait le mauvais processus, modèles qui se disputaient le GPU), mise en veille du PC à la fin.
 - **VRAM de 16 Go partagée** entre Ollama (génération, embeddings, banc) et l'entraînement : il faut décharger les modèles avant chaque entraînement (pic SFT 4B avec packing : 15,0 Gio).
 
 ---
@@ -697,3 +700,5 @@ Perspectives (non réalisées) :
 - Liquipedia Overwatch — contenu sous licence CC-BY-SA 3.0 (attribution obligatoire).
 - Notes de patch officielles Overwatch — © Blizzard Entertainment, utilisées à des fins de recherche, source citée.
 - Modèles : Qwen3 (Apache 2.0), GGUF Unsloth ; génération `qwen3.6:35b-a3b` (Apache 2.0).
+- Outils : Claude Sonnet (Anthropic), juge des réponses ; Claude Code (Claude Opus 5.5, Anthropic), développement assisté, lancement et surveillance
+  des traitements longs (génération, entraînement, bancs).
