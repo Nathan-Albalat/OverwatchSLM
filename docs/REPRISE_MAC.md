@@ -35,7 +35,7 @@ bundle en `--no-code` : copier son dossier `data/` à la racine du clone.
    ollama pull qwen3-embedding:0.6b                                            # obligatoire pour la recherche RAG
    ollama create ow-qwen3-4b-raft-v2 -f data/train/qwen3-4b-raft-v2/gguf/Modelfile
    ollama create ow-qwen3-1.7b-raft  -f data/train/qwen3-1.7b-raft/gguf/Modelfile
-   ollama pull hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M                             # modele par defaut de la demo (4B de base)
+   ollama create hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M -f data/models/qwen3-4b-base/Modelfile   # modele par defaut de la demo (4B de base, fourni dans le paquet ; sinon : ollama pull du meme nom)
    ```
    Facultatif, pour comparer : `...Qwen3-1.7B-GGUF:Q4_K_M` et les RAFT ci-dessus.
 5. Vérifier :
