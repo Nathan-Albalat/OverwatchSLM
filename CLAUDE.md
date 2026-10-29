@@ -127,6 +127,18 @@ Query: `), fusion RRF (k=60), max 2 passages/page.
   2e paire du meme `chunk_id`, question composee + reponse complete -> `raft_v3/compose.jsonl`), `augment noisy` (apercu) ; `augment apply3`
   (+ 15 % de questions bruitees deterministes, sans LLM) -> `data/dataset/raft_v3/raft_{train,val}_final.jsonl` + `augment_stats.json`
   (`--dir raft_v3 --src raft_v2 --share --seed --limit`) ; run `qwen3-4b-raft-v3`, config banc `slm-4b-raft-v3-rag`.
+- **RAFT v4** (`rag/augment.py`, distillation de la LECTURE du 35B) : diagnostic = les erreurs restantes des SLM + RAG sont des erreurs de lecture
+  (passage present, mauvaise reponse : conditionnel, valeur actuelle entre patchs, listes, croisement, distracteurs proches) ; v2/v3 etaient trop faciles.
+  Tout est reprenable (STOP = `data/rag/STOP`), dossier `data/dataset/raft_v4/` :
+  `augment hard [--n 5000 --seed --share-player 0.3 --props hero=0.3,patch=0.3,map=0.2,esport=0.2 --limit]` -> `hard_q.jsonl` (graine = chunk de l'index
+  hors faible valeur + 2 passages lies ; le 35B ecrit UNE question d'un type impose : conditional|current_value|list|cross_passage|comparison, registre
+  normal ou « joueur » ; rejets comptes : json_invalide, impossible, sources_invalides, reponse_vide, question_courte, fuite_reponse, non_autonome,
+  **fuite_test** = proximite avec test/dev/player sets via le filtre de build-dataset) ;
+  `augment teach [--limit]` -> `teach.jsonl` (retrieve k=4 reel, `build_messages` de l'eval, reponse du 35B a T=0, 2e appel = verdict
+  agree|partial|disagree|teacher_refused|truncated ; gardes : agree -> reponse du professeur ; teacher_refused sans passage source recupere -> refus standard) ;
+  `augment apply4 [--src raft_v2 --mix N --val-total 300 --limit]` -> `raft_{train,val}_final.jsonl` + `augment_stats.json` (nouveaux exemples + echantillon
+  de raft_v2, meme format de ligne + champs hard_type/register/verdict/oracle_in_rag/teacher) ; run `qwen3-4b-raft-v4`, configs `slm-4b-raft-v4-rag[-auto]`.
+  Mesures (8 graines) : hard ~10 s/ex, teach ~3,5 s/ex (meme num_ctx 16384 pour les deux appels, sinon Ollama recharge le 35B a chaque appel).
 - **Jeu de dev** (`rag.cli devset` -> `eval/dev_set.jsonl`, 300 paires val reformulees + 30 sans reponse generees) : regler les variantes
   avec `ow-bench --set dev run|judge|report` (sorties sous `eval/dev/`), le jeu de test ne sert qu'a la mesure finale.
 

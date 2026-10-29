@@ -14,3 +14,7 @@ slm-4b-cpt-sft;16;100.0;219;0.5
 slm-4b-raft-rag;16;0.0;219;9.1
 slm-4b-raft-v2-rag;16;0.0;219;5.5
 slm-4b-sft;16;100.0;219;0.5
+qwen3-4b-rag-auto;16;0.0;219;4.6
+slm-4b-raft-v2-rag-k6;16;6.2;219;5.5
+slm-4b-raft-v3-rag;16;0.0;219;4.6
+slm-4b-raft-v4-rag;16;0.0;219;4.1

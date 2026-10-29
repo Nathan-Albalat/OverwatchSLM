@@ -85,3 +85,12 @@ stage = "raft"
 data = "data/dataset/raft_v3/raft_train_final.jsonl"
 val_data = "data/dataset/raft_v3/raft_val_final.jsonl"
 epochs = 1
+
+[[run]]
+name = "qwen3-4b-raft-v4"
+model = "unsloth/Qwen3-4B"
+stage = "raft"
+# RAFT v4 = questions difficiles (conditionnelles, valeur actuelle, listes, croisement de passages) + reponses du 35B lisant les passages reels du retriever + echantillon de raft_v2
+data = "data/dataset/raft_v4/raft_train_final.jsonl"
+val_data = "data/dataset/raft_v4/raft_val_final.jsonl"
+epochs = 1

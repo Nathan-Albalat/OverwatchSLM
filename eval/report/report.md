@@ -22,6 +22,10 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | slm-4b-raft-rag | 235 | 83.6 | 82.4 | 187 | 19 | 9 | 20 | 0 |
 | slm-4b-raft-v2-rag | 235 | 83.8 | 82.6 | 187 | 20 | 16 | 12 | 0 |
 | slm-4b-sft | 235 | 11.5 | 12.3 | 18 | 18 | 182 | 1 | 16 |
+| qwen3-4b-rag-auto | 235 | 87.9 | 87.0 | 199 | 15 | 11 | 10 | 0 |
+| slm-4b-raft-v2-rag-k6 | 235 | 84.0 | 83.3 | 183 | 29 | 10 | 12 | 1 |
+| slm-4b-raft-v3-rag | 235 | 84.7 | 83.6 | 187 | 24 | 14 | 10 | 0 |
+| slm-4b-raft-v4-rag | 235 | 85.3 | 84.2 | 191 | 19 | 16 | 9 | 0 |
 
 ## Par categorie (score %)
 
@@ -42,6 +46,10 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | slm-4b-raft-rag | 84.3 (n=51) | 87.0 (n=50) | 68.6 (n=43) | 81.0 (n=50) | 96.0 (n=25) | 100.0 (n=16) |
 | slm-4b-raft-v2-rag | 84.3 (n=51) | 87.0 (n=50) | 68.6 (n=43) | 82.0 (n=50) | 96.0 (n=25) | 100.0 (n=16) |
 | slm-4b-sft | 14.7 (n=51) | 19.0 (n=50) | 8.1 (n=43) | 4.0 (n=50) | 18.0 (n=25) | 0.0 (n=16) |
+| qwen3-4b-rag-auto | 92.2 (n=51) | 88.0 (n=50) | 74.4 (n=43) | 85.0 (n=50) | 100.0 (n=25) | 100.0 (n=16) |
+| slm-4b-raft-v2-rag-k6 | 89.2 (n=51) | 85.0 (n=50) | 69.8 (n=43) | 82.0 (n=50) | 94.0 (n=25) | 93.8 (n=16) |
+| slm-4b-raft-v3-rag | 88.2 (n=51) | 87.0 (n=50) | 67.4 (n=43) | 82.0 (n=50) | 98.0 (n=25) | 100.0 (n=16) |
+| slm-4b-raft-v4-rag | 85.3 (n=51) | 88.0 (n=50) | 76.7 (n=43) | 79.0 (n=50) | 98.0 (n=25) | 100.0 (n=16) |
 
 ## Temporel / couvert (questions repondables, score %)
 
@@ -62,6 +70,10 @@ Sources du corpus : Overwatch Fandom wiki (CC-BY-SA) et Liquipedia Overwatch (CC
 | slm-4b-raft-rag | 79.7 (n=74) | 83.8 (n=145) | 85.1 (n=164) | 74.5 (n=55) |
 | slm-4b-raft-v2-rag | 81.8 (n=74) | 83.1 (n=145) | 85.4 (n=164) | 74.5 (n=55) |
 | slm-4b-sft | 3.4 (n=74) | 16.9 (n=145) | 15.2 (n=164) | 3.6 (n=55) |
+| qwen3-4b-rag-auto | 83.1 (n=74) | 89.0 (n=145) | 87.8 (n=164) | 84.5 (n=55) |
+| slm-4b-raft-v2-rag-k6 | 83.1 (n=74) | 83.4 (n=145) | 86.3 (n=164) | 74.5 (n=55) |
+| slm-4b-raft-v3-rag | 80.4 (n=74) | 85.2 (n=145) | 86.6 (n=164) | 74.5 (n=55) |
+| slm-4b-raft-v4-rag | 79.1 (n=74) | 86.9 (n=145) | 85.1 (n=164) | 81.8 (n=55) |
 
 Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/test_coverage.jsonl`, heuristique indicative).
 
@@ -84,6 +96,10 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 | slm-4b-raft-rag | 16 | 0.0 | 219 | 9.1 |
 | slm-4b-raft-v2-rag | 16 | 0.0 | 219 | 5.5 |
 | slm-4b-sft | 16 | 100.0 | 219 | 0.5 |
+| qwen3-4b-rag-auto | 16 | 0.0 | 219 | 4.6 |
+| slm-4b-raft-v2-rag-k6 | 16 | 6.2 | 219 | 5.5 |
+| slm-4b-raft-v3-rag | 16 | 0.0 | 219 | 4.6 |
+| slm-4b-raft-v4-rag | 16 | 0.0 | 219 | 4.1 |
 
 ## Performance
 
@@ -104,6 +120,10 @@ Couvert = fait du test retrouve dans le dataset d'entrainement (`data/dataset/te
 | slm-4b-raft-rag | 0.38 | 0.50 | 0.27 | 204.1 | 3873 | 0.0000 |
 | slm-4b-raft-v2-rag | 0.37 | 0.51 | 0.27 | 207.4 | 3873 | 0.0000 |
 | slm-4b-sft | 0.12 | 0.20 | 0.03 | 227.4 | 3873 | 0.0000 |
+| qwen3-4b-rag-auto | 0.40 | 0.72 | 0.26 | 204.2 | 3878 | 0.0000 |
+| slm-4b-raft-v2-rag-k6 | 0.50 | 0.79 | 0.39 | 198.1 | 3878 | 0.0000 |
+| slm-4b-raft-v3-rag | 0.38 | 0.51 | 0.26 | 204.3 | 3878 | 0.0000 |
+| slm-4b-raft-v4-rag | 0.37 | 0.51 | 0.26 | 204.7 | 3878 | 0.0000 |
 
 Local : cout = 0. Claude : cout = equivalent API (abonnement, pas une depense reelle). Pour `claude_cli`, tok/s et latence sont indicatifs (reseau inclus, tokens de reflexion inclus). VRAM lue via Ollama (`/api/ps`), pas `nvidia-smi`.
 

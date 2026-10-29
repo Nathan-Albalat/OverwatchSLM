@@ -82,9 +82,9 @@ def _stopped():
     return _stop["flag"] or C.STOP_FILE.exists()
 
 
-def ask_json(prompt, model=GEN_MODEL, temperature=0.0, num_predict=300):
+def ask_json(prompt, model=GEN_MODEL, temperature=0.0, num_predict=300, num_ctx=8192):
     body = {"model": model, "stream": False, "think": False, "format": "json", "keep_alive": "30m",
-            "options": {"temperature": temperature, "num_ctx": 8192, "num_predict": num_predict},
+            "options": {"temperature": temperature, "num_ctx": num_ctx, "num_predict": num_predict},
             "messages": [{"role": "user", "content": prompt}]}
     r = requests.post(f"{C.OLLAMA}/api/chat", json=body, timeout=600)
     r.raise_for_status()
@@ -446,5 +446,303 @@ def apply3(dst, src, share_noisy=0.15, seed=0):
         st["mean_answer_words_before"] = round(sum(before) / max(1, len(before)), 2)
         st["mean_answer_words_after"] = round(sum(after) / max(1, len(after)), 2)
         stats[split] = st
+    (dst / "augment_stats.json").write_text(json.dumps(stats, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(json.dumps(stats, ensure_ascii=False))
+
+
+# ---------------------------------------------------------------- RAFT v4 : distillation de la LECTURE du 35B
+# Diagnostic du v3 : les erreurs restantes des SLM + RAG sont des erreurs de lecture (passage present, mauvaise reponse) :
+# questions conditionnelles, valeur actuelle parmi plusieurs patchs, listes, croisement de passages, distracteurs proches.
+# Les exemples v2/v3 etaient faciles (une question = un fait recopie d'un passage oracle).
+#   hard    le 35B ecrit UNE question difficile d'un type impose (graine + 3 passages lies)       -> <dir>/hard_q.jsonl
+#   teach   recherche reelle (k=4) -> le 35B repond dans le format exact de l'eval ; un 2e appel compare sa reponse a la
+#           reference (agree/partial/disagree/teacher_refused)                                      -> <dir>/teach.jsonl
+#   apply4  exemples gardes + echantillon de raft_v2 -> <dir>/raft_{train,val}_final.jsonl + augment_stats.json
+V4_DIR = "data/dataset/raft_v4"
+HARD_TYPES = ["conditional", "current_value", "list", "cross_passage", "comparison"]
+HARD_PROPS = {"hero": 0.3, "patch": 0.3, "map": 0.2, "esport": 0.2}
+TEST_SETS = ["test_set.jsonl", "dev_set.jsonl", "player_set.jsonl"]
+
+TYPE_HELP = {
+    "conditional": "a CONDITIONAL question: the value asked for depends on a condition (a perk/talent, a game mode or queue "
+                   "such as Open queue / Role queue / 6v6, a hero, a role, a map, a version) whose effect is stated in the "
+                   "passages (e.g. \"What is the cooldown of X with the Y perk?\")",
+    "current_value": "a CURRENT-VALUE question: the passages give different numbers for the same thing in different patches or "
+                     "versions; ask for the value that applies NOW (do not name the patch), and the answer must give the value "
+                     "from the most recent patch/version in the passages and say which one it is",
+    "list": "a LIST question: the answer is the complete list of items that satisfy a criterion (every item must be in the "
+            "passages; the answer lists them all)",
+    "cross_passage": "a CROSS-PASSAGE question: the answer needs facts from at least TWO different passages combined "
+                     "(e.g. an ability's value from one passage and a change to it from another)",
+    "comparison": "a COMPARISON question: compare two heroes, abilities, versions, maps or values (which is higher/longer, "
+                  "what is the difference) using figures stated in the passages",
+}
+
+HARD_PROMPT = """You build a hard question-answering dataset about the video game Overwatch from wiki passages.
+
+{ctx}
+
+Write ONE difficult question about the facts in these passages. It must be {type_help}.
+Rules:
+- The question must be fully self-contained: name every hero, ability, map, mode, team or patch it is about. Never say
+  "the passage", "this hero", "the above", never start with a pronoun.
+- The question must NOT contain the answer, and must be answerable ONLY from the passages above.
+- The answer must be complete (one to three sentences, or the whole list), name its subject, and use only the passages.
+- {register}
+- If these passages do not allow a question of this type, reply {{"question": null}}.
+
+Reply with JSON only: {{"question": "<question>", "answer": "<complete answer>", "passages": [<numbers of the passages needed>]}}"""
+
+REGISTERS = {
+    "normal": "Write the question as a complete, natural English question.",
+    "player": "Write the question the way a player types it quickly in a search box: lowercase keywords, no question mark, "
+              "not a full sentence, maybe abbreviations, but keep every name and number needed.",
+}
+
+TEACH_VERIFY_PROMPT = """You grade a candidate answer against a reference answer for a question about the video game Overwatch.
+
+Question: {q}
+Reference answer: {ref}
+Candidate answer: {cand}
+
+Decide:
+- "agree": the candidate gives the same facts/values as the reference (extra detail or different wording is fine);
+- "partial": the candidate is partly right (misses part of a list, one value of several, a condition...);
+- "disagree": the candidate contradicts the reference or gives other values;
+- "teacher_refused": the candidate says it does not know / cannot find the information.
+
+Reply with JSON only: {{"verdict": "agree" | "partial" | "disagree" | "teacher_refused", "why": "<short reason>"}}"""
+
+_NOT_AUTONOMOUS = re.compile(r"\b(passages?|the (text|above|following|excerpt)|(this|that|these|those) (hero|ability|map|patch|"
+                             r"change|passage|character|mode|perk|talent)|mentioned (above|earlier|here))\b", re.I)
+_PRONOUN_START = re.compile(r"^(it|its|they|their|he|his|she|her|this|that|these|those|there)\b", re.I)
+_test_cache = {}
+
+
+def _test_questions():
+    """Questions (+ variantes question_clean) des jeux test, dev et joueurs, brutes et normalisees."""
+    if not _test_cache:
+        from gen.build_dataset import _norm as gnorm
+        rows = []
+        for name in TEST_SETS:
+            for r in C.read_jsonl(C.ROOT / "eval" / name):
+                for key in ("question", "question_clean"):
+                    if r.get(key):
+                        rows.append(r[key])
+        _test_cache["raw"] = rows
+        _test_cache["norm"] = [gnorm(q) for q in rows]
+    return _test_cache["raw"], _test_cache["norm"]
+
+
+def _leaks_to_test(q):
+    """Meme critere de proximite que build-dataset (token_set_ratio >= 80 ET _close : ratio, nombres, entites)."""
+    from rapidfuzz import fuzz, process
+    from gen import build_dataset as B
+    raw, norm = _test_questions()
+    for _, sc, i in process.extract(B._norm(q), norm, scorer=fuzz.token_set_ratio, limit=None, score_cutoff=B.TEST_THRESHOLD):
+        if B._close(q, raw[i], B.MIN_RATIO):
+            return raw[i]
+    return None
+
+
+def _answer_in_question(q, a):
+    from gen.build_dataset import _keys
+    nq, na = _norm(q), _norm(a)
+    if na and na in nq:
+        return True
+    keys = _keys(a)
+    return len(keys) >= 1 and all(_norm(k) in nq for k in keys) and len(na.split()) <= 12
+
+
+def _seed_categories():
+    """(source, titre minuscule) -> categorie metier des paires (hero, patch, map, tournament...)."""
+    cats = {}
+    for p in C.read_jsonl(C.PAIRS):
+        cats.setdefault((p["source"], p["title"].lower()), p.get("category"))
+    return cats
+
+
+def _seed_category(d, cats):
+    if d["source"] == "blizzard" or d["title"].strip().endswith("Patch"):
+        return "patch"
+    c = cats.get((d["source"], d["title"].lower()))
+    if d["source"] == "liquipedia" or c in ("tournament", "team", "player", "award"):
+        return "esport"
+    if c in ("hero", "ability", "ability_stats", "hero_stats"):
+        return "hero"
+    if c in ("map", "event"):
+        return "map"
+    return None
+
+
+def _hard_items(n, seed, props, limit=None):
+    from gen.build_dataset import low_value_rule
+    from rag.retrieve import get_index
+    ix, cats = get_index(), _seed_categories()
+    pools = {k: [] for k in props}
+    for d in ix.docs:
+        if d["id"].startswith("facts:") or len(d["text"].split()) < 60:
+            continue
+        cat = _seed_category(d, cats)
+        if cat not in pools or low_value_rule(d["title"], set(), d["section"]):
+            continue
+        pools[cat].append(d)
+    tot = sum(props.values())
+    sel = []
+    for cat, pool in pools.items():
+        pool.sort(key=lambda d: _frac(f"{seed}|seed|{d['id']}"))
+        sel += [d for d in pool[:round(n * props[cat] / tot)]]
+    sel.sort(key=lambda d: _frac(f"{seed}|ord|{d['id']}"))
+    items = [{"id": "H:" + d["id"], "seed": d} for d in sel]
+    return items[:limit] if limit else items
+
+
+def hard(dst, n=5000, seed=0, share_player=0.3, props=None, limit=None, mode=None):
+    from rag.raft import trunc
+    from rag.retrieve import retrieve
+    dst = Path(dst)
+    dst.mkdir(parents=True, exist_ok=True)
+    items = _hard_items(n, seed, props or HARD_PROPS, limit)
+
+    def fn(it):
+        d = it["seed"]
+        typ = HARD_TYPES[int(_frac(f"{seed}|type|{d['id']}") * len(HARD_TYPES))]
+        reg = "player" if _frac(f"{seed}|reg|{d['id']}") < share_player else "normal"
+        rel = retrieve(f"{d['title']} {d['section']}".strip(), 2, mode, exclude_ids=[d["id"]])
+        shown = [d] + rel
+        ctx = "\n\n".join(f"[{i}] {trunc(p['text'].strip(), 320 if i == 1 else 200)}" for i, p in enumerate(shown, 1))
+        base = {"seed_id": d["id"], "type": typ, "register": reg, "passages_ids_shown": [p["id"] for p in shown]}
+        try:
+            v = ask_json(HARD_PROMPT.format(ctx=ctx, type_help=TYPE_HELP[typ], register=REGISTERS[reg]),
+                         temperature=0.7, num_predict=700)
+        except ValueError:
+            return {**base, "rejected": "json_invalide"}
+        q = v.get("question") if isinstance(v, dict) else None
+        if not isinstance(q, str) or not q.strip():
+            return {**base, "rejected": "impossible"}
+        q, a = q.strip(), str(v.get("answer") or "").strip()
+        nums = v.get("passages")
+        nums = nums if isinstance(nums, list) else []
+        if not nums or not all(isinstance(x, int) and 1 <= x <= len(shown) for x in nums):
+            return {**base, "rejected": "sources_invalides"}
+        src = list(dict.fromkeys(shown[x - 1]["id"] for x in nums))
+        if typ == "cross_passage" and len(src) < 2:
+            return {**base, "rejected": "sources_invalides"}
+        row = {**base, "question": q, "answer": a, "source_ids": src}
+        if len(a.split()) < 2:
+            return {**row, "rejected": "reponse_vide"}
+        if len(q) < 12:
+            return {**row, "rejected": "question_courte"}
+        if _answer_in_question(q, a):
+            return {**row, "rejected": "fuite_reponse"}
+        if _NOT_AUTONOMOUS.search(q) or _PRONOUN_START.match(q):
+            return {**row, "rejected": "non_autonome"}
+        near = _leaks_to_test(q)
+        if near:
+            return {**row, "rejected": "fuite_test", "test_question": near}
+        return row
+    ok = _loop(items, dst / "hard_q.jsonl", fn, "hard")
+    rows = C.read_jsonl(dst / "hard_q.jsonl")
+    good = [r for r in rows if not r.get("rejected")]
+    st = {"n_rows": len(rows), "n_ok": len(good), "rejected": dict(Counter(r["rejected"] for r in rows if r.get("rejected"))),
+          "by_type": dict(Counter(r["type"] for r in good)), "by_register": dict(Counter(r["register"] for r in good))}
+    print(json.dumps(st, ensure_ascii=False))
+    return ok
+
+
+def _chat(messages, num_predict=300, num_ctx=16384, model=GEN_MODEL):
+    body = {"model": model, "stream": False, "think": False, "keep_alive": "30m",
+            "options": {"temperature": 0.0, "num_ctx": num_ctx, "num_predict": num_predict}, "messages": messages}
+    r = requests.post(f"{C.OLLAMA}/api/chat", json=body, timeout=900)
+    r.raise_for_status()
+    j = r.json()
+    return j["message"]["content"].strip(), j.get("done_reason")
+
+
+# consigne de style du professeur seulement : l'exemple d'entrainement garde le prompt exact de l'eval (champ `user`) ;
+# sans elle, le 35B repond en markdown (gras, puces, « Based on the provided passages », « Passage [3] »)
+TEACHER_STYLE = ("\n\nAnswer style: plain text in one to three sentences, like an expert answering directly. Give every value "
+                 "the question asks for (with the old and new value when it asks about a change). No markdown, no bullet "
+                 "points, no bold, and never mention the passages or their numbers.")
+
+
+def teach(dst, limit=None, mode=None, k=4):
+    from bench.prompts import build_messages
+    from rag.raft import REFUSALS
+    from rag.retrieve import retrieve
+    dst = Path(dst)
+    hq = [r for r in C.read_jsonl(dst / "hard_q.jsonl") if not r.get("rejected")]
+    items = hq[:limit] if limit else hq
+
+    def fn(it):
+        q = it["question"]
+        passages = retrieve(q, k, mode)           # recherche reelle, memes reglages que le banc (k=4, 2 par page)
+        msgs = build_messages(q, passages)
+        rag_ids = [p["id"] for p in passages]
+        oracle = any(s in rag_ids for s in it["source_ids"])
+        ans, done = _chat([{**msgs[0], "content": msgs[0]["content"] + TEACHER_STYLE}, msgs[1]])
+        base = {"question": q, "rag_ids": rag_ids, "oracle_in_rag": oracle, "teacher_answer": ans,
+                "user": msgs[1]["content"], "keep": False, "target": None}
+        if done == "length" or len(ans) < 3:
+            return {**base, "verdict": "truncated"}
+        v = ask_json(TEACH_VERIFY_PROMPT.format(q=q, ref=it["answer"], cand=ans), num_predict=150, num_ctx=16384)  # meme num_ctx que _chat : pas de rechargement du modele
+        verdict = str(v.get("verdict", "")).lower()
+        if verdict not in ("agree", "partial", "disagree", "teacher_refused"):
+            raise ValueError(f"verdict invalide: {verdict!r}")
+        base["verdict"] = verdict
+        if verdict == "agree":
+            base.update(keep=True, target=ans)
+        elif verdict == "teacher_refused" and not oracle:
+            base.update(keep=True, target=random.Random(f"refus|{it['id']}").choice(REFUSALS))
+        return base
+    ok = _loop(items, dst / "teach.jsonl", fn, "teach")
+    rows = C.read_jsonl(dst / "teach.jsonl")
+    print(json.dumps({"n": len(rows), "verdicts": dict(Counter(r["verdict"] for r in rows)),
+                      "keep": sum(r["keep"] for r in rows), "oracle_in_rag": sum(r["oracle_in_rag"] for r in rows)}))
+    return ok
+
+
+def apply4(dst, src, mix=None, seed=0, limit=None, val_total=300):
+    from bench.prompts import SYSTEM_PROMPT
+    dst, src = Path(dst), Path(src)
+    hq = {r["id"]: r for r in C.read_jsonl(dst / "hard_q.jsonl") if not r.get("rejected")}
+    teach_rows = C.read_jsonl(dst / "teach.jsonl")
+    keep = [r for r in teach_rows if r["keep"] and r["id"] in hq]
+    if limit:
+        keep = keep[:limit]
+    new = {"train": [], "val": []}
+    for r in keep:
+        h = r["id"]
+        refusal = r["verdict"] == "teacher_refused"
+        ex = {"id": h, "kind": "hard", "type": "refusal" if refusal else "oracle",
+              "oracle_id": next((s for s in hq[h]["source_ids"] if s in r["rag_ids"]), hq[h]["source_ids"][0]),
+              "passage_ids": r["rag_ids"],
+              "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": r["user"]},
+                           {"role": "assistant", "content": r["target"]}],
+              "hard_type": hq[h]["type"], "register": hq[h]["register"], "verdict": r["verdict"],
+              "oracle_in_rag": r["oracle_in_rag"], "teacher": True}
+        new["val" if _frac("val|" + h, seed) < 0.05 else "train"].append(ex)
+    rng = random.Random(f"apply4|{seed}")
+    v2 = {s: C.read_jsonl(src / f"raft_{s}_final.jsonl") for s in ("train", "val")}
+    n_mix = len(new["train"]) if mix is None else mix
+    mixed = {"train": rng.sample(v2["train"], min(n_mix, len(v2["train"]))),
+             "val": rng.sample(v2["val"], min(max(0, val_total - len(new["val"])), len(v2["val"])))}
+    wc = lambda e: len(e["messages"][-1]["content"].split())
+    stats = {"src": str(src), "mix": n_mix, "seed": seed, "teach": {
+        "n": len(teach_rows), "verdicts": dict(Counter(r["verdict"] for r in teach_rows)),
+        "keep": sum(r["keep"] for r in teach_rows)}}
+    for split in ("train", "val"):
+        rows = new[split] + mixed[split]
+        rng.shuffle(rows)
+        with open(dst / f"raft_{split}_final.jsonl", "w", encoding="utf-8") as out:
+            for e in rows:
+                out.write(json.dumps(e, ensure_ascii=False) + "\n")
+        nw = new[split]
+        stats[split] = {"n_out": len(rows), "new": len(nw), "from_v2": len(mixed[split]),
+                        "by_hard_type": dict(Counter(e["hard_type"] for e in nw)),
+                        "by_register": dict(Counter(e["register"] for e in nw)),
+                        "refusals": sum(e["type"] == "refusal" for e in nw),
+                        "mean_answer_words_new": round(sum(map(wc, nw)) / max(1, len(nw)), 2),
+                        "oracle_in_rag_share": round(sum(e["oracle_in_rag"] for e in nw) / max(1, len(nw)), 3)}
     (dst / "augment_stats.json").write_text(json.dumps(stats, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(stats, ensure_ascii=False))

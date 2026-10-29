@@ -1,5 +1,15 @@
 ﻿config;n unanswerable;taux d'hallucination %;n repondables;taux d'abstention %
 qwen3-4b-rag;27;0.0;300;6.0
-qwen3-4b-rag-rw;27;0.0;300;6.0
 qwen3-4b-rag-auto;27;0.0;300;5.7
+qwen3-4b-rag-rw;27;0.0;300;6.0
+slm-1.7b-raft-rag;27;0.0;300;4.3
+slm-4b-raft-rag;27;0.0;300;13.3
+slm-4b-raft-v2-rag;27;0.0;300;5.0
+slm-4b-raft-v2-rag-ent;27;0.0;300;6.0
+slm-4b-raft-v2-rag-ent5;27;0.0;300;5.3
 slm-4b-raft-v2-rag-k6;27;0.0;300;4.0
+slm-4b-raft-v2-rag-mpp3;27;0.0;300;5.7
+slm-4b-raft-v2-rag-recent;27;0.0;300;5.3
+slm-4b-raft-v2-rag-rw;27;0.0;300;7.3
+slm-4b-raft-v3-rag;27;0.0;300;5.0
+slm-4b-raft-v4-rag;27;0.0;300;6.0

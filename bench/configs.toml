@@ -230,3 +230,18 @@ model = "ow-qwen3-4b-raft-v3"
 think = false
 rewrite = "auto"
 rag = {k = 4}
+
+[[config]]
+name = "slm-4b-raft-v4-rag"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v4"
+think = false
+rag = {k = 4}
+
+[[config]]
+name = "slm-4b-raft-v4-rag-auto"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v4"
+think = false
+rewrite = "auto"
+rag = {k = 4}

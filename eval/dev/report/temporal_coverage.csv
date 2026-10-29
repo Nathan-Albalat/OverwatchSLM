@@ -1,5 +1,15 @@
 ﻿config;temporel;non temporel;couvert;non couvert
 qwen3-4b-rag;n/a (n=0);81.8 (n=300);n/a;n/a
-qwen3-4b-rag-rw;n/a (n=0);78.5 (n=300);n/a;n/a
 qwen3-4b-rag-auto;n/a (n=0);80.8 (n=300);n/a;n/a
+qwen3-4b-rag-rw;n/a (n=0);78.5 (n=300);n/a;n/a
+slm-1.7b-raft-rag;n/a (n=0);82.3 (n=300);n/a;n/a
+slm-4b-raft-rag;n/a (n=0);78.5 (n=300);n/a;n/a
+slm-4b-raft-v2-rag;n/a (n=0);86.0 (n=300);n/a;n/a
+slm-4b-raft-v2-rag-ent;n/a (n=0);85.0 (n=300);n/a;n/a
+slm-4b-raft-v2-rag-ent5;n/a (n=0);85.0 (n=300);n/a;n/a
 slm-4b-raft-v2-rag-k6;n/a (n=0);87.5 (n=300);n/a;n/a
+slm-4b-raft-v2-rag-mpp3;n/a (n=0);86.3 (n=300);n/a;n/a
+slm-4b-raft-v2-rag-recent;n/a (n=0);85.7 (n=300);n/a;n/a
+slm-4b-raft-v2-rag-rw;n/a (n=0);83.3 (n=300);n/a;n/a
+slm-4b-raft-v3-rag;n/a (n=0);86.2 (n=300);n/a;n/a
+slm-4b-raft-v4-rag;n/a (n=0);84.0 (n=300);n/a;n/a
