@@ -93,7 +93,11 @@ uv run ow-bench export-questions <config> / import-answers <config> <csv>   # ba
 - **Normalisation de la question** (`rag/rewrite.py`) : option de config `rewrite = true` (configs `qwen3-4b-rag-rw`, `slm-4b-raft-v2-rag-rw`, k=4). La question est d'abord
   corrigee (noms d'entites mal ecrits, rapidfuzz >= 80, mots courants/du corpus exclus) puis reformulee en une question complete par le modele qui repond (Ollama, temp. 0) ;
   elle sert a la recherche ET au prompt. Le run enregistre `rewritten` et `rewrite_s` ; `latency_s` = generation seule, latence totale = `latency_s + rewrite_s`.
-  Cache append-only `data/rag/rewrite_cache.jsonl` (cle modele + question, ignore par git) -> reproductible ; `rewrite_s` = duree mesuree a l'origine.
+  Cache append-only `data/rag/rewrite_cache.jsonl` (cle modele + question apres correction, ignore par git) -> reproductible ; `rewrite_s` = duree mesuree a l'origine.
+  `rewrite = "auto"` (configs `*-auto`, defaut de la demo) : correction des entites toujours (seuil 85, 80 en minuscules/tete de saisie,
+  jamais dans un nom propre de plusieurs mots ni pour une forme derivee), reformulation seulement si la saisie n'est pas une question
+  complete (`needs_rewrite` : 15/15 saisies joueurs, 0/327 questions du dev) ; une reformulation qui perd > 20 % des mots de contenu est rejetee.
+  Bruit d'Ollama d'un run a l'autre a temperature 0 : ~1 point sur le dev (223/327 reponses identiques a prompt identique).
 
 ### RAG et exemples RAFT (`ow-rag`, package `rag/`)
 ```

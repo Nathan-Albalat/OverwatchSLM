@@ -82,7 +82,8 @@ def run(names, limit=None, ids=None, category=None):
                         # normalisation (fautes d'entites + reformulation par le modele qui repond) : la question
                         # normalisee sert a la recherche ET au prompt ; le qhash reste celui de la question d'origine
                         from rag.rewrite import normalize
-                        question, info = normalize(q["question"], cfg["model"])
+                        question, info = normalize(q["question"], cfg["model"],
+                                                   mode="auto" if cfg["rewrite"] == "auto" else "always")
                         rewrite_s = round(info["rewrite_s"], 3)
                     if cfg.get("rag"):
                         passages = _retrieve(question, cfg["rag"].get("k", 5),

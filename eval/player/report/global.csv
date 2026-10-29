@@ -1,5 +1,10 @@
 ﻿config;n;score global %;score repondables %;correct;partial;incorrect;abstained;hallucinated
-qwen3-4b-rag;15;76.7;75.0;11;1;3;0;0
-slm-4b-raft-v2-rag;15;56.7;53.6;8;1;5;1;0
-slm-4b-raft-v2-rag-ent;15;60.0;57.1;8;2;3;2;0
-slm-4b-raft-v2-rag-ent5;15;60.0;57.1;8;2;3;2;0
+qwen3-4b-rag;15;40.0;42.9;6;0;6;2;1
+qwen3-4b-rag-rw;15;60.0;57.1;9;0;4;2;0
+qwen3-4b-rag-auto;15;60.0;57.1;9;0;5;1;0
+slm-4b-raft-v2-rag-k6;15;53.3;50.0;8;0;3;4;0
+slm-4b-raft-v2-rag-rw-k6;15;50.0;46.4;7;1;4;3;0
+slm-4b-raft-v2-rag-auto-k6;15;46.7;42.9;7;0;4;4;0
+slm-4b-raft-v3-rag;15;46.7;42.9;7;0;6;2;0
+slm-4b-raft-v3-rag-rw;15;43.3;39.3;6;1;3;5;0
+slm-4b-raft-v3-rag-auto;15;53.3;50.0;8;0;3;4;0

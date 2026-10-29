@@ -203,3 +203,30 @@ model = "ow-qwen3-4b-raft-v3"
 think = false
 rewrite = true
 rag = {k = 4}
+
+# Normalisation conditionnelle (29 oct., rewrite = "auto") : correction des entites toujours (seuil 85), reformulation
+# seulement si la saisie n'est pas une question complete (rag.rewrite.needs_rewrite), reformulation rejetee si elle perd
+# les mots de contenu de la question
+[[config]]
+name = "qwen3-4b-rag-auto"
+backend = "ollama"
+model = "hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M"
+think = false
+rewrite = "auto"
+rag = {k = 4}
+
+[[config]]
+name = "slm-4b-raft-v2-rag-auto-k6"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v2"
+think = false
+rewrite = "auto"
+rag = {k = 6}
+
+[[config]]
+name = "slm-4b-raft-v3-rag-auto"
+backend = "ollama"
+model = "ow-qwen3-4b-raft-v3"
+think = false
+rewrite = "auto"
+rag = {k = 4}

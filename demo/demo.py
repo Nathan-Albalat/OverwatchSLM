@@ -84,7 +84,7 @@ def answer(question, model, use_rag, show_sources, rewrite=False):
     if rewrite:
         from rag.rewrite import normalize
         t0 = time.time()
-        norm, _ = normalize(question, model, OLLAMA)
+        norm, _ = normalize(question, model, OLLAMA, mode="auto")
         t_rw = time.time() - t0
         if norm != question:
             print(c(f"  Question normalisee : {norm}", DIM))
