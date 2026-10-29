@@ -35,9 +35,9 @@ bundle en `--no-code` : copier son dossier `data/` à la racine du clone.
    ollama pull qwen3-embedding:0.6b                                            # obligatoire pour la recherche RAG
    ollama create ow-qwen3-4b-raft-v2 -f data/train/qwen3-4b-raft-v2/gguf/Modelfile
    ollama create ow-qwen3-1.7b-raft  -f data/train/qwen3-1.7b-raft/gguf/Modelfile
+   ollama pull hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M                             # modele par defaut de la demo (4B de base)
    ```
-   Facultatif, pour comparer avec les modèles de base : `ollama pull hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M`
-   (et `...Qwen3-1.7B-GGUF:Q4_K_M`).
+   Facultatif, pour comparer : `...Qwen3-1.7B-GGUF:Q4_K_M` et les RAFT ci-dessus.
 5. Vérifier :
    ```
    uv run python -m rag.cli query "Roadhog Chain Hook cooldown" --k 4       # doit lister des passages, dont les notes du 6 oct. 2026
@@ -47,7 +47,8 @@ bundle en `--no-code` : copier son dossier `data/` à la racine du clone.
 ## 3. La démo
 
 ```
-uv run python -m demo.demo                              # RAFT 4B v2 + RAG (défaut)
+uv run python -m demo.demo                              # Qwen3 4B de base + RAG, normalisation auto (défaut)
+uv run python -m demo.demo --model ow-qwen3-4b-raft-v2  # le RAFT, pour comparer
 uv run python -m demo.demo --model ow-qwen3-1.7b-raft   # le plus petit modèle
 ```
 

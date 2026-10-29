@@ -4,7 +4,7 @@ La question est normalisee par defaut (rag.rewrite : fautes de noms corrigees, q
 --no-rewrite ou /rewrite pour la desactiver.
 
 Usage :
-  python -m demo.demo                                  # interactif, RAFT 4B v2 + RAG
+  python -m demo.demo                                  # interactif, Qwen3 4B de base + RAG (normalisation auto)
   python -m demo.demo --model ow-qwen3-1.7b-raft      # plus petit, plus rapide
   python -m demo.demo --ask "What is the ultimate ability of the hero Kestrel?" --compare
 
@@ -24,8 +24,8 @@ import requests
 from bench.prompts import build_messages
 
 OLLAMA = "http://localhost:11434"
-# 4B par defaut : le 1.7B confond les lignes 5v5 / 6v6 des notes de patch sur la question Roadhog (S04)
-DEFAULT_MODEL = "ow-qwen3-4b-raft-v2"
+# 4B de base par defaut (meilleur SLM sur le test et le jeu joueurs, sans entrainement) ; le 1.7B confond les lignes 5v5 / 6v6 des notes de patch sur la question Roadhog (S04)
+DEFAULT_MODEL = "hf.co/unsloth/Qwen3-4B-GGUF:Q4_K_M"
 K = 4
 OPTIONS = {"temperature": 0, "num_ctx": 8192, "num_predict": 400}   # comme le banc
 
