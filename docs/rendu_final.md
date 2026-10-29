@@ -2,11 +2,13 @@
 
 Document de travail pour le rendu final de l'UE (échéance début novembre 2026). Il rassemble les chiffres mesurés,
 les comparaisons entre approches, les coûts et la complexité de mise en œuvre, et l'historique du projet.
-**État au 26 oct. 2026 : tous les entraînements et bancs sont faits.** Reste la vérification manuelle du juge (§8).
+**État au 29 oct. 2026 : tous les entraînements et bancs sont faits** (RAFT v1 à v4, normalisation des questions, jeu joueurs).
+Résumé en une ligne : le meilleur SLM est le **Qwen3-4B de base + RAG** (86,6 à 87,9 % sur le test selon l'exécution), au niveau de
+Claude Sonnet + RAG sur de vraies questions de joueurs ; aucun des quatre RAFT ne le bat (§4.12).
 
-Sources des chiffres : `eval/report/report.md` (banc test), `eval/dev/report/report.md` (banc dev),
+Sources des chiffres : `eval/report/report.md` (banc test), `eval/dev/report/report.md` (banc dev), `eval/player/report/report.md` (jeu joueurs),
 `eval/report/retrieval_hybrid.md` (recherche), `eval/report/training.md` (entraînements), `data/stats.json`,
-`data/dataset/stats.json`, `data/dataset/raft_stats.json`, `data/dataset/raft_v2/augment_stats.json`,
+`data/dataset/stats.json`, `data/dataset/raft_stats.json`, `data/dataset/raft_v{2,3,4}/augment_stats.json`, `eval/report/error_sources.md`,
 journaux `data/qa/*.log`, `data/rag/v2_*.log`, `data/train/*.log`, historique git.
 
 ---
@@ -18,11 +20,16 @@ plus gros (14 B) et aux modèles frontier (Claude Sonnet / Opus), sur un domaine
 **Overwatch** (lore, gameplay, patchs, esport). Les critères comparés sont l'exactitude, l'hallucination,
 la latence, la mémoire, le coût par requête, le coût de construction et le coût de mise à jour.
 
-Configuration principale visée : **SLM + RAG + RAFT** (fine-tuning au format RAG).
+Configuration principale visée au départ : **SLM + RAG + RAFT** (fine-tuning au format RAG). Après quatre versions du RAFT,
+la meilleure configuration mesurée est finalement le SLM de base + RAG, avec une normalisation de la question pour les saisies de joueurs (§4.12).
 
 ---
 
 ## 2. Données
+
+Trois jeux de questions servent à l'évaluation, chacun avec un rôle : le **test** (mesure finale, §2.2), le **dev**
+(choisir entre variantes sans toucher au test, §2.3) et le **jeu joueurs** (vraies saisies de joueurs, usage réel, §2.4).
+Les trois sont notés par le même juge (Claude Sonnet, §3).
 
 ### 2.1 Corpus
 
@@ -62,8 +69,24 @@ Configuration principale visée : **SLM + RAG + RAFT** (fine-tuning au format RA
 - Commandes : `ow-bench --set dev run|judge|report`, sorties sous `eval/dev/`.
 - **Limite constatée** : ses questions viennent des paires générées, donc à **un seul fait**. Il n'a pas détecté le
   défaut de réponses trop courtes du RAFT sur les questions composées du test (§4.7).
+- **Limite plus large, constatée avec les RAFT v3 et v4** : il est généré comme les données d'entraînement du RAFT (mêmes paires,
+  reformulées par le même LLM), donc il les favorise. Les RAFT y gagnent 2 à 5 points sur le modèle de base, gain qui ne se
+  retrouve ni sur le test ni sur le jeu joueurs (§4.12).
 
-### 2.4 Données d'entraînement générées
+### 2.4 Jeu joueurs (27-29 oct., usage réel)
+
+- **40 questions tapées par de vrais joueurs** (`eval/player_set.jsonl`), telles quelles : fautes de noms (« Gesnji ultimate ability »),
+  mots-clés sans verbe (« Mercy flash heal cooldown »), jargon (« C9 », « rez », « Bap », « hitscan »), questions de liste.
+  Chaque question garde aussi une version propre (`question_clean`) et la source de la réponse dans le corpus.
+- Deux lots : **J01-J15** (27 oct.), qui ont servi à mettre au point la normalisation des questions (§4.10), et **J16-J40** (29 oct.),
+  ajoutés ensuite et jamais utilisés pour régler quoi que ce soit.
+- Types (`kind`) : fiche 16, jargon 7, valeur 6, liste 5, combinée 4, avis 2. Catégories : gameplay 22, lore 13, patch 2, esport 1,
+  cartes 1, sans réponse 1. Deux questions (J28, J29 : types de compositions d'équipe) sont absentes du corpus.
+- Références trouvées dans le corpus et validées par l'utilisateur, sauf J08, J10, J18 et J22, encore à valider (§8).
+- Avec 40 questions, une question vaut 2,5 points : le jeu sert à voir des tendances et des types d'échec, pas à départager à 2 points près.
+- Commandes : `ow-bench --set player run|judge|report`, sorties sous `eval/player/`.
+
+### 2.5 Données d'entraînement générées
 
 - **Q/R LLM** : `qwen3.6:35b-a3b` en local (Ollama, licence Apache 2.0), 5 à 8 paires par chunk, ancrées dans le passage. Au total, 13 767 chunks générés, soit 100 482 paires brutes et 6,0 M tokens de sortie.
 - **Q/R par templates**, sans LLM (infobox, joueurs, équipes, tournois, MVP) : 47 314 paires en moins de 2 s.
@@ -82,7 +105,7 @@ Configuration principale visée : **SLM + RAG + RAFT** (fine-tuning au format RA
 - **CPT** : 12 360 chunks de texte brut, hors faible valeur (5,45 M tokens).
 - **Couverture du test** : 164 faits sur 219 (heuristique) sont présents dans les données d'entraînement. Les résultats sont découpés en « couvert » / « non couvert ».
 
-### 2.5 Exemples RAFT
+### 2.6 Exemples RAFT
 
 Format : la question est accompagnée de k = 4 passages issus du vrai retriever hybride. Avec une probabilité p_oracle, ces passages comprennent le passage de réponse (l'**oracle**) et 3 distracteurs. Sinon, ce sont 4 distracteurs et la cible est un refus fixe (« je ne sais pas »). Tout distracteur qui pourrait contenir la réponse est écarté, pour que le refus soit justifié. La loss ne porte que sur la réponse, soit ~1,2 % des tokens. Les exemples font ~1 950 tokens en moyenne.
 
@@ -90,6 +113,8 @@ Format : la question est accompagnée de k = 4 passages issus du vrai retriever 
 |---|---|---|---|---|---|---|---|
 | **v1** (12 oct.) | RAFT 4B v1 | 0,8 | 14 250 | 11 446 | 2 691 | 113 | 0 |
 | **v2** (17 oct.) | RAFT 4B v2, RAFT 1.7B | 0,9 | 14 072 | 12 839 | 1 172 | 61 | 6 524 (46 %) |
+| **v3** (27-28 oct.) | RAFT 4B v3 | (v2) | 14 072 | (v2) | (v2) | (v2) | v2 + 3 703 composées + 1 371 bruitées |
+| **v4** (29 oct.) | RAFT 4B v4 | — | 2 650 (1 325 nouveaux + 1 325 de v2) | 86 % des nouveaux | 112 (nouveaux) | — | 453 au registre « joueur » |
 
 La v2 est construite à partir du diagnostic du RAFT v1 (§4.7) :
 1. **Reformulation** de 50 % des questions non-refus par `qwen3.6`. Dans la v1, les questions recopiaient le passage oracle.
@@ -97,6 +122,20 @@ La v2 est construite à partir du diagnostic du RAFT v1 (§4.7) :
 3. **p_oracle passé de 0,8 à 0,9**, donc moins de refus.
 
 Un jeu « v1 reconstruit » (13 oct., après le problème n°7) existe aussi, mais il n'a servi à aucun entraînement.
+
+La **v3** part de la v2 (mêmes passages) et vise les défauts vus sur le dev et le jeu joueurs, jamais sur le test (§4.7) :
+1. **Questions composées** (`augment compose`, `qwen3.6`) : pour 30 % des oracles, une 2ᵉ paire du même chunk est fusionnée en une question
+   à deux faits, avec une réponse complète (3 703 exemples). Longueur moyenne des réponses d'entraînement : 15,8 → 20,7 mots.
+2. **Saisies bruitées** (`augment apply3`, sans LLM) : 15 % des questions dégradées comme un joueur les taperait (fautes, mots-clés, sans « ? »), 1 371 exemples.
+
+La **v4** (`augment hard | teach | apply4`) est une **distillation de la lecture du 35B** :
+1. `hard` : à partir de 3 000 chunks graines (héros 30 %, patchs 30 %, cartes 20 %, esport 20 %) et de 2 passages liés, `qwen3.6` écrit une question
+   difficile d'un type imposé (conditionnelle, valeur actuelle entre patchs, liste, croisement de passages, comparaison), au registre normal ou
+   « joueur ». 2 276 acceptées ; rejets : non autonome 354, impossible 128, sources invalides 89, autres 33 ; filtre de proximité avec les trois jeux de questions.
+2. `teach` : chaque question passe par le vrai retriever (k = 4) et le prompt de l'éval ; le 35B répond (consigne : phrase directe d'une à trois
+   phrases, sans markdown), puis un 2ᵉ appel compare à la référence : 1 289 accords, 211 partiels, 537 désaccords, 215 refus du professeur, 4 tronqués.
+   Gardés : les accords (cible = réponse du 35B) et les refus justifiés (oracle absent des passages), soit 1 406.
+3. `apply4` : 1 325 nouveaux exemples mélangés à autant d'exemples v2 ; réponses de 29 mots en moyenne ; oracle dans les passages pour 86 % des exemples.
 
 ---
 
@@ -108,7 +147,8 @@ Un jeu « v1 reconstruit » (13 oct., après le problème n°7) existe aussi, ma
 | 2 | SLM + SFT | Qwen3-4B + LoRA (102 k Q/R, 2 epochs) | question seule |
 | 3 | SLM + CPT + SFT | Qwen3-4B + LoRA (texte brut 1 epoch, puis Q/R 2 epochs) | question seule |
 | 4 | SLM + RAG | Qwen3-1.7B / 4B de base | 4 passages |
-| 5 | **SLM + RAFT + RAG** | Qwen3-4B (v1 et v2), Qwen3-1.7B (v2) | 4 passages |
+| 5 | **SLM + RAFT + RAG** | Qwen3-4B (v1 à v4), Qwen3-1.7B (v2) | 4 passages (6 pour la variante v2 k6) |
+| 5b | SLM (+ RAFT) + RAG + **normalisation** | Qwen3-4B de base, RAFT v2/v3/v4 | question corrigée puis reformulée si besoin (§4.10) |
 | 6 | LLM local | Qwen3-14B (Ollama) | ± 5 passages |
 | 7 | Frontier | Claude Sonnet, Claude Opus (`claude -p`) | Sonnet ± 5 passages |
 | 8 | Frontier + recherche web | Claude Sonnet + outil WebSearch | recherche web libre (74 questions temporelles seulement, §5.2) |
@@ -119,13 +159,17 @@ Un jeu « v1 reconstruit » (13 oct., après le problème n°7) existe aussi, ma
 - **Biais à signaler** :
   - les SLM + RAG utilisent k = 4, comme les exemples RAFT, alors que le 14B et Sonnet + RAG utilisent k = 5 ;
   - le test a été écrit à partir du même corpus que l'index RAG, ce qui favorise les bras RAG ;
-  - le juge LLM est en cours de vérification manuelle (§8).
+  - le juge LLM a été vérifié à la main (§8).
+- **Jeux passés** : test pour toutes les configurations ; dev pour les variantes des SLM + RAG ; jeu joueurs pour les meilleurs SLM, le 14B + RAG et Sonnet + RAG.
 
 ---
 
-## 4. Résultats (jeu de test, 235 questions)
+## 4. Résultats (jeu de test, puis dev, jeu joueurs et synthèse)
 
-Bancs du 12-13 oct. (bases, frontier, RAFT v1) et du 17-18 oct. (RAFT v2, RAFT 1.7B, SFT, CPT + SFT).
+Bancs du 12-13 oct. (bases, frontier, RAFT v1), du 17-18 oct. (RAFT v2, RAFT 1.7B, SFT, CPT + SFT) et du 29 oct. (RAFT v3, v4, v2 k6, 4B + normalisation).
+
+**À lire avec §4.11** : sur le test, la normalisation ne modifie que 2 questions sur 235. La ligne « 4B + RAG + normalisation » est donc, en pratique,
+une 2ᵉ exécution du 4B + RAG (29 oct. contre 12 oct.) : l'écart de 1,3 point entre les deux est du bruit d'exécution, pas un effet de la normalisation.
 
 ### 4.1 Exactitude globale
 
@@ -142,6 +186,10 @@ Bancs du 12-13 oct. (bases, frontier, RAFT v1) et du 17-18 oct. (RAFT v2, RAFT 1
 | **Qwen3-4B + RAG** (k=4) | **86,6** | 194 | 19 | 14 | 8 | 0 |
 | Qwen3-4B RAFT v1 + RAG (k=4) | 83,6 | 187 | 19 | 9 | 20 | 0 |
 | Qwen3-4B RAFT v2 + RAG (k=4) | 83,8 | 187 | 20 | 16 | 12 | 0 |
+| Qwen3-4B RAFT v2 + RAG (k=6) | 84,0 | 183 | 29 | 10 | 12 | 1 |
+| Qwen3-4B RAFT v3 + RAG (k=4) | 84,7 | 187 | 24 | 14 | 10 | 0 |
+| Qwen3-4B RAFT v4 + RAG (k=4) | 85,3 | 191 | 19 | 16 | 9 | 0 |
+| Qwen3-4B + RAG + normalisation (2ᵉ exécution) | 87,9 | 199 | 15 | 11 | 10 | 0 |
 | Qwen3-1.7B | 2,3 | 3 | 5 | 203 | 10 | 14 |
 | Qwen3-1.7B + RAG (k=4) | 80,9 | 183 | 14 | 31 | 4 | 3 |
 | Qwen3-1.7B RAFT v2 + RAG (k=4) | 80,6 | 178 | 23 | 25 | 8 | **1** |
@@ -161,6 +209,9 @@ Bancs du 12-13 oct. (bases, frontier, RAFT v1) et du 17-18 oct. (RAFT v2, RAFT 1
 | Qwen3-4B + RAG | 92,2 | 89,0 | 72,1 | 81,0 | 98,0 | 100 |
 | Qwen3-4B RAFT v1 + RAG | 84,3 | 87,0 | 68,6 | 81,0 | 96,0 | 100 |
 | Qwen3-4B RAFT v2 + RAG | 84,3 | 87,0 | 68,6 | 82,0 | 96,0 | 100 |
+| Qwen3-4B RAFT v3 + RAG | 88,2 | 87,0 | 67,4 | 82,0 | 98,0 | 100 |
+| Qwen3-4B RAFT v4 + RAG | 85,3 | 88,0 | 76,7 | 79,0 | 98,0 | 100 |
+| Qwen3-4B + RAG + normalisation | 92,2 | 88,0 | 74,4 | 85,0 | 100 | 100 |
 | Qwen3-1.7B | 0,0 | 1,0 | 3,5 | 0,0 | 6,0 | 12,5 |
 | Qwen3-1.7B + RAG | 83,3 | 86,0 | 67,4 | 75,0 | 100 | 81,2 |
 | Qwen3-1.7B RAFT v2 + RAG | 79,4 | 85,0 | 66,3 | 78,0 | 96,0 | 93,8 |
@@ -178,6 +229,9 @@ Bancs du 12-13 oct. (bases, frontier, RAFT v1) et du 17-18 oct. (RAFT v2, RAFT 1
 | Qwen3-4B + RAG | 79,7 | 88,6 | 87,2 | 80,9 |
 | Qwen3-4B RAFT v1 + RAG | 79,7 | 83,8 | 85,1 | 74,5 |
 | Qwen3-4B RAFT v2 + RAG | 81,8 | 83,1 | 85,4 | 74,5 |
+| Qwen3-4B RAFT v3 + RAG | 80,4 | 85,2 | 86,6 | 74,5 |
+| Qwen3-4B RAFT v4 + RAG | 79,1 | 86,9 | 85,1 | 81,8 |
+| Qwen3-4B + RAG + normalisation | 83,1 | 89,0 | 87,8 | 84,5 |
 | Qwen3-1.7B + RAG | 75,0 | 83,8 | 82,0 | 77,3 |
 | Qwen3-1.7B RAFT v2 + RAG | 77,7 | 80,7 | 81,4 | 74,5 |
 
@@ -192,13 +246,17 @@ Même sur les faits **couverts**, c'est-à-dire présents dans ses données d'en
 | 4B + RAG | 5/8 + 1 partielle | S03 partielle, S04 incorrecte, S08 abstention |
 | 4B RAFT v1 + RAG | 5/8 + 1 partielle | S03 partielle, S02 et S08 abstentions |
 | **4B RAFT v2 + RAG** | **6/8 + 1 partielle** | S03 partielle, S08 abstention (corrige S04 et S02) |
+| 4B RAFT v3 + RAG | 7/8 | S08 abstention (S03 complète : questions composées) |
+| 4B RAFT v4 + RAG | 6/8 + 1 partielle | S03 partielle, S08 abstention |
+| 4B + RAG, 2ᵉ exécution (normalisation) | 6/8 + 1 partielle | S03 partielle, S08 abstention (S04 correcte cette fois) |
 | 1.7B + RAG | 6/8 | S06 et S08 incorrectes |
 | **1.7B RAFT v2 + RAG** | **6/8 + 1 partielle** | S03 partielle, S08 abstention (au lieu d'une erreur) |
 | 4B + SFT | 1/8 + 1 partielle | les notes Saison 5 sont pourtant dans ses données d'entraînement |
 | 4B + CPT + SFT | 0/8 + 2 partielles | idem |
 
 - S08 (mode Halloween) est raté partout à cause du retriever : le mot « Halloween » n'apparaît qu'une fois dans un passage de 457 mots, et les pages Fandom génériques passent devant. Nous l'avons laissé tel quel et le citons comme limite ; la question n'a pas été réécrite pour s'adapter au retriever.
-- Sur ces faits vraiment nouveaux, **les RAFT v2 font mieux que leur modèle de base + RAG** et approchent le 14B et Sonnet + RAG.
+- Sur ces faits vraiment nouveaux, les RAFT v2 et v3 font un peu mieux que la 1ʳᵉ exécution du 4B + RAG et approchent le 14B et Sonnet + RAG.
+  Mais la 2ᵉ exécution du 4B fait 6/8 + 1 partielle : sur 8 questions, l'écart (une réponse) est dans le bruit (§4.11).
 
 ### 4.5 Performance d'inférence (RTX 5070 Ti, Ollama, Q4_K_M)
 
@@ -211,12 +269,18 @@ Même sur les faits **couverts**, c'est-à-dire présents dans ses données d'en
 | Qwen3-4B + SFT | 0,12 | 0,20 | 0,03 | 227 | 3,9 | 0 |
 | Qwen3-4B + RAG | 0,46 | 0,78 | 0,29 | 193 | 3,9 | 0 |
 | Qwen3-4B RAFT v2 + RAG | 0,37 | 0,51 | 0,27 | 207 | 3,9 | 0 |
+| Qwen3-4B RAFT v3 / v4 + RAG | 0,38 / 0,37 | 0,51 | 0,26 | 204 | 3,9 | 0 |
+| Qwen3-4B + RAG + normalisation | 0,40 (+0,09 si reformulée) | 0,72 | 0,26 | 204 | 3,9 | 0 |
 | Qwen3-1.7B + RAG | 0,24 | 0,39 | 0,16 | 362 | 2,2 | 0 |
 | Qwen3-1.7B RAFT v2 + RAG | 0,21 | 0,28 | 0,15 | 383 | 2,2 | 0 |
 
 \* Pour `claude -p`, les débits et latences sont indicatifs : ils incluent le réseau et les tokens de réflexion. Le prompt RAG fait ~2 100 tokens pour les Qwen (k=4) et ~4 800 pour Sonnet (k=5).
 
-**Longueur des réponses** : 25 mots en moyenne pour le 4B + RAG (29 tokens médians), 14,5 mots pour les RAFT (21 tokens). C'est l'une des causes de l'écart de score (§4.7).
+**Longueur des réponses** : 25 mots en moyenne pour le 4B + RAG (29 tokens médians), 14,5 mots pour le RAFT v2 (21 tokens), 14,9 pour la v3 et 15,2 pour la v4,
+alors que leurs réponses d'entraînement font 20,7 (v3) et 29 mots (v4 pour les nouveaux exemples). C'est l'une des causes de l'écart de score (§4.7).
+
+**Normalisation** : mesurée GPU libre sur les 40 saisies du jeu joueurs, la reformulation par le 4B prend **0,09 s** (médiane, max 0,12 s) quand elle a lieu
+(18 saisies sur 40) ; la correction des noms seule est instantanée.
 
 ### 4.6 Ce que montrent les résultats
 
@@ -230,7 +294,8 @@ Même sur les faits **couverts**, c'est-à-dire présents dans ses données d'en
    - Les deux modèles **hallucinent sur les 16 questions sans réponse** et ne s'abstiennent presque jamais (1 fois sur 219) : entraînés uniquement à répondre, ils ont désappris le « je ne sais pas ».
    - Le CPT apporte un gain modeste (+3,4 points), comme attendu.
    - Ces deux bras confirment les limites du SFT annoncées dans le cadrage : mémorisation faible d'un petit modèle, hallucination assurée hors corpus.
-3. **Un SLM de 4B avec RAG se place à 7 points de Sonnet + RAG et à 4 points du 14B + RAG**, pour un coût marginal nul. Il est ~7 fois plus rapide que Sonnet + RAG et ~2,7 fois plus rapide que le 14B, avec 2,7 fois moins de VRAM. Il tient sur un portable (démo Mac).
+3. **Un SLM de 4B avec RAG se place à 6-7 points de Sonnet + RAG et à 3-4 points du 14B + RAG** sur le test (86,6 à 87,9 % selon l'exécution),
+   et **au niveau de Sonnet + RAG sur de vraies questions de joueurs** (§4.9), pour un coût marginal nul. Il est ~7 fois plus rapide que Sonnet + RAG et ~2,7 fois plus rapide que le 14B, avec 2,7 fois moins de VRAM. Il tient sur un portable (démo Mac).
 4. **Les frontier sans RAG ne connaissent pas l'actualité du domaine.** Ils obtiennent 5 à 16 % sur les questions temporelles et 0/8 sur la Saison 5. En revanche, ils s'abstiennent au lieu d'halluciner (0 % d'hallucination, 32 à 44 % d'abstention).
 5. **Le RAFT ne bat pas le modèle de base + RAG en score global, mais il change le comportement** :
    - 4B : 83,8 % (v2) contre 86,6 %, soit un écart à la limite de la significativité (§8) ;
@@ -238,8 +303,10 @@ Même sur les faits **couverts**, c'est-à-dire présents dans ses données d'en
    - **hallucinations du 1.7B divisées par trois** (1 sur 16 au lieu de 3) : c'est le cas visé par RAFT, un très petit modèle qui lit mal des passages bruités ;
    - **meilleur sur la Saison 5** (6/8 + 1 partielle pour les deux RAFT v2), là où l'information est vraiment nouvelle ;
    - réponses plus courtes, latence p95 plus basse (0,51 s contre 0,78 s).
+6. **Les RAFT v3 et v4 ne changent pas ce constat** (84,7 et 85,3 % sur le test, sous le 4B de base ; §4.7) et **perdent nettement sur le jeu joueurs**
+   (55 à 64 % contre 74 % pour le 4B de base + normalisation ; §4.9). Le levier, c'est la recherche et la préparation de la question, pas le fine-tuning (§4.12).
 
-### 4.7 Diagnostic du RAFT et RAFT v2
+### 4.7 Diagnostic du RAFT, RAFT v2 à v4
 
 **RAFT v1 (13 oct.)** : 83,6 %, avec 20 abstentions contre 8 pour le 4B de base. Diagnostic sur `raft_val` (même distribution que l'entraînement) :
 - sur les exemples avec oracle, le RAFT ne refuse que dans 3 % des cas (base : 2 %) ; la sur-abstention n'apparaît que sur le test ;
@@ -247,7 +314,7 @@ Même sur les faits **couverts**, c'est-à-dire présents dans ses données d'en
 - ~12 % des étiquettes « refus » étaient fausses, la réponse étant en fait dans les passages ;
 - une partie des réussites du modèle de base vient de sa mémoire paramétrique (G41, G43) et non des passages.
 
-**RAFT v2 (17 oct.)** : reformulations, refus vérifiés, p_oracle 0,9 (§2.5). Le choix a été fait sur le jeu de dev :
+**RAFT v2 (17 oct.)** : reformulations, refus vérifiés, p_oracle 0,9 (§2.6). Le choix a été fait sur le jeu de dev :
 
 | Jeu de dev (327 q.) | Score % | Abstention | Halluc. |
 |---|---|---|---|
@@ -260,7 +327,31 @@ Même sur les faits **couverts**, c'est-à-dire présents dans ses données d'en
 - **réponses incomplètes sur les questions composées** : la majorité des pertes sont des « partielles » (E21, L41, L45, L48, M14…). Les exemples RAFT ne contiennent que des paires à un seul fait, et le modèle a appris à ne donner qu'un fait ;
 - **quelques refus restants** alors que la réponse est dans les passages (G41, G43, T14).
 
-Le jeu de dev n'a pas vu ce défaut, faute de questions composées. **Une v3 n'a pas été entraînée** : ses corrections auraient été conçues à partir des erreurs du test, ce qui revient à régler le système sur le test (§8). Elle figure dans les perspectives (§9).
+Le jeu de dev n'a pas vu ce défaut, faute de questions composées.
+
+**RAFT v3 (27-28 oct.)** : d'abord écartée (ses corrections seraient venues des erreurs du test), elle a finalement été construite à partir
+de défauts visibles **hors du test** : réponses à un seul fait sur des questions composées (visibles sur les paires de validation) et saisies
+de joueurs mal comprises (jeu joueurs J01-J15). Données : §2.6. Entraînement : 880 pas, 3 h 02.
+- Dev 87,3 % (v2 : 87,2), test 84,7 % (v2 : 83,8), joueurs 55,0 % avec normalisation (v2 k6 : 63,8).
+- Les réponses restent courtes (14,9 mots contre 14,5) malgré des réponses d'entraînement de 20,7 mots : le signal porte sur ~1,6 % des tokens
+  d'un exemple, en une epoch. Gain net sur S03 (Saison 5), question composée, désormais complète.
+
+**RAFT v4 (29 oct.)** : diagnostic de §4.8 (les erreurs restantes des SLM sont des erreurs de lecture) et du jeu joueurs (conditionnels, valeurs
+actuelles entre deux patchs, listes) : questions difficiles écrites par `qwen3.6`, réponses du 35B lui-même en lisant les vrais passages (distillation). Données : §2.6. Entraînement : 166 pas, 37 min.
+- Dev 85,3 %, test **85,3 %** (meilleur RAFT, et seul gain net : esport 76,7 % contre 68,6 % pour la v2), joueurs 57,5 % avec normalisation.
+- Limite : le 35B n'est d'accord avec la référence que pour 57 % des questions difficiles (1 289 sur 2 256) ; distiller un professeur à peine meilleur que
+  l'élève sur ces questions ne pouvait pas apporter beaucoup.
+
+| RAFT 4B | Ce qui change | Dev | Test | Joueurs (40) | Abstentions joueurs |
+|---|---|---|---|---|---|
+| (base) Qwen3-4B + RAG | — | 83,3 | 86,6 | 66,2 | 3 |
+| (base) + normalisation | saisie corrigée, reformulée si besoin | 82,4 | 87,9* | **73,8** | 2 |
+| v1 | passages, distracteurs, refus | 80,3 | 83,6 | — | — |
+| v2 (k=6 pour joueurs) | reformulations, refus vérifiés | 87,2 / 88,5 (k6) | 83,8 / 84,0 (k6) | 63,8 | 7 |
+| v3 (+ normalisation pour joueurs) | questions composées, saisies bruitées | 87,3 | 84,7 | 55,0 | 7 |
+| v4 (+ normalisation pour joueurs) | questions difficiles, réponses du 35B | 85,3 | 85,3 | 57,5 | 7 |
+
+\* 2ᵉ exécution du 4B + RAG (2 questions du test sur 235 modifiées par la normalisation, §4.11).
 
 ### 4.8 D'où viennent les erreurs des bras + RAG : recherche ou lecture ?
 
@@ -272,7 +363,10 @@ Pour chaque question répondable non jugée `correct` (partielle, incorrecte ou 
 | Qwen3-14B + RAG (k=5) | 33 | 13 (39 %) | 2 | 18 (55 %) |
 | Qwen3-4B + RAG | 46 | 14 (30 %) | 2 | 29 (63 %) |
 | Qwen3-4B RAFT v1 + RAG | 48 | 13 (27 %) | 3 | 31 (65 %) |
+| Qwen3-4B + RAG, 2ᵉ exécution (normalisation) | 36 | 13 (36 %) | 2 | 20 (56 %) |
 | Qwen3-4B RAFT v2 + RAG | 48 | 13 (27 %) | 2 | 32 (67 %) |
+| Qwen3-4B RAFT v3 + RAG | 48 | 13 (27 %) | 2 | 32 (67 %) |
+| Qwen3-4B RAFT v4 + RAG | 44 | 13 (30 %) | 2 | 28 (64 %) |
 | Qwen3-1.7B + RAG | 54 | 14 (26 %) | 2 | 37 (69 %) |
 | Qwen3-1.7B RAFT v2 + RAG | 56 | 13 (23 %) | 2 | 40 (71 %) |
 
@@ -282,7 +376,86 @@ Pour chaque question répondable non jugée `correct` (partielle, incorrecte ou 
 - **La limite propre au RAG est la même pour tous** : 12 à 14 questions (~6 % des 219) dont la réponse n'était dans aucun des passages reçus (ex. E32 : la page du joueur Shu n'est pas remontée, seules des pages de tournoi l'ont été). Plus de passages ou un meilleur moteur de recherche (reranker, découpe) sont les seuls leviers.
 - **Plus le modèle est petit, plus ses erreurs sont des erreurs de lecture** : 38 % pour Sonnet, 55 % pour le 14B, 63 à 71 % pour les SLM. Pour un modèle fort, c'est la recherche qui limite ; pour un SLM, c'est la lecture, en grande partie des réponses incomplètes aux questions composées (§4.7).
 - Le RAFT ne réduit pas le nombre d'erreurs de lecture sur ce test, ce qui est cohérent avec §4.7 : il apprend à s'abstenir et à repérer le bon passage, mais pas à répondre à toutes les parties d'une question.
+- **Bruit** : deux exécutions du même 4B + RAG (mêmes passages pour les 14 questions dont le verdict change) donnent 46 puis 36 erreurs, dont 29 puis 20 de lecture.
+  Le nombre d'erreurs de recherche (13-14) est stable ; les écarts de lecture entre le 4B et ses RAFT (28 à 32) sont dans ce bruit (§4.11).
 - Vérification automatique par un LLM local : indicative. Contrôlée à la main sur E32 (recherche), L18 (partiel) et quelques erreurs de lecture (G30 : le passage donne bien 750 PV pour Roadhog, le 4B s'est trompé).
+
+### 4.9 Jeu joueurs (40 questions, 29 oct.)
+
+| Configuration | Score % | J01-J15 | J16-J40 (jamais vues) | Correct | Partiel | Incorrect | Abstention | Halluc. |
+|---|---|---|---|---|---|---|---|---|
+| Qwen3-14B + RAG (k=5) | **78,8** | 80,0 | 78,0 | 31 | 1 | 5 | 3 | 0 |
+| Claude Sonnet + RAG (k=5) | 75,0 | 70,0 | 78,0 | 29 | 2 | 4 | 5 | 0 |
+| **Qwen3-4B + RAG + normalisation** | **73,8** | 60,0 | **82,0** | 29 | 1 | 8 | 2 | 0 |
+| Qwen3-4B + RAG | 66,2 | 40,0 | **82,0** | 26 | 1 | 9 | 3 | 1 |
+| RAFT 4B v2 + RAG (k=6) | 63,8 | 53,3 | 70,0 | 25 | 1 | 7 | 7 | 0 |
+| RAFT 4B v4 + RAG + normalisation | 57,5 | 56,7 | 58,0 | 20 | 6 | 7 | 7 | 0 |
+| RAFT 4B v3 + RAG + normalisation | 55,0 | 53,3 | 56,0 | 21 | 2 | 10 | 7 | 0 |
+
+Par type de question (points obtenus / questions), 4B + normalisation : fiche 13/16, valeur 5/6, jargon 4,5/7, combinée 3/4, liste 2/5, avis 2/2.
+Sonnet + RAG : jargon 5/7, liste 2,5/5. Toutes les configurations plafonnent sur les **listes** (2 à 2,5/5).
+
+**Lecture.**
+- **Le 4B de base + RAG est au niveau de Sonnet + RAG** sur de vraies saisies de joueurs (73,8 contre 75,0 %), et même devant sur les 25 questions jamais
+  utilisées pour régler quoi que ce soit (82 contre 78 %). Avec 25 questions (4 points par question), on dira « au niveau de », pas « meilleur que ».
+- **Les RAFT perdent 4 à 7 questions** sur le 4B de base : ils s'abstiennent beaucoup plus (7 contre 2) et ratent du jargon (rez, Bap) et des fiches simples
+  (ancien nom de Cassidy, phrase de l'ultime de Sigma). L'entraînement les a rendus prudents et moins souples hors de la distribution des données RAFT.
+- **Échecs communs** : J39 (Sombra devenue support en Saison 5 : les notes du 6 oct. ne sont pas retrouvées, « DPS » et « support » contre « Support role » et
+  « rework » ; erreur de recherche, tous s'abstiennent), J18 (« champion des Junkers » : tous répondent Junker Queen ; question ambiguë, référence à valider),
+  J08 (héros de la Saison 4, liste), J28-J29 (absents du corpus : abstention, sauf le 14B qui invente sur J28).
+
+### 4.10 Normalisation de la question (`rag/rewrite.py`, sans entraînement)
+
+1. **Correction des noms d'entités** (rapidfuzz contre les titres des pages d'entités, seuil 85, 80 pour un mot en minuscules ou en tête de saisie ;
+   jamais un mot du corpus fréquent, un mot d'un nom propre composé ni une forme dérivée) : « Gesnji » → Genji, « Roadhgo » → Roadhog, « Brigitta » → Brigitte.
+2. **Reformulation** en une question complète par le modèle qui répond (Ollama, température 0, exemples en un seul message), **seulement si la saisie n'est
+   pas déjà une question complète** (mode `auto` : pas de « ? », pas de mot interrogatif ou moins de 4 mots). Une reformulation qui perd plus de 20 % des mots
+   de contenu est rejetée (le RAFT répondait parfois au lieu de reformuler).
+3. La question normalisée sert à la recherche **et** au prompt ; cache disque pour la reproductibilité.
+
+| Jeu | Questions reformulées (mode auto) | 4B + RAG | 4B + RAG + normalisation |
+|---|---|---|---|
+| Joueurs J01-J15 (ont servi à la régler) | 15 / 15 | 40,0 | **60,0** |
+| Joueurs J16-J40 (jamais vues) | 3 / 25 (2 corrections de noms) | 82,0 | 82,0 |
+| Dev | 0 / 327 | 83,3 | 82,4 (bruit, prompts identiques) |
+| Test | 2 / 235 (corrections de noms) | 86,6 | 87,9 (bruit, §4.11) |
+
+La normalisation **aide les saisies en mots-clés et ne nuit pas ailleurs**. La reformulation systématique (mode `always`, testé d'abord) faisait perdre
+~3 points sur le dev : paraphrases qui changent la recherche. Coût : 0,09 s quand la reformulation a lieu. Son gain mesuré (+20 points) porte sur les
+15 saisies qui ont servi à la mettre au point : il est probablement surestimé.
+
+### 4.11 Bruit d'exécution
+
+Le même modèle, à température 0 et au même prompt, ne donne pas toujours la même réponse avec Ollama (ordre des calculs sur GPU, version du serveur) :
+- **dev** : deux exécutions à prompts identiques, 223 réponses sur 327 identiques, ~1 point d'écart de score ;
+- **test** : 4B + RAG le 12 oct. puis le 29 oct. (233 questions sur 235 identiques) : **86,6 puis 87,9 %**, 171 réponses sur 235 identiques,
+  14 verdicts différents, tous avec les mêmes passages ; erreurs de lecture 29 puis 20.
+
+Conséquence : des écarts de 1 à 3 points entre configurations, sur le test comme sur le dev, ne sont pas interprétables isolément. Les conclusions
+s'appuient sur des écarts qui se répètent sur les trois jeux (RAFT sous la base sur le test et le jeu joueurs) ou qui dépassent nettement ce bruit
+(RAG contre sans RAG, jeu joueurs J01-J15).
+
+### 4.12 Quelle configuration dans quel cas
+
+| Cas | Meilleur SLM | Écart | Commentaire |
+|---|---|---|---|
+| Questions de joueurs (fautes, mots-clés, jargon) | **4B de base + RAG + normalisation** (73,8 %) | +10 à +19 points sur les RAFT | au niveau de Sonnet + RAG (75 %) |
+| Jeu de test (questions rédigées) | **4B de base + RAG** (86,6-87,9 %) | +1 à +3 points sur le meilleur RAFT (v4, 85,3) | lore, cartes, patchs |
+| Esport | RAFT v4 (76,7 %) | +2 à +5 points | seul gain du v4 hors dev |
+| Questions du dev (même distribution que l'entraînement) | RAFT v2 k6 (88,5 %) | +5 points | gain qui ne se transfère pas |
+| Latence | RAFT (0,37 s) | ~20 % plus rapide | réponses plus courtes |
+| Hallucination, très petit modèle | **RAFT 1.7B** (1/16) | contre 3/16 | le cas visé par RAFT |
+| Hallucination, 4B | égalité (0/16) | | le 4B + RAG n'invente déjà rien |
+| Sans RAG | aucun | SFT 11,5 %, 16/16 hallucinations | le fine-tuning seul n'apprend pas les faits |
+
+**Pourquoi le RAFT ne bat pas le modèle de base** :
+1. **Qwen3-4B sait déjà lire des passages** : modèle *instruct* récent, 86,6 % avec RAG sans entraînement. L'article RAFT (2024) mesurait ses gains sur
+   des modèles qui lisaient mal (Llama 2 7B). La marge restante dépend de la recherche (13-14 questions) ou de la taille du modèle (listes, croisements).
+2. **Le RAFT apprend une forme** : questions générées par un LLM dans un style homogène, réponses courtes. D'où le gain sur le dev, généré de la même
+   façon, et la perte sur des questions humaines.
+3. **Il devient prudent** : les exemples de refus (8 à 19 % selon la version) le poussent à s'abstenir hors de l'ordinaire (7 abstentions sur 40 au jeu
+   joueurs contre 2). Utile au 1.7B qui hallucinait, pénalisant pour le 4B qui n'hallucinait pas.
+4. **Signal d'entraînement faible** : la loss porte sur ~1,2 à 1,6 % des tokens, en une epoch ; un entraînement plus fort risquerait l'oubli.
 
 ---
 
@@ -301,6 +474,9 @@ Pour chaque question répondable non jugée `correct` (partielle, incorrecte ou 
 | Exemples RAFT (15 000, hybride) | ~7 min (~36 ex/s) | GPU (embeddings des requêtes) |
 | Données RAFT v2 : vérification des refus + reformulations | ~50 min (1 426 refus, ~2 s/ex) + ~1 h 15 (6 864 questions, 1,5 ex/s) | GPU (`qwen3.6`) |
 | Jeu de dev (300 reformulations + 30 sans réponse) | quelques minutes | GPU |
+| Données RAFT v3 : questions composées (`compose`) | 4 h 35 pour 3 898 questions (~4,2 s/ex, GPU en partie partagé) | GPU (`qwen3.6`) |
+| Données RAFT v4 : questions difficiles (`hard`) puis réponses du 35B (`teach`) | 1 h 30 (3 000 graines, ~2 s/ex) + 2 h 26 (2 256 questions, ~4 s/ex) | GPU (`qwen3.6`) |
+| Banc jeu joueurs (40 q.) | < 1 min par config locale, quelques minutes pour Sonnet + RAG | GPU / abonnement |
 | Export GGUF Q4_K_M | 1 min (1.7B, 1,1 Go) à 3 min (4B, 2,5 Go) ; 7 min la première fois (compilation de llama.cpp) | CPU / GPU |
 | Banc local (235 q.) | 1 à 5 min par configuration | GPU |
 | Banc frontier (235 q.) | ~24 min par config sans RAG, ~14 min avec RAG | abonnement |
@@ -312,6 +488,8 @@ Pour chaque question répondable non jugée `correct` (partielle, incorrecte ou 
 |---|---|---|---|---|---|---|---|
 | RAFT 4B v1 | 14 250 | 891 | 3 h 22 | 0,85 | 2 322 | 13,9 | 0,246 / 0,240 |
 | RAFT 4B v2 | 14 072 | 880 | 3 h 29 | 0,89 | 2 218 | 13,8 | 0,278 / 0,275 |
+| RAFT 4B v3 | 14 072 | 880 | 3 h 02 | 0,76 | 2 614 | 13,8 | 0,326 / 0,328 |
+| RAFT 4B v4 | 2 650 | 166 | 37 min | 0,77 | 2 625 | 13,4 | 0,395 / 0,354 |
 | RAFT 1.7B v2 | 14 072 | 880 | 1 h 15 | 0,32 | 6 198 | 11,5 | 0,346 / 0,337 |
 | SFT 4B (2 epochs, packing) | 102 160 | 350 | 2 h 05 | 0,036 | 3 007 | 16,1** | 1,029 / 1,068 |
 | CPT 4B (1 epoch) | 12 360 | 84 | 30 min | 0,15 | 3 013 | 6,8 | 2,169 / — |
@@ -343,17 +521,22 @@ Le vrai concurrent d'un SLM + RAG n'est pas un LLM nu, mais un **LLM frontier é
 | **Claude Sonnet + recherche web** | **73,6 %** | 4/8 + 1 p. | **16,7 s** (p95 30,7 s) | — | **0,033 $ ≈ 0,030 €** | **~108 500 €** |
 | Claude Sonnet + notre RAG (API) | 92,6 % | 7/8 | 3,1 s | — | 0,011 $ ≈ 0,010 € | ~35 900 € |
 | Qwen3 14B + RAG (GPU) | 87,2 % | 7/8 | 1,3 s | 0,092 Wh | 1,8 × 10⁻⁵ € | 67 € |
-| Qwen3 4B + RAG (GPU) | 79,7 % | 5/8 + 1 p. | 0,51 s | 0,029 Wh | 5,9 × 10⁻⁶ € | 21 € |
+| **Qwen3 4B + RAG (GPU)**, modèle de la démo | 79,7-83,1 %** | 5-6/8 + 1 p. | 0,51 s | 0,029 Wh | 5,9 × 10⁻⁶ € | **21 €** |
 | Qwen3 4B RAFT v2 + RAG (GPU) | 81,8 % | 6/8 + 1 p. | 0,41 s | 0,024 Wh | 4,8 × 10⁻⁶ € | 17 € |
 | **Qwen3 1.7B RAFT v2 + RAG (GPU)** | 77,7 % | 6/8 + 1 p. | **0,26 s** | **0,012 Wh** | **2,3 × 10⁻⁶ €** | **8 €** |
 | Qwen3 1.7B RAFT v2 + RAG (CPU seul) | (idem) | (idem) | 4,1 s | 0,135 Wh | 2,7 × 10⁻⁵ € | 99 € |
 | Qwen3 4B + RAG (CPU seul) | (idem) | (idem) | 10,4 s | 0,348 Wh | 7,0 × 10⁻⁵ € | 254 €* |
+
+\** Deux exécutions (12 et 29 oct.). La normalisation ajoute ~0,09 s et un appel au même modèle quand la saisie est reformulée (énergie non mesurée à part,
+de l'ordre d'une génération courte).
 
 \* 10,4 s par question : une seule machine plafonne à ~8 300 questions par jour en traitement séquentiel. Sur CPU seul, les réponses sont identiques à celles du GPU (mêmes poids), seule la vitesse change ; la mesure CPU porte sur 60 (1.7B) et 30 (4B) questions. Coût Sonnet + recherche web : ~6 000 tokens en entrée (pages de résultats incluses), ~900 en sortie, ~1,2 recherche par question ; ce calcul retrouve le coût équivalent rapporté par `claude -p` (0,034 $). Le bras web n'a pas été passé sur les questions sans réponse.
 
 **Lecture.**
 - **Sonnet + recherche web se met bien à jour** (5,4 % → 73,6 % sur les questions temporelles), mais il fait **moins bien que nos SLM + RAG** (77,7 à 81,8 %) : il tombe sur des articles de presse ou des pages obsolètes plutôt que sur les notes officielles (S04 : refus faute de source fiable). Un index construit sur des sources choisies vaut mieux qu'une recherche web générique.
 - **Coût marginal** : par question, le SLM local coûte de **1 000 fois** (1.7B sur CPU) à **13 000 fois** (1.7B sur GPU) moins cher que Sonnet + recherche web, et de 360 à 4 300 fois moins que Sonnet + RAG via l'API.
+  Pour le 4B de base + RAG, modèle de la démo : **~5 000 fois** moins cher que Sonnet + recherche web sur GPU (430 fois sur CPU seul, mais 10 s par réponse),
+  avec un meilleur score sur les questions temporelles (80-83 % contre 74 %).
 - **Latence** : 0,3 à 0,5 s contre 17 s.
 
 **Amortissement du matériel** (prix d'achat ÷ économie par question, face à Sonnet + recherche web / Sonnet + RAG API) :
@@ -392,7 +575,8 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 | SLM + RAG | corpus, découpe, index BM25 + embeddings, retriever | moyen (`rag/` ~600 lignes hors RAFT) | ~6 min d'embeddings | secondes | dépend du retriever (S08) |
 | SLM + SFT | corpus, génération Q/R, filtrage, QLoRA | élevé (`gen/` 1 169 lignes + `train/` 375) | ~26 h de génération + 2 h d'entraînement | heures (génération + entraînement) | mémorisation faible (15 % sur les faits couverts), hallucination 100 % |
 | SLM + CPT + SFT | idem + passe de texte brut | élevé | + 30 min | heures | gain modeste mesuré (+3,4 points) |
-| **SLM + RAFT + RAG** | tout ce qui précède + construction des exemples RAFT | le plus élevé | génération + 7 min + 1 h 15 à 3 h 30 (+ ~2 h pour la v2) | secondes (index), réentraînement optionnel | réponses trop courtes, abstentions résiduelles |
+| **SLM + RAFT + RAG** | tout ce qui précède + construction des exemples RAFT | le plus élevé | génération + 7 min + 1 h 15 à 3 h 30 (+ ~2 h pour la v2, ~4 h 30 pour la v3, ~4 h pour la v4) | secondes (index), réentraînement optionnel | réponses trop courtes, prudence excessive, pas de gain mesuré en 4B |
+| SLM + RAG + normalisation | RAG + correction des noms (rapidfuzz) + un appel au modèle | faible (`rag/rewrite.py` ~220 lignes) | nul | secondes | reformulation qui change la recherche (d'où le mode `auto`) |
 | LLM local 14B + RAG | RAG + GPU 12 Go ou plus | moyen | idem RAG | secondes | latence ×2,7, VRAM ×2,7 |
 | Frontier (+ RAG) | abonnement / API (+ RAG) | faible | nul | dépend du fournisseur | coût récurrent, données envoyées à un tiers, connaissances datées sans RAG |
 
@@ -402,10 +586,11 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 |---|---|---|---|
 | `scraper/` | collecte, nettoyage, découpe, refresh, Blizzard | 12 | 1 021 |
 | `gen/` | génération Q/R, templates, dataset | 4 | 1 169 |
-| `rag/` | BM25, embeddings, retriever hybride, RAFT, RAFT v2 et jeu de dev (`augment.py`) | 10 | 1 055 |
-| `bench/` | banc, backends, juge, rapport, jeu de dev | 8 | 908 |
+| `rag/` | BM25, embeddings, retriever hybride, RAFT, RAFT v2 à v4 et jeu de dev (`augment.py`), normalisation (`rewrite.py`) | 11 | 1 850 |
+| `bench/` | banc, backends, juge, rapport, jeux de dev et joueurs, provenance des erreurs, énergie | 10 | 1 198 |
 | `train/` | QLoRA SFT/CPT/RAFT, export GGUF | 6 | 375 |
-| **Total** | | 40 | **~4 530** |
+| `demo/` | démo de soutenance, paquet pour le Mac | 3 | 278 |
+| **Total** | | 46 | **~5 890** |
 
 ### 6.3 Contraintes d'environnement rencontrées
 
@@ -429,7 +614,10 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 | 12-13 oct. | **Premier entraînement complet : RAFT Qwen3-4B v1** (3 h 22), export, banc : 83,6 %, sous le 4B + RAG | `aa00b41`, `1786de9` |
 | 17 oct. | Diagnostic de la sur-abstention ; jeu de dev ; données RAFT v2 (reformulations, refus vérifiés) ; RAFT 4B v2 : 87,2 % sur le dev, 83,8 % sur le test | `e0fb730` → `f59dc5c` |
 | 17-18 oct. (nuit) | RAFT 1.7B v2, SFT 4B, CPT 4B, CPT + SFT 4B, exports et bancs, en chaîne unique | `800741f`, `d97d5c2` |
-| 26 oct. | Mise à jour du dossier, échantillon de vérification manuelle du juge, préparation de la soutenance | |
+| 26 oct. | Mise à jour du dossier, échantillon de vérification manuelle du juge, préparation de la soutenance ; script de démo | `a12dfd7`, `e927ba4` |
+| 27-28 oct. | Jeu joueurs (J01-J15) ; normalisation des questions ; balayage du RAG (k, passages par page) ; données et entraînement RAFT v3 | `80220d5`, `7722c62` |
+| 29 oct. (nuit) | RAFT v4 (questions difficiles, réponses du 35B), entraînement, bancs dev/joueurs/test des finalistes, en chaîne unique | `0f0d816` |
+| 29 oct. | Jeu joueurs élargi à 40 questions (J16-J40), 14B et Sonnet + RAG ; démo sur le 4B de base + normalisation | `9515f21`, `734ce66` |
 
 ### 7.1 Décisions méthodologiques (et pourquoi)
 
@@ -445,7 +633,10 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 | Notes officielles Blizzard en plus des wikis | les wikis ont 2 à 4 semaines de retard sur les patchs |
 | Garder S08 malgré l'échec du retriever | ne pas ajuster le test au système évalué |
 | Jeu de dev séparé pour régler le RAFT v2 | ne plus utiliser le test pour choisir entre variantes |
-| Pas de RAFT v3 | ses corrections viendraient de l'analyse des erreurs du test ; à une semaine de l'échéance, le gain attendu (2 à 3 points, au mieux l'égalité) ne justifie ni ce biais ni ~6 h de calcul |
+| RAFT v3 et v4 réglés sans regarder le test | d'abord écartée pour ne pas régler le système sur le test, la v3 a été construite à partir de défauts vus sur le dev et le jeu joueurs ; même règle pour la v4 |
+| Jeu joueurs | le dev généré favorisait le RAFT ; il fallait de vraies saisies pour juger l'usage réel |
+| Normalisation en mode `auto` | la reformulation systématique faisait perdre ~3 points sur le dev |
+| Démo sur le 4B de base + RAG + normalisation | meilleur SLM sur le test et le jeu joueurs, et pas de modèle fine-tuné à installer |
 
 ### 7.2 Problèmes rencontrés et corrections (utile pour la partie « retour d'expérience »)
 
@@ -459,6 +650,11 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 8. **VRAM non mesurée** pour les modèles créés avec `ollama create` (suffixe `:latest`) : corrigé, valeur mesurée a posteriori (3 873 Mo).
 9. **Sur-abstention du RAFT v1** : les questions d'entraînement recopiaient le passage oracle, et ~12 % des refus étaient faux. Corrigé dans la v2 (§4.7).
 10. **Jeu de dev trop facile** : il ne contient que des questions à un seul fait, si bien que le gain du RAFT v2 (+3,9 points sur le dev) ne s'est pas retrouvé sur le test. Leçon : un jeu de dev doit reproduire la forme des questions du test, pas seulement leur thème.
+11. **Jeu de dev trop proche des données RAFT** : généré à partir des mêmes paires, il a favorisé les RAFT v2 à v4 (+2 à +5 points) sans que le gain se transfère. Leçon : tester sur de vraies questions.
+12. **Bruit d'exécution d'Ollama** : à température 0, une réponse sur quatre change d'une exécution à l'autre ; un 4B identique passe de 86,6 à 87,9 % (§4.11).
+13. **Modèles qui se partagent le GPU** : le 35B (~13,5 Go de VRAM) et un 4B ne tiennent pas ensemble ; Ollama les échange à chaque requête (~30 s). Une chaîne de nuit
+    qui attendait le mauvais processus (le `cmd` parent au lieu de `python`) a lancé des bancs pendant une génération ; corrigé en attendant le PID de `python`.
+14. **Reformulation par le RAFT** : le modèle fine-tuné répondait parfois au lieu de reformuler, ou répétait le mot interrogatif ; garde sur les mots de contenu.
 
 ---
 
@@ -466,22 +662,31 @@ Le prix d'une machine minimale est une hypothèse (les prix de la RAM ont fortem
 
 - **Juge LLM vérifié à la main** : 112 verdicts tirés (8 par configuration, stratifiés par verdict : les abstentions et hallucinations y sont surreprésentées), 111 relus (`eval/review/sample.csv`, précisions du relecteur dans `human_note`). **Accord 100 %, kappa de Cohen 1,00.** Limites : un seul relecteur, qui voyait le verdict et la justification du juge en relisant (biais de confirmation possible) ; échantillon stratifié, donc l'accord porte surtout sur les cas difficiles et ne se transpose pas directement à l'ensemble des réponses.
 - **Biais de construction** : le test et l'index proviennent du même corpus, ce qui avantage les bras RAG face aux frontier sans RAG. Les questions temporelles et la Saison 5 montrent toutefois un vrai besoin d'information fraîche.
-- **Le test a été consulté pour le diagnostic du RAFT** (v1 puis v2) : les écarts observés dessus servent d'explication, pas de réglage. C'est pour cette raison qu'il n'y a pas eu de v3.
+- **Le test a été consulté pour le diagnostic du RAFT** (v1 puis v2) : les écarts observés dessus servent d'explication, pas de réglage. Les v3 et v4 ont été
+  construites à partir du dev et du jeu joueurs uniquement.
+- **Jeu joueurs** : 40 questions seulement (une question = 2,5 points) ; J01-J15 ont servi à régler la normalisation (son gain y est probablement surestimé) ;
+  références de J08, J10, J18 et J22 encore à valider.
 - **k différent** entre les bras : 4 pour les SLM, 5 pour le 14B et Sonnet.
 - **Couverture « couvert / non couvert »** : heuristique, indicative.
-- **Une seule graine**, pas d'intervalles de confiance : avec n = 219, ±2 à 3 points d'écart ne sont pas significatifs. Les écarts RAFT / base (2,8 points en 4B, 0,3 en 1.7B) sont dans cette marge ; l'écart d'hallucination du 1.7B (1 contre 3 sur 16) porte sur de très petits effectifs.
+- **Une seule graine et bruit d'exécution**, pas d'intervalles de confiance : deux exécutions du même 4B donnent 86,6 et 87,9 % (§4.11) ; avec n = 219, ±2 à 3 points
+  ne sont pas significatifs. Les écarts RAFT / base sur le test (1,3 à 3 points en 4B, 0,3 en 1.7B) sont dans cette marge ; c'est leur répétition sur le jeu
+  joueurs qui rend la conclusion solide. L'écart d'hallucination du 1.7B (1 contre 3 sur 16) porte sur de très petits effectifs.
 - **Mesures frontier** (latence, tok/s) indicatives : réseau et tokens de réflexion inclus.
 
 ## 9. Reste à faire et perspectives
 
 Reste à faire :
 - [x] Vérification manuelle du juge : accord 100 %, kappa 1,00 (111 verdicts)
-- [ ] Mesure de la consommation électrique (`nvidia-smi --query-gpu=power.draw`) pendant un banc
-- [ ] Démo sur le Mac (GGUF RAFT 1.7B ou 4B + index RAG)
+- [x] Mesure de la consommation électrique (`bench/power.py`, §5.2)
+- [x] Jeu joueurs (40 questions), normalisation, RAFT v3 et v4
+- [ ] Démo sur le Mac (4B de base + RAG + normalisation, `docs/REPRISE_MAC.md`) et vidéo de secours
+- [ ] Validation des références J08, J10, J18, J22 du jeu joueurs
 - [ ] Présentation de soutenance ; citer Fandom et Liquipedia (CC-BY-SA, attribution) et Blizzard (notes de patch)
 
 Perspectives (non réalisées) :
-- **RAFT v3** : exemples à questions composées (deux paires du même passage fusionnées, réponse complète), réponses cibles en phrases complètes, et un jeu de dev qui contienne aussi des questions composées.
+- **Recherche** : reranker des ~20 meilleurs passages (le 4B juge leur pertinence, +1-2 s), découpe par capacité ; c'est la limite commune à tous les modèles (§4.8, J39).
+- **Questions de liste** (héros d'une saison, d'un rôle) : table structurée des héros interrogée directement plutôt que des passages ; tous les modèles y échouent.
+- **Jeu joueurs plus grand** (100-200 questions) et jeu de dev construit sur de vraies questions, pour régler sans biais vers le RAFT.
 - Plusieurs graines et intervalles de confiance (bootstrap) pour les écarts de quelques points.
 - Parser les brackets Liquipedia pour poser des questions « qui a gagné X ».
 - Améliorer le retriever sur les passages longs (S08) : découpe plus fine ou reranker.
