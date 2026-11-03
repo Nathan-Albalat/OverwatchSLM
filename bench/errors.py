@@ -16,6 +16,7 @@ from tqdm import tqdm
 
 from bench import common as C
 from bench.prompts import format_user_prompt
+from bench.report import load_records
 from rag.augment import SEP, VERIFY_PROMPT, ask_json
 
 OUT = C.ROOT / "eval" / "report" / "error_sources.jsonl"
@@ -43,17 +44,19 @@ def main(names=None):
     names = names or [n for n in rag_cfgs if (C.JUDGMENTS / f"{n}.jsonl").exists()]
     errors = {}   # config -> [(qid, verdict, key)]
     todo = {}     # key -> (qid, ids)
+    # memes reponses que le rapport : derniere reponse jugee et a jour par question (les anciens verdicts,
+    # rejuges apres une mise a jour du test, restent dans le fichier de jugements et ne doivent pas compter)
+    records = load_records(names)
     for n in names:
-        runs = {r["id"]: r for r in C.read_jsonl(C.RUNS / f"{n}.jsonl")}
         errors[n] = []
-        for j in C.read_jsonl(C.JUDGMENTS / f"{n}.jsonl"):
-            q = test.get(j["id"])
-            if not q or q["category"] == "unanswerable" or j["verdict"] == "correct":
+        for rec in records.get(n, []):
+            q = rec["q"]
+            if q["category"] == "unanswerable" or rec["verdict"] == "correct":
                 continue
-            ids = runs[j["id"]].get("rag_ids") or []
-            k = _key(j["id"], ids)
-            errors[n].append((j["id"], j["verdict"], k))
-            todo[k] = (j["id"], ids)
+            ids = rec["run"].get("rag_ids") or []
+            k = _key(q["id"], ids)
+            errors[n].append((q["id"], rec["verdict"], k))
+            todo[k] = (q["id"], ids)
     cache = {r["key"]: r for r in C.read_jsonl(OUT)}
     missing = {k: v for k, v in todo.items() if k not in cache}
     print(f"[errors] {len(names)} configs, {sum(map(len, errors.values()))} erreurs, "

@@ -58,7 +58,7 @@ Les trois sont notés par le même juge (Claude Sonnet, §3).
 
 - 74 questions **temporelles** portent sur des faits postérieurs à ~avril 2025, au-delà de la date de coupure des modèles frontier.
 - E41-E43 ont leur réponse uniquement dans les templates bruts.
-- Toute paire d'entraînement trop proche d'une question du test est supprimée : 224 paires retirées.
+- Toute paire d'entraînement trop proche d'une question du test est supprimée : 223 paires retirées.
 - Beaucoup de questions sont **composées** (« X, et Y ? ») : elles demandent plusieurs faits dans une même réponse (voir §4.7).
 
 ### 2.3 Jeu de dev (17 oct., pour régler les variantes sans toucher au test)
@@ -100,7 +100,7 @@ Les trois sont notés par le même juge (Claude Sonnet, §3).
 | Méta | 1 333 |
 | Ancrage des nombres | 741 |
 | Doublons exacts et flous | ~1 700 |
-| Proximité avec le test | 224 |
+| Proximité avec le test | 223 |
 
 - **CPT** : 12 360 chunks de texte brut, hors faible valeur (5,45 M tokens).
 - **Couverture du test** : 164 faits sur 219 (heuristique) sont présents dans les données d'entraînement. Les résultats sont découpés en « couvert » / « non couvert ».
@@ -359,30 +359,30 @@ Pour chaque question répondable non jugée `correct` (partielle, incorrecte ou 
 
 | Configuration | Erreurs | Recherche | Partiel | Lecture |
 |---|---|---|---|---|
-| Claude Sonnet + RAG (k=5) | 21 | 12 (57 %) | 1 | 8 (38 %) |
-| Qwen3-14B + RAG (k=5) | 33 | 13 (39 %) | 2 | 18 (55 %) |
-| Qwen3-4B + RAG | 46 | 14 (30 %) | 2 | 29 (63 %) |
+| Claude Sonnet + RAG (k=5) | 18 | 11 (61 %) | 1 | 6 (33 %) |
+| Qwen3-14B + RAG (k=5) | 28 | 12 (43 %) | 2 | 14 (50 %) |
+| Qwen3-4B + RAG | 41 | 13 (32 %) | 2 | 25 (61 %) |
 | Qwen3-4B RAFT v1 + RAG | 48 | 13 (27 %) | 3 | 31 (65 %) |
 | Qwen3-4B + RAG, 2ᵉ exécution (normalisation) | 36 | 13 (36 %) | 2 | 20 (56 %) |
 | Qwen3-4B RAFT v2 + RAG | 48 | 13 (27 %) | 2 | 32 (67 %) |
 | Qwen3-4B RAFT v3 + RAG | 48 | 13 (27 %) | 2 | 32 (67 %) |
 | Qwen3-4B RAFT v4 + RAG | 44 | 13 (30 %) | 2 | 28 (64 %) |
-| Qwen3-1.7B + RAG | 54 | 14 (26 %) | 2 | 37 (69 %) |
+| Qwen3-1.7B + RAG | 49 | 13 (27 %) | 2 | 33 (67 %) |
 | Qwen3-1.7B RAFT v2 + RAG | 56 | 13 (23 %) | 2 | 40 (71 %) |
 
-(1 question non vérifiée par bras k=4, sortie JSON invalide.)
+(1 question non vérifiée par bras k=4, sortie JSON invalide. Seule la dernière réponse jugée de chaque question compte, comme dans le rapport du banc : une première version du décompte, corrigée le 31 oct., comptait aussi les anciens verdicts des 9 questions rejugées après la mise à jour du test, d'où 21, 33, 46 et 54 erreurs pour Sonnet, le 14B, le 4B et le 1.7B.)
 
 **Lecture.**
-- **La limite propre au RAG est la même pour tous** : 12 à 14 questions (~6 % des 219) dont la réponse n'était dans aucun des passages reçus (ex. E32 : la page du joueur Shu n'est pas remontée, seules des pages de tournoi l'ont été). Plus de passages ou un meilleur moteur de recherche (reranker, découpe) sont les seuls leviers.
-- **Plus le modèle est petit, plus ses erreurs sont des erreurs de lecture** : 38 % pour Sonnet, 55 % pour le 14B, 63 à 71 % pour les SLM. Pour un modèle fort, c'est la recherche qui limite ; pour un SLM, c'est la lecture, en grande partie des réponses incomplètes aux questions composées (§4.7).
+- **La limite propre au RAG est la même pour tous** : 11 à 13 questions (~5-6 % des 219) dont la réponse n'était dans aucun des passages reçus (ex. E32 : la page du joueur Shu n'est pas remontée, seules des pages de tournoi l'ont été). Plus de passages ou un meilleur moteur de recherche (reranker, découpe) sont les seuls leviers.
+- **Plus le modèle est petit, plus ses erreurs sont des erreurs de lecture** : 33 % pour Sonnet, 50 % pour le 14B, 56 à 71 % pour les SLM. Pour un modèle fort, c'est la recherche qui limite ; pour un SLM, c'est la lecture, en grande partie des réponses incomplètes aux questions composées (§4.7).
 - Le RAFT ne réduit pas le nombre d'erreurs de lecture sur ce test, ce qui est cohérent avec §4.7 : il apprend à s'abstenir et à repérer le bon passage, mais pas à répondre à toutes les parties d'une question.
-- **Marge d'un reranker** (29 oct.) : pour les 14 erreurs de recherche du 4B + RAG et de Sonnet + RAG, `qwen3.6` vérifie si la réponse figure dans les
-  **20 premiers** passages (par groupes de 5). Trouvée pour **6 sur 14** (rangs 5, 6, 7, 9, 16, 17 : T19, T32, T36, E12, T01, E17), dont 4 dans le top 10 ;
-  absente du top 20 pour 8 (E16, E32, E34, E36, E38, G49, L38, S08). Un reranker parfait sur le top 20 gagnerait donc **au plus ~6 questions sur 219
-  (+2,7 points)**, ~4 en pratique (top 10), soit de l'ordre du bruit d'exécution, pour +1 à 2 s par question : **non implémenté**. Les 8 autres demandent
+- **Marge d'un reranker** (29 oct.) : pour les 13 erreurs de recherche du 4B + RAG et de Sonnet + RAG, `qwen3.6` vérifie si la réponse figure dans les
+  **20 premiers** passages (par groupes de 5). Trouvée pour **5 sur 13** (rangs 5, 7, 9, 16, 17 : E12, T32, T36, T01, E17), dont 3 dans le top 10 ;
+  absente du top 20 pour 8 (E16, E32, E34, E36, E38, G49, L38, S08). Un reranker parfait sur le top 20 gagnerait donc **au plus ~5 questions sur 219
+  (+2,3 points)**, ~3 en pratique (top 10), soit de l'ordre du bruit d'exécution, pour +1 à 2 s par question : **non implémenté**. Les 8 autres demandent
   une autre découpe ou une autre requête (questions « quel héros… » sans nom, voir J39 en §4.9).
-- **Bruit** : deux exécutions du même 4B + RAG (mêmes passages pour les 14 questions dont le verdict change) donnent 46 puis 36 erreurs, dont 29 puis 20 de lecture.
-  Le nombre d'erreurs de recherche (13-14) est stable ; les écarts de lecture entre le 4B et ses RAFT (28 à 32) sont dans ce bruit (§4.11).
+- **Bruit** : deux exécutions du même 4B + RAG (mêmes passages pour les 14 questions dont le verdict change) donnent 41 puis 36 erreurs, dont 25 puis 20 de lecture.
+  Le nombre d'erreurs de recherche (13) est stable ; le bruit sur la lecture est d'environ 5 erreurs (§4.11). Les RAFT (28 à 32 erreurs de lecture) n'en font pas moins que le 4B de base (20 à 25 selon l'exécution) : au mieux autant, plutôt un peu plus.
 - Vérification automatique par un LLM local : indicative. Contrôlée à la main sur E32 (recherche), L18 (partiel) et quelques erreurs de lecture (G30 : le passage donne bien 750 PV pour Roadhog, le 4B s'est trompé).
 
 ### 4.9 Jeu joueurs (40 questions, 29 oct.)
@@ -694,7 +694,7 @@ Reste à faire :
 - [ ] Présentation de soutenance ; citer Fandom et Liquipedia (CC-BY-SA, attribution) et Blizzard (notes de patch)
 
 Perspectives (non réalisées) :
-- **Recherche** : la limite commune à tous les modèles (§4.8). Un reranker du top 20 récupérerait au plus 6 des 14 erreurs de recherche (mesuré, §4.8) ;
+- **Recherche** : la limite commune à tous les modèles (§4.8). Un reranker du top 20 récupérerait au plus 5 des 13 erreurs de recherche (mesuré, §4.8) ;
   le reste demande une autre découpe (par capacité) ou de transformer les questions « quel héros… » sans nom (J39) en recherche par attribut, via une table structurée.
 - **Questions de liste** (héros d'une saison, d'un rôle) : table structurée des héros interrogée directement plutôt que des passages ; tous les modèles y échouent.
 - **Jeu joueurs plus grand** (100-200 questions) et jeu de dev construit sur de vraies questions, pour régler sans biais vers le RAFT.
